@@ -1,6 +1,8 @@
 <?php
 namespace Craft;
 
+require_once craft()->path->getPluginsPath() . 'twofactorauthentication/vendor/autoload.php';
+
 use Base32\Base32;
 use OTPHP\TOTP;
 
