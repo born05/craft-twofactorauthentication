@@ -1,8 +1,6 @@
 <?php
 namespace Craft;
 
-require_once craft()->path->getPluginsPath() . 'twofactorauthentication/vendor/autoload.php';
-
 use Base32\Base32;
 use OTPHP\TOTP;
 
@@ -192,7 +190,7 @@ class TwoFactorAuthentication_VerifyService extends BaseApplicationComponent
         $data = craft()->userSession->getIdentityCookieValue();
 
         // Data 4 is the UserAgentString.
-        if ($data && $this->_checkUserAgentString($data[4])) {
+        if ($data && $this->checkUserAgentString($data[4])) {
             // Data 2 is the session UID.
             $uid = $data[2];
 
@@ -219,10 +217,10 @@ class TwoFactorAuthentication_VerifyService extends BaseApplicationComponent
     {
         if (craft()->config->get('requireMatchingUserAgentForSession')) {
             $currentUserAgent = craft()->request->getUserAgent();
-            
+
             return $userAgent === $currentUserAgent;
         }
-        
+
         return true;
     }
 }

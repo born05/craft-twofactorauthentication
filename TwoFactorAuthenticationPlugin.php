@@ -10,7 +10,7 @@ class TwoFactorAuthenticationPlugin extends BasePlugin
 
     public function getVersion()
     {
-        return '0.0.1';
+        return '0.0.2';
     }
 
     public function getSchemaVersion()
@@ -27,7 +27,7 @@ class TwoFactorAuthenticationPlugin extends BasePlugin
     {
         return 'http://www.born05.com/';
     }
-    
+
     public function getPluginUrl()
     {
         return 'https://github.com/born05/craft-twofactorauthentication';
@@ -37,7 +37,7 @@ class TwoFactorAuthenticationPlugin extends BasePlugin
     {
         return $this->getPluginUrl() . '/blob/master/README.md';
     }
-    
+
     public function getReleaseFeedUrl()
     {
         return 'https://raw.githubusercontent.com/born05/craft-twofactorauthentication/master/releases.json';
