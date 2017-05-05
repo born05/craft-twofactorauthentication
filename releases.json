@@ -1,5 +1,13 @@
 [
   {
+    "version": "0.0.3",
+    "downloadUrl": "https://github.com/born05/craft-assetusage/archive/0.0.3.zip",
+    "date": "2017-05-05T11:55:00+00:00",
+    "notes": [
+      "Added our own vendor code."
+    ]
+  },
+  {
     "version": "0.0.2",
     "downloadUrl": "https://github.com/born05/craft-assetusage/archive/0.0.2.zip",
     "date": "2017-05-05T11:23:00+00:00",
