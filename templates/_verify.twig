@@ -1,0 +1,36 @@
+{% extends "_layouts/basecp" %}
+{% import "_includes/forms" as forms %}
+
+{% set title = "Two-Factor Authentication"|t %}
+{% set bodyClass = 'two-factor-authentication' %}
+
+{% includeCssResource "twofactorauthentication/css/verify.css" %}
+{% includeJsResource "twofactorauthentication/js/verify.js" %}
+
+{% block body %}
+    {%- set hasLogo = (CraftEdition >= CraftClient and craft.rebrand.isLogoUploaded ? true : false) -%}
+    <form id="verify-form" class="verify-form-centered centeralign" action="{{ actionUrl('twoFactorAuthentication/verify/loginProcess') }}" method="post" accept-charset="UTF-8" {% if hasLogo -%}
+            {%- set logo = craft.rebrand.logo -%}
+            {%- set padding = logo.height + 30 -%}
+            class="has-logo" style="background-image: url('{{ logo.url }}'); background-size: {{ logo.width }}px {{ logo.height }}px; padding-top: {{ padding }}px; margin-top: -{{ round((353+padding)/2) }}px"
+        {%- endif %}>
+
+        <h2>{{ 'Two-Factor Authentication'|t }}</h2>
+        <p>{{ "Enter the authentication code from your phone."|t }}</p>
+
+        {{ forms.textField({ id: "authenticationCode", name: "code", placeholder: "Authentication Code"|t }) }}
+
+        <div class="buttons">
+            <input id="submit" class="btn submit disabled" type="submit" value="{{ "Verify"|t }}">
+            <div id="spinner" class="spinner hidden"></div>
+        </div>
+
+        <small>{{ "Experiencing any issues? Contact your administrator for help."|t }}</small>
+    </form>
+
+    <script type="text/javascript">
+        {% if not craft.request.isMobileBrowser(true) %}
+            document.getElementById("authenticationCode").focus();
+        {% endif %}
+    </script>
+{% endblock %}

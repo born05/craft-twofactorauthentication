@@ -1,0 +1,16 @@
+{
+    "name": "born05/craft-twofactorauthentication",
+    "description": "Craft 2 plugin for two-factor or two-step login using Time Based OTP.",
+    "type": "craft-plugin",
+    "license": "https://github.com/born05/craft-twofactorauthentication/blob/master/LICENSE",
+    "homepage": "https://github.com/born05/craft-twofactorauthentication",
+    "authors": [
+        {
+            "name": "Roel van Hintum",
+            "email": "roel@born05.com"
+        }
+    ],
+    "require": {
+        "spomky-labs/otphp": "^8.3"
+    }
+}
