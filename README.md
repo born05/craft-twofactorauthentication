@@ -9,3 +9,7 @@ Login works as usual for users without 2-factor auth.
 
 When enabled, the user is redirected to the 2-factor verification page after login.
 This means the user is already logged in. When the user tries to visit an other Control Panel page than the public ones before verification, the logout is triggered. This blocks the user from visiting the CP unverified.
+
+## License
+
+See [license](https://github.com/born05/craft-twofactorauthentication/blob/master/LICENSE)
