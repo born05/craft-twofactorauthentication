@@ -16,4 +16,17 @@ class TwoFactorAuthentication_ResponseService extends BaseApplicationComponent
         echo JsonHelper::encode($data);
         craft()->end();
     }
+
+    /**
+     * Determine if the url points to the verification part of this plugin.
+     *
+     * @param  strin $url
+     * @return boolean
+     */
+    public function isTwoFactorAuthenticationUrl($url)
+    {
+        $verifyUrl = UrlHelper::getActionUrl('twoFactorAuthentication/verify');
+
+        return strpos($url, $verifyUrl) === 0;
+    }
 }

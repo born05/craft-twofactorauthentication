@@ -64,7 +64,7 @@ class TwoFactorAuthentication_VerifyController extends BaseController
 
     /**
      * COPIED from https://github.com/pixelandtonic/Craft-Release/blob/master/app/controllers/UsersController.php
-     * 
+     *
      * Redirects the user after a successful login attempt, or if they visited the Login page while they were already
      * logged in.
      *
@@ -80,7 +80,8 @@ class TwoFactorAuthentication_VerifyController extends BaseController
         // Were they trying to access a URL beforehand?
         $returnUrl = craft()->userSession->getReturnUrl(null, true);
 
-        if ($returnUrl === null || $returnUrl == craft()->request->getPath()) {
+        // MODIFIED FROM COPY
+        if ($returnUrl === null || $returnUrl == craft()->request->getPath() || craft()->twoFactorAuthentication_response->isTwoFactorAuthenticationUrl($returnUrl)) {
             // If this is a CP request and they can access the control panel, send them wherever
             // postCpLoginRedirect tells us
             if (craft()->request->isCpRequest() && $currentUser->can('accessCp')) {

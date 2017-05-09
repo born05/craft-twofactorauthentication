@@ -15,6 +15,8 @@
             class="has-logo" style="background-image: url('{{ logo.url }}'); background-size: {{ logo.width }}px {{ logo.height }}px; padding-top: {{ padding }}px; margin-top: -{{ round((353+padding)/2) }}px"
         {%- endif %}>
 
+        {{ getCsrfInput() }}
+
         <h2>{{ 'Two-Factor Authentication'|t }}</h2>
         <p>{{ "Enter the authentication code from your phone."|t }}</p>
 

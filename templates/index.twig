@@ -73,6 +73,8 @@
         <p>{{ 'Please enter the code from your device, do note it changes every few seconds.'|t }}</p>
 
         <form id="verify-form" action="{{ actionUrl('twoFactorAuthentication/settings/turnOn') }}" method="post" accept-charset="UTF-8">
+            {{ getCsrfInput() }}
+
             {{ forms.textField({ id: "authenticationCode", name: "code", placeholder: "Authentication Code"|t }) }}
 
             <div class="buttons">
