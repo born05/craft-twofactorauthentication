@@ -64,6 +64,7 @@ class TwoFactorAuthenticationPlugin extends BasePlugin
                 $actionSegs !== array('users', 'sendPasswordResetEmail') &&
                 $actionSegs !== array('users', 'setpassword') &&
                 $actionSegs !== array('users', 'verifyemail') &&
+                $actionSegs !== array('users', 'getAuthTimeout') &&
                 $actionSegs[0] !== 'update'
             ) &&
             !(
