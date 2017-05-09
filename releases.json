@@ -1,5 +1,13 @@
 [
   {
+    "version": "0.0.5",
+    "downloadUrl": "https://github.com/born05/craft-assetusage/archive/0.0.5.zip",
+    "date": "2017-05-09T16:16:00+00:00",
+    "notes": [
+      "Fix for login popup on verify screen."
+    ]
+  },
+  {
     "version": "0.0.4",
     "downloadUrl": "https://github.com/born05/craft-assetusage/archive/0.0.4.zip",
     "date": "2017-05-09T15:30:00+00:00",

@@ -10,7 +10,7 @@ class TwoFactorAuthenticationPlugin extends BasePlugin
 
     public function getVersion()
     {
-        return '0.0.4';
+        return '0.0.5';
     }
 
     public function getSchemaVersion()
