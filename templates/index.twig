@@ -26,9 +26,12 @@
 
         <h2>{{ 'Disable two-factor authentication'|t }}</h2>
         <p>{{ 'To disable two-factor authentication, click the button below.'|t }}</p>
-        <a href="{{ actionUrl('twoFactorAuthentication/settings/turnOff') }}" class="btn submit icon insecure">
-            {{- "I don't want two-factor authentication"|t -}}
-        </a>
+
+        <form id="turnoff-form" action="{{ actionUrl('twoFactorAuthentication/settings/turnOff') }}" method="post" accept-charset="UTF-8">
+            {{ getCsrfInput() }}
+
+            <input id="submit" class="btn submit icon insecure" type="submit" value="{{- "I don't want two-factor authentication"|t -}}">
+        </form>
 
     {% else %}
 

@@ -48,6 +48,8 @@ class TwoFactorAuthentication_SettingsController extends BaseController
      * Disable 2-factor for current user.
      */
     public function actionTurnOff() {
+        $this->requirePostRequest();
+
         $user = craft()->userSession->getUser();
         craft()->twoFactorAuthentication_verify->disableUser($user);
 
