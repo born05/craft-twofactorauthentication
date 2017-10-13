@@ -7,18 +7,13 @@ namespace Composer\Autoload;
 class ComposerStaticInit56c4a4250200e657d3027424679a54b5
 {
     public static $files = array (
-        'bd9634f2d41831496de0d3dfe4c94881' => __DIR__ . '/..' . '/symfony/polyfill-php56/bootstrap.php',
-        '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
-        '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
         'a4ecaeafb8cfb009ad0e052c90355e98' => __DIR__ . '/..' . '/beberlei/assert/lib/Assert/functions.php',
     );
 
     public static $prefixLengthsPsr4 = array (
-        'S' => 
+        'P' => 
         array (
-            'Symfony\\Polyfill\\Util\\' => 22,
-            'Symfony\\Polyfill\\Php56\\' => 23,
-            'Symfony\\Polyfill\\Mbstring\\' => 26,
+            'ParagonIE\\ConstantTime\\' => 23,
         ),
         'O' => 
         array (
@@ -28,10 +23,6 @@ class ComposerStaticInit56c4a4250200e657d3027424679a54b5
         array (
             'Composer\\Installers\\' => 20,
         ),
-        'B' => 
-        array (
-            'Base32\\' => 7,
-        ),
         'A' => 
         array (
             'Assert\\' => 7,
@@ -39,17 +30,9 @@ class ComposerStaticInit56c4a4250200e657d3027424679a54b5
     );
 
     public static $prefixDirsPsr4 = array (
-        'Symfony\\Polyfill\\Util\\' => 
+        'ParagonIE\\ConstantTime\\' => 
         array (
-            0 => __DIR__ . '/..' . '/symfony/polyfill-util',
-        ),
-        'Symfony\\Polyfill\\Php56\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/polyfill-php56',
-        ),
-        'Symfony\\Polyfill\\Mbstring\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
+            0 => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src',
         ),
         'OTPHP\\' => 
         array (
@@ -58,10 +41,6 @@ class ComposerStaticInit56c4a4250200e657d3027424679a54b5
         'Composer\\Installers\\' => 
         array (
             0 => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers',
-        ),
-        'Base32\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/christian-riesen/base32/src',
         ),
         'Assert\\' => 
         array (

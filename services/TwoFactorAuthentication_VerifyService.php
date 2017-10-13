@@ -3,7 +3,6 @@ namespace Craft;
 
 require_once craft()->path->getPluginsPath() . 'twofactorauthentication/vendor/autoload.php';
 
-use Base32\Base32;
 use OTPHP\TOTP;
 
 class TwoFactorAuthentication_VerifyService extends BaseApplicationComponent
@@ -89,7 +88,7 @@ class TwoFactorAuthentication_VerifyService extends BaseApplicationComponent
     public function disableUser(UserModel $user)
     {
         // Update the user record
-        $totp = new TOTP();
+        $totp = TOTP::create();
         $userRecord = $this->getUserRecord($user);
         // Remove verified state
         $userRecord->dateVerified = null;
@@ -130,7 +129,8 @@ class TwoFactorAuthentication_VerifyService extends BaseApplicationComponent
     private function getTotp(UserModel $user) {
         if (!isset($this->totp)) {
             $userRecord = $this->getUserRecord($user);
-            $this->totp = new TOTP($user->email, $userRecord->secret);
+            $this->totp = TOTP::create($userRecord->secret);
+            $this->totp->setLabel($user->email);
             $this->totp->setIssuer(craft()->getSiteName());
         }
 
@@ -149,7 +149,7 @@ class TwoFactorAuthentication_VerifyService extends BaseApplicationComponent
         ));
 
         if (!isset($userRecord)) {
-            $totp = new TOTP();
+            $totp = TOTP::create();
             $userRecord = new TwoFactorAuthentication_UserRecord();
             $userRecord->userId = $user->id;
             $userRecord->secret = $totp->getSecret();

@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2014-2016 Spomky-Labs
+ * Copyright (c) 2014-2017 Spomky-Labs
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -12,7 +14,7 @@
 namespace OTPHP;
 
 use Assert\Assertion;
-use Base32\Base32;
+use ParagonIE\ConstantTime\Base32;
 
 abstract class OTP implements OTPInterface
 {
@@ -21,14 +23,12 @@ abstract class OTP implements OTPInterface
     /**
      * OTP constructor.
      *
-     * @param string|null $label
      * @param string|null $secret
      * @param string      $digest
      * @param int         $digits
      */
-    public function __construct($label, $secret, $digest, $digits)
+    protected function __construct(?string $secret, string $digest, int $digits)
     {
-        $this->setLabel($label);
         $this->setSecret($secret);
         $this->setDigest($digest);
         $this->setDigits($digits);
@@ -37,7 +37,7 @@ abstract class OTP implements OTPInterface
     /**
      * {@inheritdoc}
      */
-    public function getQrCodeUri($uri = 'https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl={PROVISIONING_URI}', $placeholder = '{PROVISIONING_URI}')
+    public function getQrCodeUri(string $uri = 'https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl={PROVISIONING_URI}', string $placeholder = '{PROVISIONING_URI}'): string
     {
         $provisioning_uri = urlencode($this->getProvisioningUri());
 
@@ -49,7 +49,7 @@ abstract class OTP implements OTPInterface
      *
      * @return string The OTP at the specified input
      */
-    protected function generateOTP($input)
+    protected function generateOTP(int $input): string
     {
         $hash = hash_hmac($this->getDigest(), $this->intToByteString($input), $this->getDecodedSecret());
         $hmac = [];
@@ -66,9 +66,9 @@ abstract class OTP implements OTPInterface
     /**
      * {@inheritdoc}
      */
-    public function at($input)
+    public function at(int $timestamp): string
     {
-        return $this->generateOTP($input);
+        return $this->generateOTP($timestamp);
     }
 
     /**
@@ -91,7 +91,7 @@ abstract class OTP implements OTPInterface
      *
      * @return string
      */
-    protected function generateURI($type, array $options)
+    protected function generateURI(string $type, array $options): string
     {
         $label = $this->getLabel();
         Assertion::string($label, 'The label is not set.');
@@ -106,9 +106,9 @@ abstract class OTP implements OTPInterface
     /**
      * @return string
      */
-    private function getDecodedSecret()
+    private function getDecodedSecret(): string
     {
-        $secret = Base32::decode($this->getSecret());
+        $secret = Base32::decodeUpper($this->getSecret());
 
         return $secret;
     }
@@ -118,7 +118,7 @@ abstract class OTP implements OTPInterface
      *
      * @return string
      */
-    private function intToByteString($int)
+    private function intToByteString(int $int): string
     {
         $result = [];
         while (0 !== $int) {
@@ -135,7 +135,7 @@ abstract class OTP implements OTPInterface
      *
      * @return bool
      */
-    protected function compareOTP($safe, $user)
+    protected function compareOTP(string $safe, string $user): bool
     {
         return hash_equals($safe, $user);
     }
