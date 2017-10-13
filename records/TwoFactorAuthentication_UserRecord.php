@@ -12,7 +12,7 @@ class TwoFactorAuthentication_UserRecord extends BaseRecord
     protected function defineAttributes()
     {
         return array(
-            'secret' => array(AttributeType::String, 'maxLength' => 100, 'required' => true),
+            'secret' => array(AttributeType::String, 'maxLength' => 512, 'required' => true),
             'dateVerified' => array(AttributeType::DateTime),
         );
     }
