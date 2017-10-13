@@ -1,4 +1,4 @@
-# BETA - Two-Factor Authentication
+# Two-Factor Authentication
 
 Craft 2 plugin for two-factor or two-step login using Time Based OTP (TOTP, like Google Authenticator).
 Every user can setup TOTP themselves, the plugin does not force users. Admins can list usage in user tables.
