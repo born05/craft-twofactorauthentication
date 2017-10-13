@@ -16,7 +16,7 @@ class TwoFactorAuthentication_AuthenticationCodeModel extends BaseModel
         // Don't allow whitespace in the authenticationCode.
         if (preg_match('/\s+/', $this->authenticationCode))
         {
-            $this->addError('authenticationCode', Craft::t('Spaces are not allowed in the username.'));
+            $this->addError('authenticationCode', Craft::t('Spaces are not allowed in the authentication code.'));
         }
 
         return parent::validate($attributes, false);
