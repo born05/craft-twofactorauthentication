@@ -15,7 +15,7 @@ class TwoFactorAuthenticationPlugin extends BasePlugin
 
     public function getSchemaVersion()
     {
-        return '0.0.1';
+        return '1.0.0';
     }
 
     public function getDeveloper()
@@ -90,7 +90,8 @@ class TwoFactorAuthenticationPlugin extends BasePlugin
 
             if (isset($user) &&
                 craft()->twoFactorAuthentication_verify->isEnabled($user) &&
-                !craft()->twoFactorAuthentication_verify->isVerified($user)) {
+                !craft()->twoFactorAuthentication_verify->isVerified($user)
+            ) {
                 $url = UrlHelper::getActionUrl('twoFactorAuthentication/verify/login');
 
                 if (craft()->request->isAjaxRequest()) {
