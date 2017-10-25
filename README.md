@@ -1,4 +1,4 @@
-![Two-Factor Authentication logo](https://raw.githubusercontent.com/born05/craft-twofactorauthentication/master/logo.png)
+![Two-Factor Authentication](https://raw.githubusercontent.com/born05/craft-twofactorauthentication/master/plugin-icon.png)
 
 # Two-Factor Authentication
 
