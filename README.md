@@ -1,3 +1,6 @@
+![Two-Factor Authentication logo](https://raw.githubusercontent.com/born05/craft-twofactorauthentication/resources/icon.svg)
+resources/icon.svg
+
 # Two-Factor Authentication
 
 Craft 2 plugin for two-factor or two-step login using Time Based OTP (TOTP, like Google Authenticator).
@@ -9,6 +12,12 @@ Login works as usual for users without 2-factor auth.
 
 When enabled, the user is redirected to the 2-factor verification page after login.
 This means the user is already logged in. When the user tries to visit an other Control Panel page than the public ones before verification, the logout is triggered. This blocks the user from visiting the CP unverified.
+
+![Setting screen turning 2FA on](https://raw.githubusercontent.com/born05/craft-twofactorauthentication/settings-turn-on.png)
+
+![Setting screen turning 2FA off](https://raw.githubusercontent.com/born05/craft-twofactorauthentication/settings-turn-off.png)
+
+![Login verification screen](https://raw.githubusercontent.com/born05/craft-twofactorauthentication/login-verification.png)
 
 ## Requirements
 
