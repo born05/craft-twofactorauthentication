@@ -36,7 +36,7 @@ use LogicException;
  * @method LazyAssertion digit(string|callable $message = null, string $propertyPath = null) Validates if an integer or integerish is a digit.
  * @method LazyAssertion directory(string|callable $message = null, string $propertyPath = null) Assert that a directory exists.
  * @method LazyAssertion e164(string|callable $message = null, string $propertyPath = null) Assert that the given string is a valid E164 Phone Number.
- * @method LazyAssertion email(string|callable $message = null, string $propertyPath = null) Assert that value is an email adress (using input_filter/FILTER_VALIDATE_EMAIL).
+ * @method LazyAssertion email(string|callable $message = null, string $propertyPath = null) Assert that value is an email address (using input_filter/FILTER_VALIDATE_EMAIL).
  * @method LazyAssertion endsWith(string $needle, string|callable $message = null, string $propertyPath = null, string $encoding = 'utf8') Assert that string ends with a sequence of chars.
  * @method LazyAssertion eq(mixed $value2, string|callable $message = null, string $propertyPath = null) Assert that two values are equal (using == ).
  * @method LazyAssertion extensionLoaded(string|callable $message = null, string $propertyPath = null) Assert that extension is loaded.
@@ -66,7 +66,7 @@ use LogicException;
  * @method LazyAssertion keyIsset(string|int $key, string|callable $message = null, string $propertyPath = null) Assert that key exists in an array/array-accessible object using isset().
  * @method LazyAssertion keyNotExists(string|int $key, string|callable $message = null, string $propertyPath = null) Assert that key does not exist in an array.
  * @method LazyAssertion length(int $length, string|callable $message = null, string $propertyPath = null, string $encoding = 'utf8') Assert that string has a given length.
- * @method LazyAssertion lessOrEqualThan(mixed $limit, string|callable $message = null, string $propertyPath = null) Determines if the value is less or than given limit.
+ * @method LazyAssertion lessOrEqualThan(mixed $limit, string|callable $message = null, string $propertyPath = null) Determines if the value is less or equal than given limit.
  * @method LazyAssertion lessThan(mixed $limit, string|callable $message = null, string $propertyPath = null) Determines if the value is less than given limit.
  * @method LazyAssertion max(mixed $maxValue, string|callable $message = null, string $propertyPath = null) Assert that a number is smaller as a given limit.
  * @method LazyAssertion maxLength(int $maxLength, string|callable $message = null, string $propertyPath = null, string $encoding = 'utf8') Assert that string value is not longer than $maxLength chars.

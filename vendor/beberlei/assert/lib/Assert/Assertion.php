@@ -36,7 +36,7 @@ use BadMethodCallException;
  * @method static bool allDigit(mixed $value, string|callable $message = null, string $propertyPath = null) Validates if an integer or integerish is a digit for all values.
  * @method static bool allDirectory(string $value, string|callable $message = null, string $propertyPath = null) Assert that a directory exists for all values.
  * @method static bool allE164(string $value, string|callable $message = null, string $propertyPath = null) Assert that the given string is a valid E164 Phone Number for all values.
- * @method static bool allEmail(mixed $value, string|callable $message = null, string $propertyPath = null) Assert that value is an email adress (using input_filter/FILTER_VALIDATE_EMAIL) for all values.
+ * @method static bool allEmail(mixed $value, string|callable $message = null, string $propertyPath = null) Assert that value is an email address (using input_filter/FILTER_VALIDATE_EMAIL) for all values.
  * @method static bool allEndsWith(mixed $string, string $needle, string|callable $message = null, string $propertyPath = null, string $encoding = 'utf8') Assert that string ends with a sequence of chars for all values.
  * @method static bool allEq(mixed $value, mixed $value2, string|callable $message = null, string $propertyPath = null) Assert that two values are equal (using == ) for all values.
  * @method static bool allExtensionLoaded(mixed $value, string|callable $message = null, string $propertyPath = null) Assert that extension is loaded for all values.
@@ -66,7 +66,7 @@ use BadMethodCallException;
  * @method static bool allKeyIsset(mixed $value, string|int $key, string|callable $message = null, string $propertyPath = null) Assert that key exists in an array/array-accessible object using isset() for all values.
  * @method static bool allKeyNotExists(mixed $value, string|int $key, string|callable $message = null, string $propertyPath = null) Assert that key does not exist in an array for all values.
  * @method static bool allLength(mixed $value, int $length, string|callable $message = null, string $propertyPath = null, string $encoding = 'utf8') Assert that string has a given length for all values.
- * @method static bool allLessOrEqualThan(mixed $value, mixed $limit, string|callable $message = null, string $propertyPath = null) Determines if the value is less or than given limit for all values.
+ * @method static bool allLessOrEqualThan(mixed $value, mixed $limit, string|callable $message = null, string $propertyPath = null) Determines if the value is less or equal than given limit for all values.
  * @method static bool allLessThan(mixed $value, mixed $limit, string|callable $message = null, string $propertyPath = null) Determines if the value is less than given limit for all values.
  * @method static bool allMax(mixed $value, mixed $maxValue, string|callable $message = null, string $propertyPath = null) Assert that a number is smaller as a given limit for all values.
  * @method static bool allMaxLength(mixed $value, int $maxLength, string|callable $message = null, string $propertyPath = null, string $encoding = 'utf8') Assert that string value is not longer than $maxLength chars for all values.
@@ -117,7 +117,7 @@ use BadMethodCallException;
  * @method static bool nullOrDigit(mixed $value, string|callable $message = null, string $propertyPath = null) Validates if an integer or integerish is a digit or that the value is null.
  * @method static bool nullOrDirectory(string $value, string|callable $message = null, string $propertyPath = null) Assert that a directory exists or that the value is null.
  * @method static bool nullOrE164(string $value, string|callable $message = null, string $propertyPath = null) Assert that the given string is a valid E164 Phone Number or that the value is null.
- * @method static bool nullOrEmail(mixed $value, string|callable $message = null, string $propertyPath = null) Assert that value is an email adress (using input_filter/FILTER_VALIDATE_EMAIL) or that the value is null.
+ * @method static bool nullOrEmail(mixed $value, string|callable $message = null, string $propertyPath = null) Assert that value is an email address (using input_filter/FILTER_VALIDATE_EMAIL) or that the value is null.
  * @method static bool nullOrEndsWith(mixed $string, string $needle, string|callable $message = null, string $propertyPath = null, string $encoding = 'utf8') Assert that string ends with a sequence of chars or that the value is null.
  * @method static bool nullOrEq(mixed $value, mixed $value2, string|callable $message = null, string $propertyPath = null) Assert that two values are equal (using == ) or that the value is null.
  * @method static bool nullOrExtensionLoaded(mixed $value, string|callable $message = null, string $propertyPath = null) Assert that extension is loaded or that the value is null.
@@ -147,7 +147,7 @@ use BadMethodCallException;
  * @method static bool nullOrKeyIsset(mixed $value, string|int $key, string|callable $message = null, string $propertyPath = null) Assert that key exists in an array/array-accessible object using isset() or that the value is null.
  * @method static bool nullOrKeyNotExists(mixed $value, string|int $key, string|callable $message = null, string $propertyPath = null) Assert that key does not exist in an array or that the value is null.
  * @method static bool nullOrLength(mixed $value, int $length, string|callable $message = null, string $propertyPath = null, string $encoding = 'utf8') Assert that string has a given length or that the value is null.
- * @method static bool nullOrLessOrEqualThan(mixed $value, mixed $limit, string|callable $message = null, string $propertyPath = null) Determines if the value is less or than given limit or that the value is null.
+ * @method static bool nullOrLessOrEqualThan(mixed $value, mixed $limit, string|callable $message = null, string $propertyPath = null) Determines if the value is less or equal than given limit or that the value is null.
  * @method static bool nullOrLessThan(mixed $value, mixed $limit, string|callable $message = null, string $propertyPath = null) Determines if the value is less than given limit or that the value is null.
  * @method static bool nullOrMax(mixed $value, mixed $maxValue, string|callable $message = null, string $propertyPath = null) Assert that a number is smaller as a given limit or that the value is null.
  * @method static bool nullOrMaxLength(mixed $value, int $maxLength, string|callable $message = null, string $propertyPath = null, string $encoding = 'utf8') Assert that string value is not longer than $maxLength chars or that the value is null.
@@ -505,7 +505,7 @@ class Assertion
      */
     public static function integerish($value, $message = null, $propertyPath = null)
     {
-        if (\is_resource($value) || \is_object($value) || \strval(\intval($value)) != $value || \is_bool($value) || \is_null($value)) {
+        if (\is_resource($value) || \is_object($value) || \is_bool($value) || \is_null($value) || \is_array($value) || \strval(\intval($value)) !== \strval($value)) {
             $message = \sprintf(
                 static::generateMessage($message) ?: 'Value "%s" is not an integer or a number castable to integer.',
                 static::stringify($value)
@@ -1515,7 +1515,7 @@ class Assertion
     }
 
     /**
-     * Assert that value is an email adress (using input_filter/FILTER_VALIDATE_EMAIL).
+     * Assert that value is an email address (using input_filter/FILTER_VALIDATE_EMAIL).
      *
      * @param mixed                $value
      * @param string|callable|null $message
@@ -1576,8 +1576,8 @@ class Assertion
         $protocols = array('http', 'https');
 
         $pattern = '~^
-            (%s)://                                 # protocol
-            (([\pL\pN-]+:)?([\pL\pN-]+)@)?          # basic auth
+            (%s)://                                     # protocol
+            (([\.\pL\pN-]+:)?([\.\pL\pN-]+)@)?          # basic auth
             (
                 ([\pL\pN\pS-\.])+(\.?([\pL\pN]|xn\-\-[\pL\pN-]+)+\.?) # a domain name
                     |                                                 # or
@@ -2022,7 +2022,7 @@ class Assertion
     }
 
     /**
-     * Determines if the value is less or than given limit.
+     * Determines if the value is less or equal than given limit.
      *
      * @param mixed                $value
      * @param mixed                $limit

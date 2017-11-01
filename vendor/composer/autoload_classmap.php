@@ -6,4 +6,5 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'RequirementsChecker' => $vendorDir . '/craftcms/server-check/server/requirements/RequirementsChecker.php',
 );

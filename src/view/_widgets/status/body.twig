@@ -1,0 +1,20 @@
+{% if isEnabled %}
+    <p>
+        {{ 'Your account is secured.'|t('app') }}
+
+        <a class="go nowrap" href="{{ cpUrl('twofactorauthentication') }}">
+            {{- 'Go to settings'|t('app') -}}
+        </a>
+    </p>
+{% else %}
+    <p class="warning">
+        {{ 'Two-factor authentication is not turned on for your account!'|t('app') }}
+        {{ 'With two-factor authentication you can improve protection of your account, because your phone (or other device) is needed as a second step during login.'|t('app') }}
+    </p>
+
+    <p>
+        <a class="btn submit icon secure" href="{{ cpUrl('twofactorauthentication') }}">
+            {{- 'Secure your acoount'|t('app') -}}
+        </a>
+    </p>
+{% endif %}
