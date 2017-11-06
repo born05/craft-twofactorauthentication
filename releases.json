@@ -1,5 +1,14 @@
 [
   {
+    "version": "1.0.1",
+    "downloadUrl": "https://github.com/born05/craft-assetusage/archive/1.0.1.zip",
+    "date": "2017-11-06T14:50:00+00:00",
+    "notes": [
+      "rememberedUserSessionDuration is now optional.",
+      "Fixed a DateTime checking issue causing unpredictable behavior."
+    ]
+  },
+  {
     "version": "1.0.0",
     "downloadUrl": "https://github.com/born05/craft-assetusage/archive/1.0.0.zip",
     "date": "2017-10-16T11:30:00+00:00",

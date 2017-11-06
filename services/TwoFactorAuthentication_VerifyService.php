@@ -36,11 +36,11 @@ class TwoFactorAuthentication_VerifyService extends BaseApplicationComponent
         ));
 
         if (isset($sessionRecord)) {
-            $sessionDuration = craft()->config->get('rememberedUserSessionDuration');
-            $minimalSessionDate = new DateTime();
+            $sessionDuration = $this->getSessionDuration();
+            $minimalSessionDate = DateTimeHelper::currentUTCDateTime();
             $minimalSessionDate->sub(new DateInterval($sessionDuration));
 
-            return $sessionRecord->dateVerified > $minimalSessionDate->format(DateTime::MYSQL_DATETIME);
+            return $sessionRecord->dateVerified > $minimalSessionDate;
         }
 
         return false;
@@ -207,6 +207,22 @@ class TwoFactorAuthentication_VerifyService extends BaseApplicationComponent
         }
 
         return null;
+    }
+
+    /**
+     * Get the session duration.
+     * @return string
+     */
+    private function getSessionDuration()
+    {
+        $data = craft()->userSession->getIdentityCookieValue();
+
+        // Data 4 is the UserAgentString, 3 is rememberMe.
+        if ($data && $this->checkUserAgentString($data[4]) && $data[3]) {
+            return craft()->config->get('rememberedUserSessionDuration');
+        }
+
+        return craft()->config->get('userSessionDuration');
     }
 
     /**

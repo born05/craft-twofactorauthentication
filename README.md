@@ -23,6 +23,7 @@ This means the user is already logged in. When the user tries to visit an other 
 
 ## Requirements
 
+- `userSessionDuration` not set to null (there is not really a point of using this plugin otherwise)
 - Craft 2.6.x (we test on the latest release of Craft 2)
 - PHP 7.1 at least (depends on [otphp](https://github.com/Spomky-Labs/otphp))
 
