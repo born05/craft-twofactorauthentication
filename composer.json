@@ -1,10 +1,11 @@
 {
     "name": "born05/craft-twofactorauthentication",
-    "description": "Craft 2 plugin for two-factor or two-step login using Time Based OTP.",
+    "description": "Craft 3 plugin for two-factor or two-step login using Time Based OTP.",
     "version": "1.0.0",
     "type": "craft-plugin",
     "keywords": [
         "craftcms-plugin",
+        "two-factor authentication",
         "two-factor",
         "two-step",
         "authentication",
@@ -25,14 +26,14 @@
     },
     "autoload": {
         "psr-4": {
-            "born05\\twofactorauth\\": "src/"
+            "born05\\twofactorauthentication\\": "src/"
         }
     },
     "support": {
         "email": "development@born05.com",
-        "issues": "https://github.com/born05/craft-twofactorauthentication/issues?state=open",
+        "issues": "https://github.com/born05/craft-twofactorauthentication/issues",
         "source": "https://github.com/born05/craft-twofactorauthentication",
-        "docs": "https://github.com/born05/craft-twofactorauthentication",
+        "docs": "https://github.com/born05/craft-twofactorauthentication/blob/master/README.md",
         "rss": "https://github.com/born05/craft-twofactorauthentication/releases.atom"
     },
     "extra": {
@@ -42,6 +43,11 @@
         "developer": "Born05",
         "developerUrl": "https://born05.com",
         "documentationUrl": "https://github.com/born05/craft-twofactorauthentication",
-        "changelogUrl": "https://raw.githubusercontent.com/born05/craft-twofactorauthentication/master/CHANGELOG.md"
+        "changelogUrl": "https://raw.githubusercontent.com/born05/craft-twofactorauthentication/master/CHANGELOG.md",
+        "components": {
+            "response": "born05\\twofactorauthentication\\services\\Response",
+            "verify": "born05\\twofactorauthentication\\services\\Verify"
+        },
+        "class": "born05\\twofactorauthentication\\TwofactorAuthentication"
     }
 }

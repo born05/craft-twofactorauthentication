@@ -1,8 +1,10 @@
 <?php
 
-namespace born05\twofactorauth\controllers;
+namespace born05\twofactorauthentication\controllers;
 
+use Craft;
 use craft\web\Controller;
+use born05\twofactorauthentication\Plugin as TwoFactorAuth;
 
 class VerifyController extends Controller
 {
@@ -21,26 +23,26 @@ class VerifyController extends Controller
     {
         $this->requirePostRequest();
 
-        $authenticationCode = \Craft::$app->request->getPost('authenticationCode');
+        $authenticationCode = Craft::$app->request->getPost('authenticationCode');
 
         // Get the current user
-        $currentUser = \Craft::$app->user->getUser();
+        $currentUser = Craft::$app->user->getUser();
 
-        if (Craft::$app->twoFactorAuthentication_verify->verify($currentUser, $authenticationCode)) {
+        if (TwoFactorAuth::$plugin->verify->verify($currentUser, $authenticationCode)) {
             $this->_handleSuccessfulLogin(true);
         } else {
             $errorCode = UserIdentity::ERROR_UNKNOWN_IDENTITY;
-            $errorMessage = \Craft::t('app', 'Authentication code is invalid.');
+            $errorMessage = Craft::t('app', 'Authentication code is invalid.');
 
             if (Craft::$app->request->isAjaxRequest()) {
-                $this->returnJson(array(
+                return $this->returnJson(array(
                     'errorCode' => $errorCode,
                     'error' => $errorMessage
                 ));
             } else {
-                \Craft::$app->user->setError($errorMessage);
+                Craft::$app->user->setError($errorMessage);
 
-                \Craft::$app->urlManager->setRouteVariables(array(
+                Craft::$app->urlManager->setRouteVariables(array(
                     'errorCode' => $errorCode,
                     'errorMessage' => $errorMessage,
                 ));
@@ -55,12 +57,12 @@ class VerifyController extends Controller
      */
     private function renderCPTemplate($path)
     {
-        \Craft::$app->templates->setTemplateMode(TemplateMode::CP);
+        Craft::$app->templates->setTemplateMode(TemplateMode::CP);
         $this->renderTemplate($path, array(
-            'CraftEdition'  => \Craft::$app->getEdition(),
-            'CraftPersonal' => \Craft::Personal,
-            'CraftClient'   => \Craft::Client,
-            'CraftPro'      => \Craft::Pro,
+            'CraftEdition'  => Craft::$app->getEdition(),
+            'CraftPersonal' => Craft::Personal,
+            'CraftClient'   => Craft::Client,
+            'CraftPro'      => Craft::Pro,
         ));
     }
 
@@ -77,21 +79,21 @@ class VerifyController extends Controller
     private function _handleSuccessfulLogin($setNotice)
     {
         // Get the current user
-        $currentUser = \Craft::$app->user->getUser();
+        $currentUser = Craft::$app->user->getUser();
 
         // Were they trying to access a URL beforehand?
-        $returnUrl = \Craft::$app->user->getReturnUrl(null, true);
+        $returnUrl = Craft::$app->user->getReturnUrl(null, true);
 
         // MODIFIED FROM COPY
-        if ($returnUrl === null || $returnUrl == \Craft::$app->request->getPath() || \Craft::$app->twoFactorAuthentication_response->isTwoFactorAuthenticationUrl($returnUrl)) {
+        if ($returnUrl === null || $returnUrl == Craft::$app->request->getPath() || Craft::$app->twoFactorAuthentication_response->isTwoFactorAuthenticationUrl($returnUrl)) {
             // If this is a CP request and they can access the control panel, send them wherever
             // postCpLoginRedirect tells us
             if (Craft::$app->request->isCpRequest() && $currentUser->can('accessCp')) {
-                $postCpLoginRedirect = \Craft::$app->config->get('postCpLoginRedirect');
+                $postCpLoginRedirect = Craft::$app->config->get('postCpLoginRedirect');
                 $returnUrl = UrlHelper::getCpUrl($postCpLoginRedirect);
             } else {
                 // Otherwise send them wherever postLoginRedirect tells us
-                $postLoginRedirect = \Craft::$app->config->get('postLoginRedirect');
+                $postLoginRedirect = Craft::$app->config->get('postLoginRedirect');
                 $returnUrl = UrlHelper::getSiteUrl($postLoginRedirect);
             }
         }
@@ -104,7 +106,7 @@ class VerifyController extends Controller
             ));
         } else {
             if ($setNotice) {
-                \Craft::$app->user->setNotice(\Craft::t('app', 'Logged in.'));
+                Craft::$app->user->setNotice(Craft::t('app', 'Logged in.'));
             }
 
             $this->redirectToPostedUrl($currentUser, $returnUrl);

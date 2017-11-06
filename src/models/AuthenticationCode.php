@@ -1,5 +1,5 @@
 <?php
-namespace born05\twofactorauth\models;
+namespace born05\twofactorauthentication\models;
 
 use craft\base\Model;
 

@@ -1,7 +1,8 @@
 <?php
-namespace born05\twofactorauth\services;
+namespace born05\twofactorauthentication\services;
 
 use yii\base\Component;
+use born05\twofactorauthentication\Plugin as TwoFactorAuth;
 
 class Response extends Component
 {

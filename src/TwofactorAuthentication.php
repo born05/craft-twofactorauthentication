@@ -1,18 +1,27 @@
 <?php
-namespace born05\twofactorauth;
+namespace born05\twofactorauthentication;
 
+use born05\twofactorauthentication\widgets\Notify as NotifyWidget;
+
+use Craft;
+use craft\base\Plugin;
 use craft\base\Element;
 use craft\elements\User;
+use craft\services\Dashboard;
+use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterElementTableAttributesEvent;
 use craft\events\SetElementTableAttributeHtmlEvent;
 use yii\base\Event;
 
-class Plugin extends \craft\base\Plugin
+class TwofactorAuthentication extends Plugin
 {
-    public function hasCpSection()
-    {
-        return true;
-    }
+    /**
+     * Static property that is an instance of this plugin class so that it can be accessed via
+     * TwofactorAuthentication::$plugin
+     *
+     * @var TwofactorAuthentication
+     */
+    public static $plugin;
 
     public function init()
     {
@@ -40,8 +49,8 @@ class Plugin extends \craft\base\Plugin
 
             // Only redirect two-factor enabled users who aren't verified yet.
             if (isset($user) &&
-                \Craft::$app->twoFactorAuthentication_verify->isEnabled($user) &&
-                !Craft::$app->twoFactorAuthentication_verify->isVerified($user)
+                \TwoFactorAuth::$plugin->verify->isEnabled($user) &&
+                !TwoFactorAuth::$plugin->verify->isVerified($user)
             ) {
                 \Craft::$app->user->logout(false);
                 \Craft::$app->request->redirect(UrlHelper::getCpUrl());
@@ -53,8 +62,8 @@ class Plugin extends \craft\base\Plugin
             $user = \Craft::$app->user->getUser();
 
             if (isset($user) &&
-                \Craft::$app->twoFactorAuthentication_verify->isEnabled($user) &&
-                !Craft::$app->twoFactorAuthentication_verify->isVerified($user)
+                \TwoFactorAuth::$plugin->verify->isEnabled($user) &&
+                !TwoFactorAuth::$plugin->verify->isVerified($user)
             ) {
                 $url = UrlHelper::getActionUrl('twoFactorAuthentication/verify/login');
 
@@ -68,6 +77,15 @@ class Plugin extends \craft\base\Plugin
                 }
             }
         });
+        
+        // Register our widgets
+        Event::on(
+            Dashboard::class,
+            Dashboard::EVENT_REGISTER_WIDGET_TYPES,
+            function (RegisterComponentTypesEvent $event) {
+                $event->types[] = NotifyWidget::class;
+            }
+        );
         
         /**
          * Adds the following attributes to the User table in the CMS
@@ -85,7 +103,7 @@ class Plugin extends \craft\base\Plugin
                 /** @var UserModel $user */
                 $user = $event->sender;
 
-                if (Craft::$app->twoFactorAuthentication_verify->isEnabled($user)) {
+                if (TwoFactorAuth::$plugin->verify->isEnabled($user)) {
                     $event->html = '<div class="status enabled" title="' . \Craft::t('app', 'Enabled') . '"></div>';
                 } else {
                     $event->html = '<div class="status" title="' . \Craft::t('app', 'Not enabled') . '"></div>';

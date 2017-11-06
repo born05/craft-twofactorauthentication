@@ -1,5 +1,5 @@
 <?php
-namespace born05\twofactorauth\migrations;
+namespace born05\twofactorauthentication\migrations;
 
 use craft\db\Migration;
 

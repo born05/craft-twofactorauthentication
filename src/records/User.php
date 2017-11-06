@@ -1,14 +1,14 @@
 <?php
 
-namespace born05\twofactorauth\records;
+namespace born05\twofactorauthentication\records;
 
 use craft\db\ActiveRecord;
 
 class User extends ActiveRecord
 {
-    public function getTableName()
+    public static function tableName()
     {
-        return 'twofactorauthentication_users';
+        return '{{%twofactorauthentication_user}}';
     }
 
     protected function defineAttributes()

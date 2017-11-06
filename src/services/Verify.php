@@ -1,8 +1,9 @@
 <?php
-namespace born05\twofactorauth\services;
+namespace born05\twofactorauthentication\services;
 
 use OTPHP\TOTP;
 use yii\base\Component;
+use born05\twofactorauthentication\Plugin as TwoFactorAuth;
 
 class Verify extends Component
 {

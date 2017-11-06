@@ -1,8 +1,10 @@
 <?php
 
-namespace born05\twofactorauth\controllers;
+namespace born05\twofactorauthentication\controllers;
 
+use Craft;
 use craft\web\Controller;
+use born05\twofactorauthentication\Plugin as TwoFactorAuth;
 
 class DefaultController extends Controller
 {
@@ -11,14 +13,14 @@ class DefaultController extends Controller
      */
     public function actionIndex()
     {
-        $user = \Craft::$app->user->getUser();
+        $user = Craft::$app->user->getUser();
 
-        $rawSecret = \Craft::$app->twoFactorAuthentication_verify->getUserSecret($user);
+        $rawSecret = TwoFactorAuth::$plugin->verify->getUserSecret($user);
 
         return $this->renderCPTemplate('twofactorauthentication/index', [
-            'isUserVerified' => \Craft::$app->twoFactorAuthentication_verify->isVerified($user),
+            'isUserVerified' => TwoFactorAuth::$plugin->verify->isVerified($user),
             'currentUserSecret' => str_split($rawSecret, 4),
-            'currentUserQRCode' => \Craft::$app->twoFactorAuthentication_verify->getUserQRCode($user),
+            'currentUserQRCode' => TwoFactorAuth::$plugin->verify->getUserQRCode($user),
         ]);
     }
 }
