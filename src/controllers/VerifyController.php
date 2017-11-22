@@ -22,19 +22,20 @@ class VerifyController extends Controller
     public function actionLoginProcess()
     {
         $this->requirePostRequest();
+        $request = Craft::$app->getRequest();
 
-        $authenticationCode = Craft::$app->request->getPost('authenticationCode');
+        $authenticationCode = $request->getPost('authenticationCode');
 
         // Get the current user
-        $currentUser = Craft::$app->user->getUser();
+        $currentUser = Craft::$app->getUser()->getIdentity();
 
-        if (TwoFactorAuth::$plugin->verify->verify($currentUser, $authenticationCode)) {
+        if (TwofactorAuthentication::$plugin->verify->verify($currentUser, $authenticationCode)) {
             $this->_handleSuccessfulLogin(true);
         } else {
             $errorCode = UserIdentity::ERROR_UNKNOWN_IDENTITY;
             $errorMessage = Craft::t('app', 'Authentication code is invalid.');
 
-            if (Craft::$app->request->isAjaxRequest()) {
+            if ($request->isAjaxRequest()) {
                 return $this->returnJson(array(
                     'errorCode' => $errorCode,
                     'error' => $errorMessage
@@ -79,16 +80,17 @@ class VerifyController extends Controller
     private function _handleSuccessfulLogin($setNotice)
     {
         // Get the current user
-        $currentUser = Craft::$app->user->getUser();
+        $currentUser = Craft::$app->getUser()->getIdentity();
+        $request = Craft::$app->getRequest();
 
         // Were they trying to access a URL beforehand?
         $returnUrl = Craft::$app->user->getReturnUrl(null, true);
 
         // MODIFIED FROM COPY
-        if ($returnUrl === null || $returnUrl == Craft::$app->request->getPath() || Craft::$app->twoFactorAuthentication_response->isTwoFactorAuthenticationUrl($returnUrl)) {
+        if ($returnUrl === null || $returnUrl == $request->getPath() || TwofactorAuthentication::$plugin->response->isTwoFactorAuthenticationUrl($returnUrl)) {
             // If this is a CP request and they can access the control panel, send them wherever
             // postCpLoginRedirect tells us
-            if (Craft::$app->request->isCpRequest() && $currentUser->can('accessCp')) {
+            if ($request->isCpRequest() && $currentUser->can('accessCp')) {
                 $postCpLoginRedirect = Craft::$app->config->get('postCpLoginRedirect');
                 $returnUrl = UrlHelper::getCpUrl($postCpLoginRedirect);
             } else {
@@ -99,7 +101,7 @@ class VerifyController extends Controller
         }
 
         // If this was an Ajax request, just return success:true
-        if (Craft::$app->request->isAjaxRequest()) {
+        if ($request->isAjaxRequest()) {
             $this->returnJson(array(
                 'success' => true,
                 'returnUrl' => $returnUrl

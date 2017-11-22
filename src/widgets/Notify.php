@@ -14,10 +14,10 @@ class Notify extends Widget
 
     public function getBodyHtml()
     {
-        $user = Craft::$app->user->getUser();
+        $user = Craft::$app->getUser()->getIdentity();
 
         return Craft::$app->getView()->renderTemplate('twofactorauthentication/_widgets/status/body', [
-            'isEnabled' => \TwoFactorAuth::$plugin->verify->isEnabled($user),
+            'isEnabled' => TwofactorAuthentication::$plugin->verify->isEnabled($user),
         ]);
     }
 }

@@ -14,12 +14,14 @@ class SettingsController extends Controller
     public function actionTurnOn() {
         $this->requirePostRequest();
 
-        $user = \Craft::$app->user->getUser();
-        $authenticationCode = \Craft::$app->request->getPost('authenticationCode');
+        $user = Craft::$app->getUser()->getIdentity();
+        $request = Craft::$app->getRequest();
+        
+        $authenticationCode = $request->getPost('authenticationCode');
         $returnUrl = UrlHelper::getCpUrl('twofactorauthentication');
 
-        if (TwoFactorAuth::$plugin->verify->verify($user, $authenticationCode)) {
-            if (Craft::$app->request->isAjaxRequest()) {
+        if (TwofactorAuthentication::$plugin->verify->verify($user, $authenticationCode)) {
+            if ($request->isAjaxRequest()) {
                 $this->returnJson(array(
                     'success' => true,
                     'returnUrl' => $returnUrl
@@ -29,17 +31,17 @@ class SettingsController extends Controller
             }
         } else {
             $errorCode = UserIdentity::ERROR_UNKNOWN_IDENTITY;
-            $errorMessage = \Craft::t('app', 'Authentication code is invalid.');
+            $errorMessage = Craft::t('app', 'Authentication code is invalid.');
 
-            if (Craft::$app->request->isAjaxRequest()) {
+            if ($request->isAjaxRequest()) {
                 $this->returnJson(array(
                     'errorCode' => $errorCode,
                     'error' => $errorMessage
                 ));
             } else {
-                \Craft::$app->user->setError($errorMessage);
+                Craft::$app->user->setError($errorMessage);
 
-                \Craft::$app->urlManager->setRouteVariables(array(
+                Craft::$app->urlManager->setRouteVariables(array(
                     'errorCode' => $errorCode,
                     'errorMessage' => $errorMessage,
                 ));
@@ -54,8 +56,8 @@ class SettingsController extends Controller
     public function actionTurnOff() {
         $this->requirePostRequest();
 
-        $user = \Craft::$app->user->getUser();
-        \TwoFactorAuth::$plugin->verify->disableUser($user);
+        $user = Craft::$app->getUser()->getIdentity();
+        TwofactorAuthentication::$plugin->verify->disableUser($user);
 
         $returnUrl = UrlHelper::getCpUrl('twofactorauthentication');
         $this->redirect($returnUrl);

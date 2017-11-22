@@ -13,14 +13,14 @@ class DefaultController extends Controller
      */
     public function actionIndex()
     {
-        $user = Craft::$app->user->getUser();
+        $user = Craft::$app->getUser()->getIdentity();
 
-        $rawSecret = TwoFactorAuth::$plugin->verify->getUserSecret($user);
+        $rawSecret = TwofactorAuthentication::$plugin->verify->getUserSecret($user);
 
         return $this->renderCPTemplate('twofactorauthentication/index', [
-            'isUserVerified' => TwoFactorAuth::$plugin->verify->isVerified($user),
+            'isUserVerified' => TwofactorAuthentication::$plugin->verify->isVerified($user),
             'currentUserSecret' => str_split($rawSecret, 4),
-            'currentUserQRCode' => TwoFactorAuth::$plugin->verify->getUserQRCode($user),
+            'currentUserQRCode' => TwofactorAuthentication::$plugin->verify->getUserQRCode($user),
         ]);
     }
 }

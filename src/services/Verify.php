@@ -1,8 +1,13 @@
 <?php
 namespace born05\twofactorauthentication\services;
 
+use Craft;
 use OTPHP\TOTP;
 use yii\base\Component;
+use craft\elements\User;
+use born05\twofactorauthentication\records\User as UserRecord;
+use born05\twofactorauthentication\records\Session as SessionRecord;
+use born05\twofactorauthentication\models\AuthenticationCode as AuthenticationCodeModel;
 use born05\twofactorauthentication\Plugin as TwoFactorAuth;
 
 class Verify extends Component
@@ -11,32 +16,32 @@ class Verify extends Component
 
     /**
      * Determines if the user has two-factor authentication.
-     * @param  UserModel $user
+     * @param  User $user
      * @return boolean
      */
-    public function isEnabled(UserModel $user)
+    public function isEnabled(User $user)
     {
-        $userRecord = UserRecord::model()->findByAttributes(array(
+        $userRecord = UserRecord::findOne([
             'userId' => $user->id,
-        ));
+        ]);
 
         return isset($userRecord) && $userRecord->dateVerified !== null;
     }
 
     /**
      * Determines if the user is verified.
-     * @param  UserModel $user
+     * @param  User $user
      * @return boolean
      */
-    public function isVerified(UserModel $user)
+    public function isVerified(User $user)
     {
-        $sessionRecord = SessionRecord::model()->findByAttributes(array(
+        $sessionRecord = SessionRecord::findOne([
             'userId' => $user->id,
             'sessionId' => $this->getSessionId($user),
-        ));
+        ]);
 
         if (isset($sessionRecord)) {
-            $sessionDuration = \Craft::$app->config->get('remembereduserDuration');
+            $sessionDuration = Craft::$app->config->get('remembereduserDuration');
             $minimalSessionDate = new DateTime();
             $minimalSessionDate->sub(new DateInterval($sessionDuration));
 
@@ -48,11 +53,11 @@ class Verify extends Component
 
     /**
      * Verify the authenticationCode with the user's credentials.
-     * @param  UserModel $user
+     * @param  User $user
      * @param  string $authenticationCode
      * @return boolean
      */
-    public function verify(UserModel $user, $authenticationCode)
+    public function verify(User $user, $authenticationCode)
     {
         $authenticationCodeModel = new AuthenticationCodeModel();
         $authenticationCodeModel->authenticationCode = str_replace(' ', '', $authenticationCode);
@@ -82,10 +87,10 @@ class Verify extends Component
 
     /**
      * Disable the current user's two-factor authentication.
-     * @param  UserModel $user
+     * @param  User $user
      * @return string
      */
-    public function disableUser(UserModel $user)
+    public function disableUser(User $user)
     {
         // Update the user record
         $totp = TOTP::create();
@@ -103,30 +108,30 @@ class Verify extends Component
 
     /**
      * Get the user's secret.
-     * @param  UserModel $user
+     * @param  User $user
      * @return string
      */
-    public function getUserSecret(UserModel $user)
+    public function getUserSecret(User $user)
     {
         return $this->getTotp($user)->getSecret();
     }
 
     /**
      * Get the user's secret QR code.
-     * @param  UserModel $user
+     * @param  User $user
      * @return string
      */
-    public function getUserQRCode(UserModel $user)
+    public function getUserQRCode(User $user)
     {
         return $this->getTotp($user)->getQrCodeUri();
     }
 
     /**
      * Get a valid TOTP instance.
-     * @param  UserModel $user
+     * @param  User $user
      * @return TOTP
      */
-    private function getTotp(UserModel $user) {
+    private function getTotp(User $user) {
         if (!isset($this->totp)) {
             $userRecord = $this->getUserRecord($user);
             $this->totp = TOTP::create($userRecord->secret);
@@ -139,14 +144,14 @@ class Verify extends Component
 
     /**
      * Get the user record for two-factor.
-     * @param  UserModel $user
+     * @param  User $user
      * @return UserRecord
      */
-    private function getUserRecord(UserModel $user)
+    private function getUserRecord(User $user)
     {
-        $userRecord = UserRecord::model()->findByAttributes(array(
+        $userRecord = UserRecord::findOne([
             'userId' => $user->id,
-        ));
+        ]);
 
         if (!isset($userRecord)) {
             $totp = TOTP::create();
@@ -161,16 +166,16 @@ class Verify extends Component
 
     /**
      * Get the session record for two-factor.
-     * @param  UserModel $user
+     * @param  User $user
      * @return SessionRecord
      */
-    private function getTwoFactorSessionRecord(UserModel $user)
+    private function getTwoFactorSessionRecord(User $user)
     {
         $sessionId = $this->getSessionId($user);
-        $twoFactorSessionRecord = SessionRecord::model()->findByAttributes(array(
+        $twoFactorSessionRecord = SessionRecord::findOne([
             'userId' => $user->id,
             'sessionId' => $sessionId,
-        ));
+        ]);
 
         if (!isset($twoFactorSessionRecord)) {
             $twoFactorSessionRecord = new SessionRecord();
@@ -184,22 +189,22 @@ class Verify extends Component
 
     /**
      * Get the session id.
-     * @param  UserModel $user
+     * @param  User $user
      * @return int
      */
-    private function getSessionId(UserModel $user)
+    private function getSessionId(User $user)
     {
-        $data = \Craft::$app->user->getIdentityCookieValue();
+        $data = Craft::$app->user->getIdentityCookieValue();
 
         // Data 4 is the UserAgentString.
         if ($data && $this->checkUserAgentString($data[4])) {
             // Data 2 is the session UID.
             $uid = $data[2];
 
-            $sessionRecord = SessionRecord::model()->findByAttributes(array(
+            $sessionRecord = SessionRecord::findOne([
                 'userId' => $user->id,
                 'uid' => $uid,
-            ));
+            ]);
 
             if (isset($sessionRecord)) {
                 return $sessionRecord->id;
@@ -218,7 +223,7 @@ class Verify extends Component
     private function checkUserAgentString($userAgent)
     {
         if (Craft::$app->config->get('requireMatchingUserAgentForSession')) {
-            $currentUserAgent = \Craft::$app->request->getUserAgent();
+            $currentUserAgent = Craft::$app->request->getUserAgent();
 
             return $userAgent === $currentUserAgent;
         }

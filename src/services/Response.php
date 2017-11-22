@@ -1,6 +1,7 @@
 <?php
 namespace born05\twofactorauthentication\services;
 
+use Craft;
 use yii\base\Component;
 use born05\twofactorauthentication\Plugin as TwoFactorAuth;
 
@@ -17,7 +18,7 @@ class Response extends Component
         HeaderHelper::setNoCache();
         ob_start();
         echo JsonHelper::encode($data);
-        \Craft::$app->end();
+        Craft::$app->end();
     }
 
     /**
