@@ -27,9 +27,9 @@ class Plugin extends CraftPlugin
 
     /**
      * Static property that is an instance of this plugin class so that it can be accessed via
-     * TwoFactorAuth::$plugin
+     * Plugin::$plugin
      *
-     * @var TwofactorAuthentication
+     * @var Plugin
      */
     public static $plugin;
 
@@ -68,8 +68,8 @@ class Plugin extends CraftPlugin
 
             // Only redirect two-factor enabled users who aren't verified yet.
             if (isset($user) &&
-                TwoFactorAuth::$plugin->verify->isEnabled($user) &&
-                !TwoFactorAuth::$plugin->verify->isVerified($user)
+                Plugin::$plugin->verify->isEnabled($user) &&
+                !Plugin::$plugin->verify->isVerified($user)
             ) {
                 Craft::$app->getUser()->logout(false);
                 $request->redirect(UrlHelper::getCpUrl());
@@ -81,13 +81,13 @@ class Plugin extends CraftPlugin
             $user = Craft::$app->getUser()->getIdentity();
 
             if (isset($user) &&
-                TwoFactorAuth::$plugin->verify->isEnabled($user) &&
-                !TwoFactorAuth::$plugin->verify->isVerified($user)
+                Plugin::$plugin->verify->isEnabled($user) &&
+                !Plugin::$plugin->verify->isVerified($user)
             ) {
                 $url = UrlHelper::getActionUrl('twoFactorAuthentication/verify/login');
 
                 if ($request->isAjaxRequest()) {
-                    TwoFactorAuth::$plugin->response->returnJson(array(
+                    Plugin::$plugin->response->returnJson(array(
                         'success' => true,
                         'returnUrl' => $url
                     ));
@@ -122,7 +122,7 @@ class Plugin extends CraftPlugin
                 /** @var UserModel $user */
                 $user = $event->sender;
 
-                if (TwoFactorAuth::$plugin->verify->isEnabled($user)) {
+                if (Plugin::$plugin->verify->isEnabled($user)) {
                     $event->html = '<div class="status enabled" title="' . Craft::t('two-factor-authentication', 'Enabled') . '"></div>';
                 } else {
                     $event->html = '<div class="status" title="' . Craft::t('two-factor-authentication', 'Not enabled') . '"></div>';
