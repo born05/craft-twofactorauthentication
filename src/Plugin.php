@@ -4,7 +4,7 @@ namespace born05\twofactorauthentication;
 use born05\twofactorauthentication\widgets\Notify as NotifyWidget;
 
 use Craft;
-use craft\base\Plugin;
+use craft\base\Plugin as CraftPlugin;
 use craft\base\Element;
 use craft\elements\User;
 use craft\services\Dashboard;
@@ -13,7 +13,7 @@ use craft\events\RegisterElementTableAttributesEvent;
 use craft\events\SetElementTableAttributeHtmlEvent;
 use yii\base\Event;
 
-class TwofactorAuthentication extends Plugin
+class Plugin extends CraftPlugin
 {
     /**
      * @var string
