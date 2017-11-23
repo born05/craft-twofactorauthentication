@@ -20,7 +20,7 @@ class SettingsController extends Controller
         $authenticationCode = $request->getPost('authenticationCode');
         $returnUrl = UrlHelper::getCpUrl('twofactorauthentication');
 
-        if (TwofactorAuthentication::$plugin->verify->verify($user, $authenticationCode)) {
+        if (TwoFactorAuth::$plugin->verify->verify($user, $authenticationCode)) {
             if ($request->isAjaxRequest()) {
                 $this->returnJson(array(
                     'success' => true,
@@ -31,7 +31,7 @@ class SettingsController extends Controller
             }
         } else {
             $errorCode = UserIdentity::ERROR_UNKNOWN_IDENTITY;
-            $errorMessage = Craft::t('app', 'Authentication code is invalid.');
+            $errorMessage = Craft::t('two-factor-authentication', 'Authentication code is invalid.');
 
             if ($request->isAjaxRequest()) {
                 $this->returnJson(array(
@@ -57,7 +57,7 @@ class SettingsController extends Controller
         $this->requirePostRequest();
 
         $user = Craft::$app->getUser()->getIdentity();
-        TwofactorAuthentication::$plugin->verify->disableUser($user);
+        TwoFactorAuth::$plugin->verify->disableUser($user);
 
         $returnUrl = UrlHelper::getCpUrl('twofactorauthentication');
         $this->redirect($returnUrl);

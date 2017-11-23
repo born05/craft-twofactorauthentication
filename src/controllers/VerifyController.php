@@ -29,11 +29,11 @@ class VerifyController extends Controller
         // Get the current user
         $currentUser = Craft::$app->getUser()->getIdentity();
 
-        if (TwofactorAuthentication::$plugin->verify->verify($currentUser, $authenticationCode)) {
+        if (TwoFactorAuth::$plugin->verify->verify($currentUser, $authenticationCode)) {
             $this->_handleSuccessfulLogin(true);
         } else {
             $errorCode = UserIdentity::ERROR_UNKNOWN_IDENTITY;
-            $errorMessage = Craft::t('app', 'Authentication code is invalid.');
+            $errorMessage = Craft::t('two-factor-authentication', 'Authentication code is invalid.');
 
             if ($request->isAjaxRequest()) {
                 return $this->returnJson(array(
@@ -87,7 +87,7 @@ class VerifyController extends Controller
         $returnUrl = Craft::$app->user->getReturnUrl(null, true);
 
         // MODIFIED FROM COPY
-        if ($returnUrl === null || $returnUrl == $request->getPath() || TwofactorAuthentication::$plugin->response->isTwoFactorAuthenticationUrl($returnUrl)) {
+        if ($returnUrl === null || $returnUrl == $request->getPath() || TwoFactorAuth::$plugin->response->isTwoFactorAuthenticationUrl($returnUrl)) {
             // If this is a CP request and they can access the control panel, send them wherever
             // postCpLoginRedirect tells us
             if ($request->isCpRequest() && $currentUser->can('accessCp')) {
@@ -108,7 +108,7 @@ class VerifyController extends Controller
             ));
         } else {
             if ($setNotice) {
-                Craft::$app->user->setNotice(Craft::t('app', 'Logged in.'));
+                Craft::$app->user->setNotice(Craft::t('two-factor-authentication', 'Logged in.'));
             }
 
             $this->redirectToPostedUrl($currentUser, $returnUrl);

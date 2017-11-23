@@ -7,9 +7,14 @@ use born05\twofactorauthentication\Plugin as TwoFactorAuth;
 
 class Notify extends Widget
 {
-    public static function displayName()
+    public static function displayName(): string
     {
-        return Craft::t('app', 'Two-factor authentication status');
+        return Craft::t('two-factor-authentication', 'Two-factor authentication status');
+    }
+    
+    public static function iconPath()
+    {
+        return Craft::getAlias('@born05/twofactorauthentication/icon-mask.svg');
     }
 
     public function getBodyHtml()
@@ -17,7 +22,7 @@ class Notify extends Widget
         $user = Craft::$app->getUser()->getIdentity();
 
         return Craft::$app->getView()->renderTemplate('twofactorauthentication/_widgets/status/body', [
-            'isEnabled' => TwofactorAuthentication::$plugin->verify->isEnabled($user),
+            'isEnabled' => TwoFactorAuth::$plugin->verify->isEnabled($user),
         ]);
     }
 }

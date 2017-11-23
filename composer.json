@@ -46,7 +46,6 @@
         "components": {
             "response": "born05\\twofactorauthentication\\services\\Response",
             "verify": "born05\\twofactorauthentication\\services\\Verify"
-        },
-        "class": "born05\\twofactorauthentication\\TwofactorAuthentication"
+        }
     }
 }

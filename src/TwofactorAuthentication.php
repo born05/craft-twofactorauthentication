@@ -27,7 +27,7 @@ class TwofactorAuthentication extends Plugin
 
     /**
      * Static property that is an instance of this plugin class so that it can be accessed via
-     * TwofactorAuthentication::$plugin
+     * TwoFactorAuth::$plugin
      *
      * @var TwofactorAuthentication
      */
@@ -68,8 +68,8 @@ class TwofactorAuthentication extends Plugin
 
             // Only redirect two-factor enabled users who aren't verified yet.
             if (isset($user) &&
-                TwofactorAuthentication::$plugin->verify->isEnabled($user) &&
-                !TwofactorAuthentication::$plugin->verify->isVerified($user)
+                TwoFactorAuth::$plugin->verify->isEnabled($user) &&
+                !TwoFactorAuth::$plugin->verify->isVerified($user)
             ) {
                 Craft::$app->getUser()->logout(false);
                 $request->redirect(UrlHelper::getCpUrl());
@@ -81,13 +81,13 @@ class TwofactorAuthentication extends Plugin
             $user = Craft::$app->getUser()->getIdentity();
 
             if (isset($user) &&
-                TwofactorAuthentication::$plugin->verify->isEnabled($user) &&
-                !TwofactorAuthentication::$plugin->verify->isVerified($user)
+                TwoFactorAuth::$plugin->verify->isEnabled($user) &&
+                !TwoFactorAuth::$plugin->verify->isVerified($user)
             ) {
                 $url = UrlHelper::getActionUrl('twoFactorAuthentication/verify/login');
 
                 if ($request->isAjaxRequest()) {
-                    TwofactorAuthentication::$plugin->response->returnJson(array(
+                    TwoFactorAuth::$plugin->response->returnJson(array(
                         'success' => true,
                         'returnUrl' => $url
                     ));
@@ -111,7 +111,7 @@ class TwofactorAuthentication extends Plugin
          * NOTE: You still need to select them with the 'gear'
          */
         Event::on(User::class, Element::EVENT_REGISTER_TABLE_ATTRIBUTES, function(RegisterElementTableAttributesEvent $event) {
-            $event->tableAttributes['hasTwoFactorAuthentication'] = ['label' => Craft::t('app', '2-Factor Auth')];
+            $event->tableAttributes['hasTwoFactorAuthentication'] = ['label' => Craft::t('two-factor-authentication', '2-Factor Auth')];
         });
 
         /**
@@ -122,10 +122,10 @@ class TwofactorAuthentication extends Plugin
                 /** @var UserModel $user */
                 $user = $event->sender;
 
-                if (TwofactorAuthentication::$plugin->verify->isEnabled($user)) {
-                    $event->html = '<div class="status enabled" title="' . Craft::t('app', 'Enabled') . '"></div>';
+                if (TwoFactorAuth::$plugin->verify->isEnabled($user)) {
+                    $event->html = '<div class="status enabled" title="' . Craft::t('two-factor-authentication', 'Enabled') . '"></div>';
                 } else {
-                    $event->html = '<div class="status" title="' . Craft::t('app', 'Not enabled') . '"></div>';
+                    $event->html = '<div class="status" title="' . Craft::t('two-factor-authentication', 'Not enabled') . '"></div>';
                 }
 
                 // Prevent other event listeners from getting invoked
