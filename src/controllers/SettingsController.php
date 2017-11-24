@@ -18,7 +18,7 @@ class SettingsController extends Controller
         $request = Craft::$app->getRequest();
         
         $authenticationCode = $request->getPost('authenticationCode');
-        $returnUrl = UrlHelper::getCpUrl('twofactorauthentication');
+        $returnUrl = UrlHelper::getCpUrl('two-factor-authentication');
 
         if (TwoFactorAuth::$plugin->verify->verify($user, $authenticationCode)) {
             if ($request->isAjaxRequest()) {
@@ -59,7 +59,7 @@ class SettingsController extends Controller
         $user = Craft::$app->getUser()->getIdentity();
         TwoFactorAuth::$plugin->verify->disableUser($user);
 
-        $returnUrl = UrlHelper::getCpUrl('twofactorauthentication');
+        $returnUrl = UrlHelper::getCpUrl('two-factor-authentication');
         $this->redirect($returnUrl);
     }
 }

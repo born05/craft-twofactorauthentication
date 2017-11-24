@@ -8,9 +8,11 @@ use craft\base\Plugin as CraftPlugin;
 use craft\base\Element;
 use craft\elements\User;
 use craft\services\Dashboard;
+use craft\events\RegisterUrlRulesEvent;
 use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterElementTableAttributesEvent;
 use craft\events\SetElementTableAttributeHtmlEvent;
+use craft\web\UrlManager;
 use yii\base\Event;
 
 class Plugin extends CraftPlugin
@@ -47,16 +49,18 @@ class Plugin extends CraftPlugin
         if (
             $request->getIsCpRequest() &&
             (
+                // COPIED from craft\web\Application::_isSpecialCaseActionRequest
                 $request->getPathInfo() !== '' &&
-                $actionSegs !== array('users', 'login') &&
-                $actionSegs !== array('users', 'logout') &&
-                $actionSegs !== array('users', 'get-remaining-session-time') &&
-                $actionSegs !== array('users', 'send-password-reset-email') &&
-                $actionSegs !== array('users', 'send-activation-email') &&
-                $actionSegs !== array('users', 'save-user') &&
-                $actionSegs !== array('users', 'set-password') &&
-                $actionSegs !== array('users', 'verify-email') &&
-                $actionSegs[0] !== 'update'
+                $actionSegs !== ['app', 'migrate'] &&
+                $actionSegs !== ['users', 'login'] &&
+                $actionSegs !== ['users', 'logout'] &&
+                $actionSegs !== ['users', 'set-password'] &&
+                $actionSegs !== ['users', 'verify-email'] &&
+                $actionSegs !== ['users', 'forgot-password'] &&
+                $actionSegs !== ['users', 'send-password-reset-email'] &&
+                $actionSegs !== ['users', 'save-user'] &&
+                $actionSegs !== ['users', 'get-remaining-session-time'] &&
+                $actionSegs[0] !== 'updater'
             ) &&
             !(
                 $actionSegs[0] === 'twoFactorAuthentication' &&
@@ -97,14 +101,14 @@ class Plugin extends CraftPlugin
             }
         });
         
+        Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, function(RegisterUrlRulesEvent $event) {
+            $event->rules['two-factor-authentication'] = 'two-factor-authentication/default/index';
+        });
+        
         // Register our widgets
-        Event::on(
-            Dashboard::class,
-            Dashboard::EVENT_REGISTER_WIDGET_TYPES,
-            function (RegisterComponentTypesEvent $event) {
-                $event->types[] = NotifyWidget::class;
-            }
-        );
+        Event::on(Dashboard::class, Dashboard::EVENT_REGISTER_WIDGET_TYPES, function (RegisterComponentTypesEvent $event) {
+            $event->types[] = NotifyWidget::class;
+        });
         
         /**
          * Adds the following attributes to the User table in the CMS

@@ -21,7 +21,7 @@ class Notify extends Widget
     {
         $user = Craft::$app->getUser()->getIdentity();
 
-        return Craft::$app->getView()->renderTemplate('twofactorauthentication/_widgets/status/body', [
+        return Craft::$app->view->renderTemplate('two-factor-authentication/_widgets/status/body', [
             'isEnabled' => TwoFactorAuth::$plugin->verify->isEnabled($user),
         ]);
     }

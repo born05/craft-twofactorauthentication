@@ -13,7 +13,7 @@ class VerifyController extends Controller
      */
     public function actionLogin()
     {
-        return $this->renderCPTemplate('twofactorauthentication/_verify');
+        return $this->renderCPTemplate('two-factor-authentication/_verify');
     }
 
     /**

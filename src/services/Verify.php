@@ -136,7 +136,7 @@ class Verify extends Component
             $userRecord = $this->getUserRecord($user);
             $this->totp = TOTP::create($userRecord->secret);
             $this->totp->setLabel($user->email);
-            $this->totp->setIssuer(Craft::$app->getSiteName());
+            $this->totp->setIssuer(Craft::$app->getConfig()->getGeneral()->$name);
         }
 
         return $this->totp;
@@ -158,6 +158,7 @@ class Verify extends Component
             $userRecord = new UserRecord();
             $userRecord->userId = $user->id;
             $userRecord->secret = $totp->getSecret();
+            $userRecord->dateVerified = new \DateTime();
             $userRecord->save();
         }
 
@@ -181,6 +182,7 @@ class Verify extends Component
             $twoFactorSessionRecord = new SessionRecord();
             $twoFactorSessionRecord->userId = $user->id;
             $twoFactorSessionRecord->sessionId = $sessionId;
+            $twoFactorSessionRecord->dateVerified = new \DateTime();
             $twoFactorSessionRecord->save();
         }
 

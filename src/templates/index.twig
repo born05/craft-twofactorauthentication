@@ -4,9 +4,6 @@
 {% set title = "Two-Factor Authentication"|t('app') %}
 {% set bodyClass = 'two-factor-authentication-settings' %}
 
-{% includeCssResource "@born05/twofactorauth/resources/css/verify.css" %}
-{% includeJsResource "@born05/twofactorauth/resources/js/verify.js" %}
-
 {% set content %}
 
     <h2>{{ 'Why two-factor authentication?'|t('app') }}</h2>
@@ -27,7 +24,7 @@
         <h2>{{ 'Disable two-factor authentication'|t('app') }}</h2>
         <p>{{ 'To disable two-factor authentication, click the button below.'|t('app') }}</p>
 
-        <form id="turnoff-form" action="{{ actionUrl('twoFactorAuthentication/settings/turnOff') }}" method="post" accept-charset="UTF-8">
+        <form id="turnoff-form" action="{{ actionUrl('two-factor-authentication/settings/turnOff') }}" method="post" accept-charset="UTF-8">
             {{ getCsrfInput() }}
 
             <input id="submit" class="btn submit icon insecure" type="submit" value="{{- "I don't want two-factor authentication"|t('app') -}}">
@@ -74,7 +71,7 @@
         <h2>{{ 'Step 3: Verify the code from your device'|t('app') }}</h2>
         <p>{{ 'Please enter the code from your device, do note it changes every few seconds.'|t('app') }}</p>
 
-        <form id="verify-form" action="{{ actionUrl('twoFactorAuthentication/settings/turnOn') }}" method="post" accept-charset="UTF-8">
+        <form id="verify-form" action="{{ actionUrl('two-factor-authentication/settings/turnOn') }}" method="post" accept-charset="UTF-8">
             {{ getCsrfInput() }}
 
             {{ forms.textField({ id: "authenticationCode", name: "code", placeholder: "Authentication Code"|t('app') }) }}

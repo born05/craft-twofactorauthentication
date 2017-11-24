@@ -29,7 +29,7 @@ class Response extends Component
      */
     public function isTwoFactorAuthenticationUrl($url)
     {
-        $verifyUrl = UrlHelper::getActionUrl('twoFactorAuthentication/verify');
+        $verifyUrl = UrlHelper::getActionUrl('two-factor-authentication/verify');
 
         return strpos($url, $verifyUrl) === 0;
     }
