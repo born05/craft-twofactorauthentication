@@ -85,25 +85,27 @@ class TwoFactorAuthenticationPlugin extends BasePlugin
         }
 
         // Verify after login.
-        craft()->on('userSession.onLogin', function(Event $event) {
-            $user = craft()->userSession->getUser();
+        if (!craft()->isConsole()) {
+            craft()->on('userSession.onLogin', function(Event $event) {
+                $user = craft()->userSession->getUser();
 
-            if (isset($user) &&
-                craft()->twoFactorAuthentication_verify->isEnabled($user) &&
-                !craft()->twoFactorAuthentication_verify->isVerified($user)
-            ) {
-                $url = UrlHelper::getActionUrl('twoFactorAuthentication/verify/login');
+                if (isset($user) &&
+                    craft()->twoFactorAuthentication_verify->isEnabled($user) &&
+                    !craft()->twoFactorAuthentication_verify->isVerified($user)
+                ) {
+                    $url = UrlHelper::getActionUrl('twoFactorAuthentication/verify/login');
 
-                if (craft()->request->isAjaxRequest()) {
-                    craft()->twoFactorAuthentication_response->returnJson(array(
-                        'success' => true,
-                        'returnUrl' => $url
-                    ));
-                } else {
-                    craft()->request->redirect($url);
+                    if (craft()->request->isAjaxRequest()) {
+                        craft()->twoFactorAuthentication_response->returnJson(array(
+                            'success' => true,
+                            'returnUrl' => $url
+                        ));
+                    } else {
+                        craft()->request->redirect($url);
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     /**
