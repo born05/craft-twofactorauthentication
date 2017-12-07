@@ -88,7 +88,7 @@ class TwoFactorAuthentication_VerifyService extends BaseApplicationComponent
     public function disableUser(UserModel $user)
     {
         // Update the user record
-        $totp = TOTP::create();
+        $totp = new TOTP();
         $userRecord = $this->getUserRecord($user);
         // Remove verified state
         $userRecord->dateVerified = null;
@@ -129,8 +129,7 @@ class TwoFactorAuthentication_VerifyService extends BaseApplicationComponent
     private function getTotp(UserModel $user) {
         if (!isset($this->totp)) {
             $userRecord = $this->getUserRecord($user);
-            $this->totp = TOTP::create($userRecord->secret);
-            $this->totp->setLabel($user->email);
+            $this->totp = new TOTP($user->email, $userRecord->secret);
             $this->totp->setIssuer(craft()->getSiteName());
         }
 
@@ -149,7 +148,7 @@ class TwoFactorAuthentication_VerifyService extends BaseApplicationComponent
         ));
 
         if (!isset($userRecord)) {
-            $totp = TOTP::create();
+            $totp = new TOTP();
             $userRecord = new TwoFactorAuthentication_UserRecord();
             $userRecord->userId = $user->id;
             $userRecord->secret = $totp->getSecret();

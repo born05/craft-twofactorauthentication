@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * The MIT License (MIT)
  *
@@ -20,42 +18,33 @@ final class HOTP extends OTP implements HOTPInterface
     /**
      * HOTP constructor.
      *
+     * @param string|null $label
      * @param string|null $secret
      * @param int         $counter
      * @param string      $digest
      * @param int         $digits
      */
-    protected function __construct(?string $secret, int $counter, string $digest, int $digits)
+    public function __construct($label = null, $secret = null, $counter = 0, $digest = 'sha1', $digits = 6)
     {
-        parent::__construct($secret, $digest, $digits);
+        parent::__construct($label, $secret, $digest, $digits);
         $this->setCounter($counter);
-    }
-
-    /**
-     * @param string|null $secret
-     * @param int         $counter
-     * @param string      $digest
-     * @param int         $digits
-     *
-     * @return self
-     */
-    public static function create(?string $secret = null, int $counter = 0, string $digest = 'sha1', int $digits = 6): HOTP
-    {
-        return new self($secret, $counter, $digest, $digits);
     }
 
     /**
      * @param int $counter
      */
-    protected function setCounter(int $counter)
+    private function setCounter($counter)
     {
+        Assertion::integer($counter, 'Counter must be at least 0.');
+        Assertion::greaterOrEqualThan($counter, 0, 'Counter must be at least 0.');
+
         $this->setParameter('counter', $counter);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getCounter(): int
+    public function getCounter()
     {
         return $this->getParameter('counter');
     }
@@ -63,7 +52,7 @@ final class HOTP extends OTP implements HOTPInterface
     /**
      * @param int $counter
      */
-    private function updateCounter(int $counter)
+    private function updateCounter($counter)
     {
         $this->setCounter($counter);
     }
@@ -71,7 +60,7 @@ final class HOTP extends OTP implements HOTPInterface
     /**
      * {@inheritdoc}
      */
-    public function getProvisioningUri(): string
+    public function getProvisioningUri()
     {
         return $this->generateURI('hotp', ['counter' => $this->getCounter()]);
     }
@@ -81,9 +70,12 @@ final class HOTP extends OTP implements HOTPInterface
      *
      * {@inheritdoc}
      */
-    public function verify(string $otp, ?int $counter = null, ?int $window = null): bool
+    public function verify($otp, $counter = null, $window = null)
     {
+        Assertion::string($otp, 'The OTP must be a string');
+        Assertion::nullOrInteger($counter, 'The counter must be null or an integer');
         Assertion::greaterOrEqualThan($counter, 0, 'The counter must be at least 0.');
+        Assertion::nullOrInteger($window, 'The window parameter must be null or an integer');
 
         if (null === $counter) {
             $counter = $this->getCounter();
@@ -99,23 +91,23 @@ final class HOTP extends OTP implements HOTPInterface
      *
      * @return int
      */
-    private function getWindow(?int $window): int
+    private function getWindow($window)
     {
         if (null === $window) {
             $window = 0;
         }
 
-        return (int) abs($window);
+        return abs($window);
     }
 
     /**
-     * @param string   $otp
-     * @param int      $counter
-     * @param int|null $window
+     * @param string $otp
+     * @param int    $counter
+     * @param int    $window
      *
      * @return bool
      */
-    private function verifyOtpWithWindow(string $otp, int $counter, ?int $window): bool
+    private function verifyOtpWithWindow($otp, $counter, $window)
     {
         $window = $this->getWindow($window);
 
@@ -128,22 +120,5 @@ final class HOTP extends OTP implements HOTPInterface
         }
 
         return false;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getParameterMap(): array
-    {
-        $v = array_merge(
-            parent::getParameterMap(),
-            ['counter' => function ($value) {
-                Assertion::greaterOrEqualThan((int) $value, 0, 'Counter must be at least 0.');
-
-                return (int) $value;
-            }]
-        );
-
-        return $v;
     }
 }
