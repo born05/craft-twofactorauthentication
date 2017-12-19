@@ -12,8 +12,10 @@ use craft\events\RegisterUrlRulesEvent;
 use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterElementTableAttributesEvent;
 use craft\events\SetElementTableAttributeHtmlEvent;
+use craft\helpers\UrlHelper;
 use craft\web\UrlManager;
 use yii\base\Event;
+use yii\web\UserEvent;
 
 class Plugin extends CraftPlugin
 {
@@ -39,11 +41,12 @@ class Plugin extends CraftPlugin
     {
         parent::init();
         self::$plugin = $this;
-        
+
         if (!$this->isInstalled) return;
 
         // Only allow users in the CP who are verified or don't use two-factor.
         $request = Craft::$app->getRequest();
+        $response = Craft::$app->getResponse();
         $actionSegs = $request->getActionSegments();
 
         if (
@@ -63,7 +66,7 @@ class Plugin extends CraftPlugin
                 $actionSegs[0] !== 'updater'
             ) &&
             !(
-                $actionSegs[0] === 'twoFactorAuthentication' &&
+                $actionSegs[0] === 'two-factor-authentication' &&
                 $actionSegs[1] === 'verify'
             )
         ) {
@@ -76,27 +79,29 @@ class Plugin extends CraftPlugin
                 !Plugin::$plugin->verify->isVerified($user)
             ) {
                 Craft::$app->getUser()->logout(false);
-                $request->redirect(UrlHelper::getCpUrl());
+                $response->redirect(UrlHelper::cpUrl());
             }
         }
 
         // Verify after login.
-        Craft::$app->on('user.onLogin', function(Event $event) {
+        Event::on(\craft\web\User::class, \craft\web\User::EVENT_AFTER_LOGIN, function(UserEvent $event) {
             $user = Craft::$app->getUser()->getIdentity();
+            $request = Craft::$app->getRequest();
+            $response = Craft::$app->getResponse();
 
             if (isset($user) &&
                 Plugin::$plugin->verify->isEnabled($user) &&
                 !Plugin::$plugin->verify->isVerified($user)
             ) {
-                $url = UrlHelper::getActionUrl('twoFactorAuthentication/verify/login');
+                $url = UrlHelper::actionUrl('two-factor-authentication/verify/login');
 
-                if ($request->isAjaxRequest()) {
-                    Plugin::$plugin->response->returnJson(array(
+                if ($request->getAcceptsJson()) {
+                    return Plugin::$plugin->response->asJson(array(
                         'success' => true,
                         'returnUrl' => $url
                     ));
                 } else {
-                    $request->redirect($url);
+                    $response->redirect($url);
                 }
             }
         });

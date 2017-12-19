@@ -4,7 +4,9 @@ namespace born05\twofactorauthentication\controllers;
 
 use Craft;
 use craft\web\Controller;
+use craft\helpers\UrlHelper;
 use born05\twofactorauthentication\Plugin as TwoFactorAuth;
+use born05\twofactorauthentication\web\assets\verify\VerifyAsset;
 
 class VerifyController extends Controller
 {
@@ -13,7 +15,8 @@ class VerifyController extends Controller
      */
     public function actionLogin()
     {
-        return $this->renderCPTemplate('two-factor-authentication/_verify');
+        Craft::$app->view->registerAssetBundle(VerifyAsset::class);
+        return $this->renderTemplate('two-factor-authentication/_verify');
     }
 
     /**
@@ -35,8 +38,8 @@ class VerifyController extends Controller
             $errorCode = UserIdentity::ERROR_UNKNOWN_IDENTITY;
             $errorMessage = Craft::t('two-factor-authentication', 'Authentication code is invalid.');
 
-            if ($request->isAjaxRequest()) {
-                return $this->returnJson(array(
+            if ($request->getAcceptsJson()) {
+                return $this->asJson(array(
                     'errorCode' => $errorCode,
                     'error' => $errorMessage
                 ));
@@ -49,22 +52,6 @@ class VerifyController extends Controller
                 ));
             }
         }
-    }
-
-    /**
-     * Render a template in admin modus
-     * @param  string $path
-     * @return void
-     */
-    private function renderCPTemplate($path)
-    {
-        Craft::$app->templates->setTemplateMode(TemplateMode::CP);
-        $this->renderTemplate($path, array(
-            'CraftEdition'  => Craft::$app->getEdition(),
-            'CraftPersonal' => Craft::Personal,
-            'CraftClient'   => Craft::Client,
-            'CraftPro'      => Craft::Pro,
-        ));
     }
 
     /**
@@ -91,18 +78,18 @@ class VerifyController extends Controller
             // If this is a CP request and they can access the control panel, send them wherever
             // postCpLoginRedirect tells us
             if ($request->isCpRequest() && $currentUser->can('accessCp')) {
-                $postCpLoginRedirect = Craft::$app->config->get('postCpLoginRedirect');
-                $returnUrl = UrlHelper::getCpUrl($postCpLoginRedirect);
+                $postCpLoginRedirect = Craft::$app->getConfig()->get('postCpLoginRedirect');
+                $returnUrl = UrlHelper::cpUrl($postCpLoginRedirect);
             } else {
                 // Otherwise send them wherever postLoginRedirect tells us
-                $postLoginRedirect = Craft::$app->config->get('postLoginRedirect');
-                $returnUrl = UrlHelper::getSiteUrl($postLoginRedirect);
+                $postLoginRedirect = Craft::$app->getConfig()->get('postLoginRedirect');
+                $returnUrl = UrlHelper::siteUrl($postLoginRedirect);
             }
         }
 
         // If this was an Ajax request, just return success:true
-        if ($request->isAjaxRequest()) {
-            $this->returnJson(array(
+        if ($request->getAcceptsJson()) {
+            $this->asJson(array(
                 'success' => true,
                 'returnUrl' => $returnUrl
             ));

@@ -4,6 +4,7 @@ namespace born05\twofactorauthentication\controllers;
 
 use Craft;
 use craft\web\Controller;
+use craft\helpers\UrlHelper;
 use born05\twofactorauthentication\Plugin as TwoFactorAuth;
 
 class SettingsController extends Controller
@@ -18,11 +19,11 @@ class SettingsController extends Controller
         $request = Craft::$app->getRequest();
         
         $authenticationCode = $request->getPost('authenticationCode');
-        $returnUrl = UrlHelper::getCpUrl('two-factor-authentication');
+        $returnUrl = UrlHelper::cpUrl('two-factor-authentication');
 
         if (TwoFactorAuth::$plugin->verify->verify($user, $authenticationCode)) {
-            if ($request->isAjaxRequest()) {
-                $this->returnJson(array(
+            if ($request->getAcceptsJson()) {
+                $this->asJson(array(
                     'success' => true,
                     'returnUrl' => $returnUrl
                 ));
@@ -33,8 +34,8 @@ class SettingsController extends Controller
             $errorCode = UserIdentity::ERROR_UNKNOWN_IDENTITY;
             $errorMessage = Craft::t('two-factor-authentication', 'Authentication code is invalid.');
 
-            if ($request->isAjaxRequest()) {
-                $this->returnJson(array(
+            if ($request->getAcceptsJson()) {
+                $this->asJson(array(
                     'errorCode' => $errorCode,
                     'error' => $errorMessage
                 ));
@@ -59,7 +60,7 @@ class SettingsController extends Controller
         $user = Craft::$app->getUser()->getIdentity();
         TwoFactorAuth::$plugin->verify->disableUser($user);
 
-        $returnUrl = UrlHelper::getCpUrl('two-factor-authentication');
+        $returnUrl = UrlHelper::cpUrl('two-factor-authentication');
         $this->redirect($returnUrl);
     }
 }

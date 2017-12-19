@@ -19,8 +19,7 @@ class DefaultController extends Controller
         $rawSecret = TwoFactorAuth::$plugin->verify->getUserSecret($user);
         
         Craft::$app->view->registerAssetBundle(VerifyAsset::class);
-
-        return $this->renderCPTemplate('two-factor-authentication/index', [
+        return $this->renderTemplate('two-factor-authentication/index', [
             'isUserVerified' => TwoFactorAuth::$plugin->verify->isVerified($user),
             'currentUserSecret' => str_split($rawSecret, 4),
             'currentUserQRCode' => TwoFactorAuth::$plugin->verify->getUserQRCode($user),

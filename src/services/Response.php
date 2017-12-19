@@ -2,6 +2,7 @@
 namespace born05\twofactorauthentication\services;
 
 use Craft;
+use craft\helpers\UrlHelper;
 use yii\base\Component;
 use born05\twofactorauthentication\Plugin as TwoFactorAuth;
 
@@ -12,13 +13,12 @@ class Response extends Component
      *
      * @param array $data
      */
-    public function returnJson($data = array())
+    public function asJson($data)
     {
-        JsonHelper::setJsonContentTypeHeader();
-        HeaderHelper::setNoCache();
-        ob_start();
-        echo JsonHelper::encode($data);
-        Craft::$app->end();
+        $response = Craft::$app->getResponse();
+        $response->format = \yii\web\Response::FORMAT_JSON;
+        $response->data = $data;
+        Craft::$app->end(0, $response);
     }
 
     /**
@@ -29,7 +29,7 @@ class Response extends Component
      */
     public function isTwoFactorAuthenticationUrl($url)
     {
-        $verifyUrl = UrlHelper::getActionUrl('two-factor-authentication/verify');
+        $verifyUrl = UrlHelper::actionUrl('two-factor-authentication/verify');
 
         return strpos($url, $verifyUrl) === 0;
     }

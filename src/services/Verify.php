@@ -41,11 +41,11 @@ class Verify extends Component
         ]);
 
         if (isset($sessionRecord)) {
-            $sessionDuration = Craft::$app->config->get('remembereduserDuration');
-            $minimalSessionDate = new DateTime();
+            $sessionDuration = $this->getSessionDuration();
+            $minimalSessionDate = DateTimeHelper::currentUTCDateTime();
             $minimalSessionDate->sub(new DateInterval($sessionDuration));
 
-            return $sessionRecord->dateVerified > $minimalSessionDate->format(DateTime::MYSQL_DATETIME);
+            return $sessionRecord->dateVerified > $minimalSessionDate;
         }
 
         return false;
@@ -93,7 +93,7 @@ class Verify extends Component
     public function disableUser(User $user)
     {
         // Update the user record
-        $totp = TOTP::create();
+        $totp = new TOTP();
         $userRecord = $this->getUserRecord($user);
         // Remove verified state
         $userRecord->dateVerified = null;
@@ -134,9 +134,8 @@ class Verify extends Component
     private function getTotp(User $user) {
         if (!isset($this->totp)) {
             $userRecord = $this->getUserRecord($user);
-            $this->totp = TOTP::create($userRecord->secret);
-            $this->totp->setLabel($user->email);
-            $this->totp->setIssuer(Craft::$app->getConfig()->getGeneral()->$name);
+            $this->totp = new TOTP($user->email, $userRecord->secret);
+            $this->totp->setIssuer(Craft::$app->getConfig()->getGeneral()->get('name'));
         }
 
         return $this->totp;
@@ -154,11 +153,10 @@ class Verify extends Component
         ]);
 
         if (!isset($userRecord)) {
-            $totp = TOTP::create();
+            $totp = new TOTP();
             $userRecord = new UserRecord();
             $userRecord->userId = $user->id;
             $userRecord->secret = $totp->getSecret();
-            $userRecord->dateVerified = new \DateTime();
             $userRecord->save();
         }
 
@@ -196,24 +194,32 @@ class Verify extends Component
      */
     private function getSessionId(User $user)
     {
-        $data = Craft::$app->user->getIdentityCookieValue();
+        $sessionRecord = SessionRecord::findOne([
+            'userId' => $user->id,
+            'uid' => $user->uid,
+        ]);
 
-        // Data 4 is the UserAgentString.
-        if ($data && $this->checkUserAgentString($data[4])) {
-            // Data 2 is the session UID.
-            $uid = $data[2];
-
-            $sessionRecord = SessionRecord::findOne([
-                'userId' => $user->id,
-                'uid' => $uid,
-            ]);
-
-            if (isset($sessionRecord)) {
-                return $sessionRecord->id;
-            }
+        if (isset($sessionRecord)) {
+            return $sessionRecord->id;
         }
 
         return null;
+    }
+
+    /**
+     * Get the session duration.
+     * @return string
+     */
+    private function getSessionDuration()
+    {
+        $data = craft()->userSession->getIdentityCookieValue();
+
+        // Data 4 is the UserAgentString, 3 is rememberMe.
+        if ($data && $this->checkUserAgentString($data[4]) && $data[3]) {
+            return Craft::$app->getConfig()->get('rememberedUserSessionDuration');
+        }
+
+        return Craft::$app->getConfig()->get('userSessionDuration');
     }
 
     /**
@@ -224,7 +230,7 @@ class Verify extends Component
      */
     private function checkUserAgentString($userAgent)
     {
-        if (Craft::$app->config->get('requireMatchingUserAgentForSession')) {
+        if (Craft::$app->getConfig()->get('requireMatchingUserAgentForSession')) {
             $currentUserAgent = Craft::$app->request->getUserAgent();
 
             return $userAgent === $currentUserAgent;
