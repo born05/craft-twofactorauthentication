@@ -12,7 +12,7 @@
             class="has-logo" style="background-image: url('{{ logo.url }}'); background-size: {{ logo.width }}px {{ logo.height }}px; padding-top: {{ padding }}px; margin-top: -{{ round((353+padding)/2) }}px"
         {%- endif %}>
 
-        {{ getCsrfInput() }}
+        {{ csrfInput() }}
 
         <h2>{{ 'Two-Factor Authentication'|t('app') }}</h2>
         <p>{{ "Enter the authentication code from your phone."|t('app') }}</p>
@@ -28,7 +28,7 @@
     </form>
 
     <script type="text/javascript">
-        {% if not craft.request.isMobileBrowser(true) %}
+        {% if not craft.app.request.isMobileBrowser(true) %}
             document.getElementById("authenticationCode").focus();
         {% endif %}
     </script>
