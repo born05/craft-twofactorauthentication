@@ -135,7 +135,7 @@ class Verify extends Component
         if (!isset($this->totp)) {
             $userRecord = $this->getUserRecord($user);
             $this->totp = new TOTP($user->email, $userRecord->secret);
-            $this->totp->setIssuer(Craft::$app->getConfig()->getGeneral()->get('name'));
+            $this->totp->setIssuer(Craft::$app->getConfig()->getGeneral()->get('siteName'));
         }
 
         return $this->totp;
