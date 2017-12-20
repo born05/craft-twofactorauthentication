@@ -24,7 +24,7 @@
         <h2>{{ 'Disable two-factor authentication'|t('app') }}</h2>
         <p>{{ 'To disable two-factor authentication, click the button below.'|t('app') }}</p>
 
-        <form id="turnoff-form" action="{{ actionUrl('two-factor-authentication/settings/turnOff') }}" method="post" accept-charset="UTF-8">
+        <form id="turnoff-form" action="{{ actionUrl('two-factor-authentication/settings/turn-off') }}" method="post" accept-charset="UTF-8">
             {{ csrfInput() }}
 
             <input id="submit" class="btn submit icon insecure" type="submit" value="{{- "I don't want two-factor authentication"|t('app') -}}">
@@ -71,7 +71,7 @@
         <h2>{{ 'Step 3: Verify the code from your device'|t('app') }}</h2>
         <p>{{ 'Please enter the code from your device, do note it changes every few seconds.'|t('app') }}</p>
 
-        <form id="verify-form" action="{{ actionUrl('two-factor-authentication/settings/turnOn') }}" method="post" accept-charset="UTF-8">
+        <form id="verify-form" action="{{ actionUrl('two-factor-authentication/settings/turn-on') }}" method="post" accept-charset="UTF-8">
             {{ csrfInput() }}
 
             {{ forms.textField({ id: "authenticationCode", name: "code", placeholder: "Authentication Code"|t('app') }) }}

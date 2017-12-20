@@ -2,9 +2,11 @@
 namespace born05\twofactorauthentication\services;
 
 use Craft;
+use DateTime;
 use OTPHP\TOTP;
 use yii\base\Component;
 use craft\elements\User;
+use craft\helpers\Db;
 use born05\twofactorauthentication\records\User as UserRecord;
 use born05\twofactorauthentication\records\Session as SessionRecord;
 use born05\twofactorauthentication\models\AuthenticationCode as AuthenticationCodeModel;
@@ -64,19 +66,22 @@ class Verify extends Component
 
         if ($authenticationCodeModel->validate()) {
             // Magic checking of the authentication code.
+            $totp = $this->getTotp($user);
             $isValid = $this->getTotp($user)->verify($authenticationCodeModel->authenticationCode);
+
             if (!$isValid) {
                 return false;
             }
 
+            $now = new DateTime();
             $userRecord = $this->getUserRecord($user);
             if ($userRecord->dateVerified === null) {
-                $userRecord->dateVerified = DateTimeHelper::currentTimeForDb();
+                $userRecord->dateVerified = Db::prepareValueForDb($now);
                 $userRecord->update();
             }
 
             $twoFactorSessionRecord = $this->getTwoFactorSessionRecord($user);
-            $twoFactorSessionRecord->dateVerified = DateTimeHelper::currentTimeForDb();
+            $twoFactorSessionRecord->dateVerified = Db::prepareValueForDb($now);
             $twoFactorSessionRecord->update();
 
             return true;
@@ -93,7 +98,7 @@ class Verify extends Component
     public function disableUser(User $user)
     {
         // Update the user record
-        $totp = new TOTP();
+        $totp = new TOTP($user->email);
         $userRecord = $this->getUserRecord($user);
         // Remove verified state
         $userRecord->dateVerified = null;
@@ -153,7 +158,7 @@ class Verify extends Component
         ]);
 
         if (!isset($userRecord)) {
-            $totp = new TOTP();
+            $totp = new TOTP($user->email);
             $userRecord = new UserRecord();
             $userRecord->userId = $user->id;
             $userRecord->secret = $totp->getSecret();
@@ -194,14 +199,15 @@ class Verify extends Component
      */
     private function getSessionId(User $user)
     {
-        $sessionRecord = SessionRecord::findOne([
-            'userId' => $user->id,
-            'uid' => $user->uid,
-        ]);
-
-        if (isset($sessionRecord)) {
-            return $sessionRecord->id;
-        }
+        // TODO retrieve the session id.
+        // $sessionRecord = SessionRecord::findOne([
+        //     'userId' => $user->id,
+        //     'uid' => $user->uid,
+        // ]);
+        // 
+        // if (isset($sessionRecord)) {
+        //     return $sessionRecord->id;
+        // }
 
         return null;
     }

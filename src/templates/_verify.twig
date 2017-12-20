@@ -6,7 +6,7 @@
 
 {% block body %}
     {%- set hasLogo = (CraftEdition >= CraftClient and craft.rebrand.isLogoUploaded ? true : false) -%}
-    <form id="verify-form" class="verify-form-centered centeralign" action="{{ actionUrl('two-factor-authentication/verify/loginProcess') }}" method="post" accept-charset="UTF-8" {% if hasLogo -%}
+    <form id="verify-form" class="verify-form-centered centeralign" action="{{ actionUrl('two-factor-authentication/verify/login-process') }}" method="post" accept-charset="UTF-8" {% if hasLogo -%}
             {%- set logo = craft.rebrand.logo -%}
             {%- set padding = logo.height + 30 -%}
             class="has-logo" style="background-image: url('{{ logo.url }}'); background-size: {{ logo.width }}px {{ logo.height }}px; padding-top: {{ padding }}px; margin-top: -{{ round((353+padding)/2) }}px"

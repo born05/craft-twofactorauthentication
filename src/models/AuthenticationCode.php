@@ -7,6 +7,11 @@ use craft\base\Model;
 class AuthenticationCode extends Model
 {
     /**
+     * @var string|null Athentication code
+     */
+    public $authenticationCode;
+
+    /**
      * Validates the authentication code.
      *
      * @param null $attributes
@@ -28,10 +33,11 @@ class AuthenticationCode extends Model
     /**
      * @return array
      */
-    protected function defineAttributes()
+    public function rules()
     {
-        return array(
-            'authenticationCode' => array(AttributeType::String, 'maxLength' => 100, 'required' => true),
-        );
+        return [
+            [['authenticationCode'], 'required'],
+            [['authenticationCode'], 'string', 'max' => 100],
+        ];
     }
 }

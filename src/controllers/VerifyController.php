@@ -4,6 +4,7 @@ namespace born05\twofactorauthentication\controllers;
 
 use Craft;
 use craft\web\Controller;
+use craft\elements\User;
 use craft\helpers\UrlHelper;
 use born05\twofactorauthentication\Plugin as TwoFactorAuth;
 use born05\twofactorauthentication\web\assets\verify\VerifyAsset;
@@ -25,31 +26,31 @@ class VerifyController extends Controller
     public function actionLoginProcess()
     {
         $this->requirePostRequest();
-        $request = Craft::$app->getRequest();
+        $requestService = Craft::$app->getRequest();
 
-        $authenticationCode = $request->getPost('authenticationCode');
+        $authenticationCode = $requestService->getBodyParam('authenticationCode');
 
         // Get the current user
         $currentUser = Craft::$app->getUser()->getIdentity();
 
         if (TwoFactorAuth::$plugin->verify->verify($currentUser, $authenticationCode)) {
-            $this->_handleSuccessfulLogin(true);
+            return $this->_handleSuccessfulLogin(true);
         } else {
-            $errorCode = UserIdentity::ERROR_UNKNOWN_IDENTITY;
+            $errorCode = User::AUTH_INVALID_CREDENTIALS;
             $errorMessage = Craft::t('two-factor-authentication', 'Authentication code is invalid.');
 
-            if ($request->getAcceptsJson()) {
-                return $this->asJson(array(
+            if ($requestService->getAcceptsJson()) {
+                return $this->asJson([
                     'errorCode' => $errorCode,
                     'error' => $errorMessage
-                ));
+                ]);
             } else {
-                Craft::$app->user->setError($errorMessage);
+                Craft::$app->getUser()->setError($errorMessage);
 
-                Craft::$app->urlManager->setRouteVariables(array(
+                Craft::$app->urlManager->setRouteVariables([
                     'errorCode' => $errorCode,
                     'errorMessage' => $errorMessage,
-                ));
+                ]);
             }
         }
     }
@@ -67,17 +68,17 @@ class VerifyController extends Controller
     private function _handleSuccessfulLogin($setNotice)
     {
         // Get the current user
-        $currentUser = Craft::$app->getUser()->getIdentity();
-        $request = Craft::$app->getRequest();
-
-        // Were they trying to access a URL beforehand?
-        $returnUrl = Craft::$app->user->getReturnUrl(null, true);
+        $userService = Craft::$app->getUser();
+        $requestService = Craft::$app->getRequest();
+        $currentUser = $userService->getIdentity();
+        $returnUrl = $userService->getReturnUrl();
 
         // MODIFIED FROM COPY
-        if ($returnUrl === null || $returnUrl == $request->getPath() || TwoFactorAuth::$plugin->response->isTwoFactorAuthenticationUrl($returnUrl)) {
+        // Prevent looping back to the verify controller.
+        if ($returnUrl === null || $returnUrl == $requestService->getPath() || TwoFactorAuth::$plugin->response->isTwoFactorAuthenticationUrl($returnUrl)) {
             // If this is a CP request and they can access the control panel, send them wherever
             // postCpLoginRedirect tells us
-            if ($request->isCpRequest() && $currentUser->can('accessCp')) {
+            if ($requestService->isCpRequest() && $currentUser->can('accessCp')) {
                 $postCpLoginRedirect = Craft::$app->getConfig()->get('postCpLoginRedirect');
                 $returnUrl = UrlHelper::cpUrl($postCpLoginRedirect);
             } else {
@@ -88,17 +89,17 @@ class VerifyController extends Controller
         }
 
         // If this was an Ajax request, just return success:true
-        if ($request->getAcceptsJson()) {
-            $this->asJson(array(
+        if ($requestService->getAcceptsJson()) {
+            return $this->asJson([
                 'success' => true,
                 'returnUrl' => $returnUrl
-            ));
+            ]);
         } else {
             if ($setNotice) {
-                Craft::$app->user->setNotice(Craft::t('two-factor-authentication', 'Logged in.'));
+                $userService->setNotice(Craft::t('two-factor-authentication', 'Logged in.'));
             }
 
-            $this->redirectToPostedUrl($currentUser, $returnUrl);
+            return $this->redirectToPostedUrl($currentUser, $returnUrl);
         }
     }
 }

@@ -24,7 +24,7 @@ This means the user is already logged in. When the user tries to visit an other 
 ## Requirements
 
 - `userSessionDuration` not set to null (there is not really a point of using this plugin otherwise)
-- Craft 3.0.0-RC2
+- Craft 3.0.0-RC3
 - PHP 7.x at least
 
 ## Resetting a user's 2FA
