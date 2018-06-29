@@ -10,7 +10,7 @@ class TwoFactorAuthenticationPlugin extends BasePlugin
 
     public function getVersion()
     {
-        return '1.1.0';
+        return '1.2.0';
     }
 
     public function getSchemaVersion()
@@ -35,12 +35,12 @@ class TwoFactorAuthenticationPlugin extends BasePlugin
 
     public function getDocumentationUrl()
     {
-        return $this->getPluginUrl() . '/blob/master/README.md';
+        return $this->getPluginUrl() . '/blob/craft-2/README.md';
     }
 
     public function getReleaseFeedUrl()
     {
-        return 'https://raw.githubusercontent.com/born05/craft-twofactorauthentication/master/releases.json';
+        return 'https://raw.githubusercontent.com/born05/craft-twofactorauthentication/craft-2/releases.json';
     }
 
     public function hasCpSection()

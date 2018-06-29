@@ -2,7 +2,7 @@
     "name": "born05/craft-twofactorauthentication",
     "description": "Craft 2 plugin for two-factor or two-step login using Time Based OTP.",
     "type": "craft-plugin",
-    "license": "https://github.com/born05/craft-twofactorauthentication/blob/master/LICENSE",
+    "license": "https://github.com/born05/craft-twofactorauthentication/blob/craft-2/LICENSE",
     "homepage": "https://github.com/born05/craft-twofactorauthentication",
     "authors": [
         {

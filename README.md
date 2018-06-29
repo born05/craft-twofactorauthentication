@@ -1,4 +1,4 @@
-![Two-Factor Authentication](https://raw.githubusercontent.com/born05/craft-twofactorauthentication/master/plugin-icon.png)
+![Two-Factor Authentication](https://raw.githubusercontent.com/born05/craft-twofactorauthentication/craft-2/plugin-icon.png)
 
 # Two-Factor Authentication
 
@@ -13,13 +13,13 @@ When enabled, the user is redirected to the 2-factor verification page after log
 This means the user is already logged in. When the user tries to visit an other Control Panel page than the public ones before verification, the logout is triggered. This blocks the user from visiting the CP unverified.
 
 #### Setting screen when turning 2FA on
-![Setting screen when turning 2FA on](https://raw.githubusercontent.com/born05/craft-twofactorauthentication/master/settings-turn-on.png)
+![Setting screen when turning 2FA on](https://raw.githubusercontent.com/born05/craft-twofactorauthentication/craft-2/settings-turn-on.png)
 
 #### Setting screen when turning 2FA off
-![Setting screen when turning 2FA off](https://raw.githubusercontent.com/born05/craft-twofactorauthentication/master/settings-turn-off.png)
+![Setting screen when turning 2FA off](https://raw.githubusercontent.com/born05/craft-twofactorauthentication/craft-2/settings-turn-off.png)
 
 #### Login verification screen
-![Login verification screen](https://raw.githubusercontent.com/born05/craft-twofactorauthentication/master/login-verification.png)
+![Login verification screen](https://raw.githubusercontent.com/born05/craft-twofactorauthentication/craft-2/login-verification.png)
 
 ## Requirements
 
@@ -33,6 +33,6 @@ Simply remove the user's `TwoFactorAuthentication_UserRecord`. This disables 2FA
 
 ## License
 
-Copyright © 2017 [Born05](https://www.born05.com/)
+Copyright © 2018 [Born05](https://www.born05.com/)
 
-See [license](https://github.com/born05/craft-twofactorauthentication/blob/master/LICENSE)
+See [license](https://github.com/born05/craft-twofactorauthentication/blob/craft-2/LICENSE)
