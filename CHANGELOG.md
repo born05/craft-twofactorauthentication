@@ -1,7 +1,7 @@
 Changelog
 ==================
 
-## 2.0.0-beta-1 - 2018-06-29
+## 2.0.0-beta.1 - 2018-06-29
 
 ### Improved
 - Fixed user overview with 2FA column enabled.
