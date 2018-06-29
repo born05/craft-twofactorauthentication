@@ -1,6 +1,11 @@
 Changelog
 ==================
 
+## 2.0.0-beta-1 - 2018-06-29
+
+### Improved
+- Fixed user overview with 2FA column enabled.
+
 ## 2.0.0-beta - 2018-06-29
 
 - Beta release of the Craft 3 plugin.

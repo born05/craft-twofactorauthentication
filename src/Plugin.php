@@ -127,7 +127,8 @@ class Plugin extends CraftPlugin
          * Returns the content for the additional attributes field
          */
         Event::on(User::class, Element::EVENT_SET_TABLE_ATTRIBUTE_HTML, function(SetElementTableAttributeHtmlEvent $event) {
-            if ($event->attribute == 'hasTwoFactorAuthentication' && Craft::$app->user->getUser()->admin) {
+            $currentUser = Craft::$app->getUser()->getIdentity();
+            if ($event->attribute == 'hasTwoFactorAuthentication' && $currentUser->admin) {
                 /** @var UserModel $user */
                 $user = $event->sender;
 
