@@ -56,7 +56,7 @@ class VerifyController extends Controller
     }
 
     /**
-     * COPIED from https://github.com/pixelandtonic/Craft-Release/blob/master/app/controllers/UsersController.php
+     * COPIED from \craft\controllers\UsersController::_handleSuccessfulLogin
      *
      * Redirects the user after a successful login attempt, or if they visited the Login page while they were already
      * logged in.
@@ -67,24 +67,27 @@ class VerifyController extends Controller
      */
     private function _handleSuccessfulLogin($setNotice)
     {
-        // Get the current user
+        // Get the return URL
         $userService = Craft::$app->getUser();
         $requestService = Craft::$app->getRequest();
         $currentUser = $userService->getIdentity();
         $returnUrl = $userService->getReturnUrl();
 
+        // Clear it out
+        $userService->removeReturnUrl();
+
         // MODIFIED FROM COPY
         // Prevent looping back to the verify controller.
-        if ($returnUrl === null || $returnUrl == $requestService->getPath() || TwoFactorAuth::$plugin->response->isTwoFactorAuthenticationUrl($returnUrl)) {
-            // If this is a CP request and they can access the control panel, send them wherever
-            // postCpLoginRedirect tells us
-            if ($requestService->isCpRequest() && $currentUser->can('accessCp')) {
-                $postCpLoginRedirect = Craft::$app->getConfig()->get('postCpLoginRedirect');
-                $returnUrl = UrlHelper::cpUrl($postCpLoginRedirect);
+        if (
+            $returnUrl === null ||
+            $returnUrl === $requestService->getPathInfo() ||
+            TwoFactorAuth::$plugin->response->isTwoFactorAuthenticationUrl($returnUrl)
+        ) {
+            // Is this a CP request and can they access the CP?
+            if (Craft::$app->getRequest()->getIsCpRequest() && $this->checkPermission('accessCp')) {
+                $returnUrl = UrlHelper::cpUrl(Craft::$app->getConfig()->getGeneral()->getPostCpLoginRedirect());
             } else {
-                // Otherwise send them wherever postLoginRedirect tells us
-                $postLoginRedirect = Craft::$app->getConfig()->get('postLoginRedirect');
-                $returnUrl = UrlHelper::siteUrl($postLoginRedirect);
+                $returnUrl = UrlHelper::siteUrl(Craft::$app->getConfig()->getGeneral()->getPostLoginRedirect());
             }
         }
 
@@ -94,12 +97,12 @@ class VerifyController extends Controller
                 'success' => true,
                 'returnUrl' => $returnUrl
             ]);
-        } else {
-            if ($setNotice) {
-                $userService->setNotice(Craft::t('two-factor-authentication', 'Logged in.'));
-            }
-
-            return $this->redirectToPostedUrl($currentUser, $returnUrl);
         }
+        
+        if ($setNotice) {
+            Craft::$app->getSession()->setNotice(Craft::t('two-factor-authentication', 'Logged in.'));
+        }
+
+        return $this->redirectToPostedUrl($currentUser, $returnUrl);
     }
 }

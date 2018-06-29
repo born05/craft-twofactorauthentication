@@ -2,11 +2,12 @@
 namespace born05\twofactorauthentication\services;
 
 use Craft;
-use DateTime;
+use DateInterval;
 use OTPHP\TOTP;
 use yii\base\Component;
 use craft\elements\User;
 use craft\helpers\Db;
+use craft\helpers\DateTimeHelper;
 use born05\twofactorauthentication\records\User as UserRecord;
 use born05\twofactorauthentication\records\Session as SessionRecord;
 use born05\twofactorauthentication\models\AuthenticationCode as AuthenticationCodeModel;
@@ -37,17 +38,22 @@ class Verify extends Component
      */
     public function isVerified(User $user)
     {
-        $sessionRecord = SessionRecord::findOne([
-            'userId' => $user->id,
-            'sessionId' => $this->getSessionId($user),
-        ]);
+        $sessionId = $this->getSessionId($user);
 
-        if (isset($sessionRecord)) {
-            $sessionDuration = $this->getSessionDuration();
-            $minimalSessionDate = DateTimeHelper::currentUTCDateTime();
-            $minimalSessionDate->sub(new DateInterval($sessionDuration));
+        if (isset($sessionId)) {
+            $sessionRecord = SessionRecord::findOne([
+                'userId' => $user->id,
+                'sessionId' => $sessionId,
+            ]);
 
-            return $sessionRecord->dateVerified > $minimalSessionDate;
+            if (isset($sessionRecord)) {
+                $sessionDuration = Craft::$app->getUser()->getRemainingSessionTime();
+                $minimalSessionDate = DateTimeHelper::currentUTCDateTime();
+                $minimalSessionDate->sub(new DateInterval('PT' . $sessionDuration . 'S'));
+                $dateVerified = DateTimeHelper::toDateTime($sessionRecord->dateVerified);
+
+                return $dateVerified > $minimalSessionDate;
+            }
         }
 
         return false;
@@ -73,7 +79,7 @@ class Verify extends Component
                 return false;
             }
 
-            $now = new DateTime();
+            $now = DateTimeHelper::currentUTCDateTime();
             $userRecord = $this->getUserRecord($user);
             if ($userRecord->dateVerified === null) {
                 $userRecord->dateVerified = Db::prepareValueForDb($now);
@@ -176,6 +182,7 @@ class Verify extends Component
     private function getTwoFactorSessionRecord(User $user)
     {
         $sessionId = $this->getSessionId($user);
+
         $twoFactorSessionRecord = SessionRecord::findOne([
             'userId' => $user->id,
             'sessionId' => $sessionId,
@@ -185,7 +192,7 @@ class Verify extends Component
             $twoFactorSessionRecord = new SessionRecord();
             $twoFactorSessionRecord->userId = $user->id;
             $twoFactorSessionRecord->sessionId = $sessionId;
-            $twoFactorSessionRecord->dateVerified = new \DateTime();
+            $twoFactorSessionRecord->dateVerified = DateTimeHelper::currentUTCDateTime();
             $twoFactorSessionRecord->save();
         }
 
@@ -199,33 +206,33 @@ class Verify extends Component
      */
     private function getSessionId(User $user)
     {
-        // TODO retrieve the session id.
-        // $sessionRecord = SessionRecord::findOne([
-        //     'userId' => $user->id,
-        //     'uid' => $user->uid,
-        // ]);
-        // 
-        // if (isset($sessionRecord)) {
-        //     return $sessionRecord->id;
-        // }
+        // Extract the current session token's UID from the identity cookie
+        $cookieValue = Craft::$app->getRequest()->getCookies()->getValue(Craft::$app->getUser()->identityCookie['name']);
+        if ($cookieValue !== null) {
+            $data = json_decode($cookieValue, true);
 
-        return null;
-    }
+            if (is_array($data) && isset($data[2])) {
+                $authData = User::authData($data[1]);
 
-    /**
-     * Get the session duration.
-     * @return string
-     */
-    private function getSessionDuration()
-    {
-        $data = craft()->userSession->getIdentityCookieValue();
-
-        // Data 4 is the UserAgentString, 3 is rememberMe.
-        if ($data && $this->checkUserAgentString($data[4]) && $data[3]) {
-            return Craft::$app->getConfig()->get('rememberedUserSessionDuration');
+                if ($authData) {
+                    $tokenUid = $authData[1];
+                }
+            }
         }
 
-        return Craft::$app->getConfig()->get('userSessionDuration');
+        if (isset($tokenUid)) {
+            // retrieve the session id.
+            $sessionRecord = \craft\records\Session::findOne([
+                'userId' => $user->id,
+                'uid' => $tokenUid,
+            ]);
+
+            if (isset($sessionRecord)) {
+                return $sessionRecord->id;
+            }
+        }
+
+        return null;
     }
 
     /**

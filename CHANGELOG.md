@@ -1,6 +1,10 @@
 Changelog
 ==================
 
+## 2.0.0-beta - 2018-06-29
+
+- Beta release of the Craft 3 plugin.
+
 ## 1.0.0 - 2017-10-16
 
 ### Improved

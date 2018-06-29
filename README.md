@@ -2,7 +2,7 @@
 
 # Two-Factor Authentication
 
-Craft 2 plugin for two-factor or two-step login using Time Based OTP (TOTP, like Google Authenticator).
+Craft 3 plugin for two-factor or two-step login using Time Based OTP (TOTP, like Google Authenticator).
 Every user can setup TOTP themselves, the plugin does not force users. Admins can list usage in user tables.
 
 ## Inner working
@@ -23,16 +23,15 @@ This means the user is already logged in. When the user tries to visit an other 
 
 ## Requirements
 
-- `userSessionDuration` not set to null (there is not really a point of using this plugin otherwise)
-- Craft 3.0.0-RC3
+- Craft 3.0.0
 - PHP 7.x at least
 
 ## Resetting a user's 2FA
 
-Simply remove the user's `TwoFactorAuthentication_UserRecord`. This disables 2FA for that user.
+Simply remove the user's `twofactorauthentication_user` record. This disables 2FA for that user.
 
 ## License
 
-Copyright © 2017 [Born05](https://www.born05.com/)
+Copyright © 2018 [Born05](https://www.born05.com/)
 
-See [license](https://github.com/born05/craft-twofactorauthentication/blob/master/LICENSE)
+See [license](https://github.com/born05/craft-twofactorauthentication/blob/master/LICENSE.md)
