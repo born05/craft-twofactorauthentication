@@ -5,6 +5,18 @@ Changelog
 
 - Beta release of the Craft 3 plugin.
 
+## 1.1.0 - 2017-12-07
+
+### Improved
+- Fixed console support.
+- Downgraded otphp to 8.3.2 for better PHP support.
+
+## 1.0.1 - 2017-11-06
+
+### Improved
+- rememberedUserSessionDuration is now optional.
+- Fixed a DateTime checking issue causing unpredictable behavior.
+
 ## 1.0.0 - 2017-10-16
 
 ### Improved
