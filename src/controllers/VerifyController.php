@@ -56,6 +56,19 @@ class VerifyController extends Controller
     }
 
     /**
+     * Redirects the user to the login template if they're not logged in.
+     */
+    public function requireLogin()
+    {
+        $user = Craft::$app->getUser();
+
+        if ($user->getIsGuestWithoutVerification()) {
+            $user->loginRequired();
+            Craft::$app->end();
+        }
+    }
+
+    /**
      * COPIED from \craft\controllers\UsersController::_handleSuccessfulLogin
      *
      * Redirects the user after a successful login attempt, or if they visited the Login page while they were already

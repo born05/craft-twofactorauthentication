@@ -6,7 +6,7 @@ use born05\twofactorauthentication\widgets\Notify as NotifyWidget;
 use Craft;
 use craft\base\Plugin as CraftPlugin;
 use craft\base\Element;
-use craft\elements\User;
+// use craft\elements\User;
 use craft\services\Dashboard;
 use craft\events\RegisterUrlRulesEvent;
 use craft\events\RegisterComponentTypesEvent;
@@ -16,6 +16,7 @@ use craft\helpers\UrlHelper;
 use craft\web\UrlManager;
 use yii\base\Event;
 use yii\web\UserEvent;
+use born05\twofactorauthentication\web\User;
 
 class Plugin extends CraftPlugin
 {
@@ -43,45 +44,6 @@ class Plugin extends CraftPlugin
         self::$plugin = $this;
 
         if (!$this->isInstalled) return;
-
-        // Only allow users in the CP who are verified or don't use two-factor.
-        $request = Craft::$app->getRequest();
-        $response = Craft::$app->getResponse();
-        $actionSegs = $request->getActionSegments();
-
-        if (
-            $request->getIsCpRequest() &&
-            (
-                // COPIED from craft\web\Application::_isSpecialCaseActionRequest
-                $request->getPathInfo() !== '' &&
-                $actionSegs !== ['app', 'migrate'] &&
-                $actionSegs !== ['users', 'login'] &&
-                $actionSegs !== ['users', 'logout'] &&
-                $actionSegs !== ['users', 'set-password'] &&
-                $actionSegs !== ['users', 'verify-email'] &&
-                $actionSegs !== ['users', 'forgot-password'] &&
-                $actionSegs !== ['users', 'send-password-reset-email'] &&
-                $actionSegs !== ['users', 'save-user'] &&
-                $actionSegs !== ['users', 'get-remaining-session-time'] &&
-                $actionSegs[0] !== 'updater'
-            ) &&
-            !(
-                $actionSegs[0] === 'two-factor-authentication' &&
-                $actionSegs[1] === 'verify'
-            )
-        ) {
-            // Get the current user
-            $user = Craft::$app->getUser()->getIdentity();
-
-            // Only redirect two-factor enabled users who aren't verified yet.
-            if (isset($user) &&
-                Plugin::$plugin->verify->isEnabled($user) &&
-                !Plugin::$plugin->verify->isVerified($user)
-            ) {
-                Craft::$app->getUser()->logout(false);
-                $response->redirect(UrlHelper::cpUrl());
-            }
-        }
 
         // Verify after login.
         Event::on(\craft\web\User::class, \craft\web\User::EVENT_AFTER_LOGIN, function(UserEvent $event) {
@@ -119,14 +81,14 @@ class Plugin extends CraftPlugin
          * Adds the following attributes to the User table in the CMS
          * NOTE: You still need to select them with the 'gear'
          */
-        Event::on(User::class, Element::EVENT_REGISTER_TABLE_ATTRIBUTES, function(RegisterElementTableAttributesEvent $event) {
+        Event::on(\craft\elements\User::class, Element::EVENT_REGISTER_TABLE_ATTRIBUTES, function(RegisterElementTableAttributesEvent $event) {
             $event->tableAttributes['hasTwoFactorAuthentication'] = ['label' => Craft::t('two-factor-authentication', '2-Factor Auth')];
         });
 
         /**
          * Returns the content for the additional attributes field
          */
-        Event::on(User::class, Element::EVENT_SET_TABLE_ATTRIBUTE_HTML, function(SetElementTableAttributeHtmlEvent $event) {
+        Event::on(\craft\elements\User::class, Element::EVENT_SET_TABLE_ATTRIBUTE_HTML, function(SetElementTableAttributeHtmlEvent $event) {
             $currentUser = Craft::$app->getUser()->getIdentity();
             if ($event->attribute == 'hasTwoFactorAuthentication' && $currentUser->admin) {
                 /** @var UserModel $user */
@@ -142,5 +104,39 @@ class Plugin extends CraftPlugin
                 $event->handled = true;
             }
         });
+    }
+    
+    /**
+     * Replacement for the default app.web.php user.
+     * COPIED from vendor/craftcms/cms/src/config/app.web.php 'user'
+     */
+    public static function userConfig()
+    {
+        $configService = Craft::$app->getConfig();
+        $generalConfig = $configService->getGeneral();
+        $request = Craft::$app->getRequest();
+
+        if ($request->getIsConsoleRequest() || $request->getIsSiteRequest()) {
+            $loginUrl = \craft\helpers\UrlHelper::siteUrl($generalConfig->getLoginPath());
+        } else {
+            $loginUrl = \craft\helpers\UrlHelper::cpUrl('login');
+        }
+
+        $stateKeyPrefix = md5('Craft.' . \craft\web\User::class . '.' . Craft::$app->id);
+
+        return Craft::createObject([
+            'class' => User::class,
+            'identityClass' => \craft\elements\User::class,
+            'enableAutoLogin' => true,
+            'autoRenewCookie' => true,
+            'loginUrl' => $loginUrl,
+            'authTimeout' => $generalConfig->userSessionDuration ?: null,
+            'identityCookie' => Craft::cookieConfig(['name' => $stateKeyPrefix . '_identity']),
+            'usernameCookie' => Craft::cookieConfig(['name' => $stateKeyPrefix . '_username']),
+            'idParam' => $stateKeyPrefix . '__id',
+            'authTimeoutParam' => $stateKeyPrefix . '__expire',
+            'absoluteAuthTimeoutParam' => $stateKeyPrefix . '__absoluteExpire',
+            'returnUrlParam' => $stateKeyPrefix . '__returnUrl',
+        ]);
     }
 }

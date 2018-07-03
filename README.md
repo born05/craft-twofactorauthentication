@@ -25,6 +25,19 @@ This means the user is already logged in. When the user tries to visit an other 
 
 - Craft 3.0.0
 - PHP 7.x at least
+- app.web.php with the following values
+```
+<?php
+
+return [
+    'class' => \born05\twofactorauthentication\web\Application::class,
+    'components' => [
+        'user' => function() {
+            return \born05\twofactorauthentication\Plugin::userConfig();
+        },
+    ],
+];
+```
 
 ## Resetting a user's 2FA
 
