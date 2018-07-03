@@ -4,6 +4,8 @@ namespace born05\twofactorauthentication;
 use born05\twofactorauthentication\widgets\Notify as NotifyWidget;
 
 use Craft;
+use born05\twofactorauthentication\services\Response as ResponseService;
+use born05\twofactorauthentication\services\Verify as VerifyService;
 use craft\base\Plugin as CraftPlugin;
 use craft\base\Element;
 use craft\elements\User;
@@ -44,6 +46,12 @@ class Plugin extends CraftPlugin
 
         if (!$this->isInstalled) return;
 
+        // Register Components (Services)
+        $this->setComponents([
+            'response' => ResponseService::class,
+            'verify' => VerifyService::class,
+        ]);
+
         // Only allow users in the CP who are verified or don't use two-factor.
         $request = Craft::$app->getRequest();
         $response = Craft::$app->getResponse();
@@ -75,8 +83,8 @@ class Plugin extends CraftPlugin
 
             // Only redirect two-factor enabled users who aren't verified yet.
             if (isset($user) &&
-                Plugin::$plugin->verify->isEnabled($user) &&
-                !Plugin::$plugin->verify->isVerified($user)
+                $this->verify->isEnabled($user) &&
+                !$this->verify->isVerified($user)
             ) {
                 Craft::$app->getUser()->logout(false);
                 $response->redirect(UrlHelper::cpUrl());
@@ -90,13 +98,13 @@ class Plugin extends CraftPlugin
             $response = Craft::$app->getResponse();
 
             if (isset($user) &&
-                Plugin::$plugin->verify->isEnabled($user) &&
-                !Plugin::$plugin->verify->isVerified($user)
+                $this->verify->isEnabled($user) &&
+                !$this->verify->isVerified($user)
             ) {
                 $url = UrlHelper::actionUrl('two-factor-authentication/verify/login');
 
                 if ($request->getAcceptsJson()) {
-                    return Plugin::$plugin->response->asJson(array(
+                    return $this->response->asJson(array(
                         'success' => true,
                         'returnUrl' => $url
                     ));
