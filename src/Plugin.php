@@ -93,6 +93,11 @@ class Plugin extends CraftPlugin
 
         // Verify after login.
         Event::on(\craft\web\User::class, \craft\web\User::EVENT_AFTER_LOGIN, function(UserEvent $event) {
+            // Don't redirect cookieBased events.
+            if ($event->cookieBased) {
+                return;
+            }
+
             $user = Craft::$app->getUser()->getIdentity();
             $request = Craft::$app->getRequest();
             $response = Craft::$app->getResponse();

@@ -1,6 +1,11 @@
 Changelog
 ==================
 
+## 2.0.0-beta.2 - 2018-07-04
+
+### Improved
+- Prevent redirect loop for cookieBased login.
+
 ## 2.0.0-beta.1 - 2018-06-29
 
 ### Improved
