@@ -71,7 +71,8 @@ class Plugin extends CraftPlugin
                 $actionSegs !== ['users', 'send-password-reset-email'] &&
                 $actionSegs !== ['users', 'save-user'] &&
                 $actionSegs !== ['users', 'get-remaining-session-time'] &&
-                $actionSegs[0] !== 'updater'
+                $actionSegs[0] !== 'updater' &&
+                $actionSegs[0] !== 'debug'
             ) &&
             !(
                 $actionSegs[0] === 'two-factor-authentication' &&
