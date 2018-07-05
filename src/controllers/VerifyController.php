@@ -16,6 +16,7 @@ class VerifyController extends Controller
      */
     public function actionLogin()
     {
+        $this->requireLogin();
         Craft::$app->view->registerAssetBundle(VerifyAsset::class);
         return $this->renderTemplate('two-factor-authentication/_verify');
     }
@@ -25,6 +26,7 @@ class VerifyController extends Controller
      */
     public function actionLoginProcess()
     {
+        $this->requireLogin();
         $this->requirePostRequest();
         $requestService = Craft::$app->getRequest();
 
@@ -70,7 +72,6 @@ class VerifyController extends Controller
         // Get the return URL
         $userService = Craft::$app->getUser();
         $requestService = Craft::$app->getRequest();
-        $currentUser = $userService->getIdentity();
         $returnUrl = $userService->getReturnUrl();
 
         // Clear it out
@@ -91,6 +92,9 @@ class VerifyController extends Controller
             }
         }
 
+        // Clear it out
+        $userService->removeReturnUrl();
+
         // If this was an Ajax request, just return success:true
         if ($requestService->getAcceptsJson()) {
             return $this->asJson([
@@ -103,6 +107,6 @@ class VerifyController extends Controller
             Craft::$app->getSession()->setNotice(Craft::t('two-factor-authentication', 'Logged in.'));
         }
 
-        return $this->redirectToPostedUrl($currentUser, $returnUrl);
+        return $this->redirectToPostedUrl($userService->getIdentity(), $returnUrl);
     }
 }
