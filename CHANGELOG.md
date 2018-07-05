@@ -1,6 +1,11 @@
 Changelog
 ==================
 
+## 2.0.0-beta.3 - 2018-07-05
+
+### Changed
+- Fixed debug bar support. Debug should be allowed, not trigger logout.
+
 ## 2.0.0-beta.2 - 2018-07-04
 
 ### Improved
