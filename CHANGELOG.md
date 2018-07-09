@@ -1,6 +1,11 @@
 Changelog
 ==================
 
+## 2.0.0-beta.4 - 2018-07-09
+
+### Changed
+- Changed the translation scope to app.
+
 ## 2.0.0-beta.3 - 2018-07-05
 
 ### Changed

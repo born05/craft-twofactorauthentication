@@ -9,7 +9,7 @@ class Notify extends Widget
 {
     public static function displayName(): string
     {
-        return Craft::t('two-factor-authentication', 'Two-factor authentication status');
+        return Craft::t('app', 'Two-factor authentication status');
     }
     
     public static function iconPath()

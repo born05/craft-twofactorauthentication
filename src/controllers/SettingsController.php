@@ -51,7 +51,7 @@ class SettingsController extends Controller
             }
         } else {
             $errorCode = User::AUTH_INVALID_CREDENTIALS;
-            $errorMessage = Craft::t('two-factor-authentication', 'Authentication code is invalid.');
+            $errorMessage = Craft::t('app', 'Authentication code is invalid.');
 
             if ($requestService->getAcceptsJson()) {
                 return $this->asJson([
