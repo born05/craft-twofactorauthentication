@@ -134,7 +134,7 @@ class Plugin extends CraftPlugin
          * NOTE: You still need to select them with the 'gear'
          */
         Event::on(User::class, Element::EVENT_REGISTER_TABLE_ATTRIBUTES, function(RegisterElementTableAttributesEvent $event) {
-            $event->tableAttributes['hasTwoFactorAuthentication'] = ['label' => Craft::t('app', '2-Factor Auth')];
+            $event->tableAttributes['hasTwoFactorAuthentication'] = ['label' => Craft::t('two-factor-authentication', '2-Factor Auth')];
         });
 
         /**
@@ -147,9 +147,9 @@ class Plugin extends CraftPlugin
                 $user = $event->sender;
 
                 if (Plugin::$plugin->verify->isEnabled($user)) {
-                    $event->html = '<div class="status enabled" title="' . Craft::t('app', 'Enabled') . '"></div>';
+                    $event->html = '<div class="status enabled" title="' . Craft::t('two-factor-authentication', 'Enabled') . '"></div>';
                 } else {
-                    $event->html = '<div class="status" title="' . Craft::t('app', 'Not enabled') . '"></div>';
+                    $event->html = '<div class="status" title="' . Craft::t('two-factor-authentication', 'Not enabled') . '"></div>';
                 }
 
                 // Prevent other event listeners from getting invoked

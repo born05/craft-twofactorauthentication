@@ -1,6 +1,11 @@
 Changelog
 ==================
 
+## 2.0.0-beta.5 - 2018-07-11
+
+### Improved
+- Added Dutch (NL) translation file. Thanks to @RichardFrontwise
+
 ## 2.0.0-beta.4 - 2018-07-09
 
 ### Changed

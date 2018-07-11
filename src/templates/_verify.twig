@@ -1,7 +1,7 @@
 {% extends "_layouts/basecp" %}
 {% import "_includes/forms" as forms %}
 
-{% set title = "Two-Factor Authentication"|t('app') %}
+{% set title = "Two-Factor Authentication"|t('two-factor-authentication') %}
 {% set bodyClass = 'two-factor-authentication' %}
 
 {% block body %}
@@ -14,17 +14,17 @@
 
         {{ csrfInput() }}
 
-        <h2>{{ 'Two-Factor Authentication'|t('app') }}</h2>
-        <p>{{ "Enter the authentication code from your phone."|t('app') }}</p>
+        <h2>{{ 'Two-Factor Authentication'|t('two-factor-authentication') }}</h2>
+        <p>{{ "Enter the authentication code from your phone."|t('two-factor-authentication') }}</p>
 
-        {{ forms.textField({ id: "authenticationCode", name: "code", placeholder: "Authentication Code"|t('app') }) }}
+        {{ forms.textField({ id: "authenticationCode", name: "code", placeholder: "Authentication Code"|t('two-factor-authentication') }) }}
 
         <div class="buttons">
-            <input id="submit" class="btn submit disabled" type="submit" value="{{ "Verify"|t('app') }}">
+            <input id="submit" class="btn submit disabled" type="submit" value="{{ "Verify"|t('two-factor-authentication') }}">
             <div id="spinner" class="spinner hidden"></div>
         </div>
 
-        <small>{{ "Experiencing any issues? Contact your administrator for help."|t('app') }}</small>
+        <small>{{ "Experiencing any issues? Contact your administrator for help."|t('two-factor-authentication') }}</small>
     </form>
 
     <script type="text/javascript">

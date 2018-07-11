@@ -39,7 +39,7 @@ class VerifyController extends Controller
             return $this->_handleSuccessfulLogin(true);
         } else {
             $errorCode = User::AUTH_INVALID_CREDENTIALS;
-            $errorMessage = Craft::t('app', 'Authentication code is invalid.');
+            $errorMessage = Craft::t('two-factor-authentication', 'Authentication code is invalid.');
 
             if ($requestService->getAcceptsJson()) {
                 return $this->asJson([
@@ -104,7 +104,7 @@ class VerifyController extends Controller
         }
         
         if ($setNotice) {
-            Craft::$app->getSession()->setNotice(Craft::t('app', 'Logged in.'));
+            Craft::$app->getSession()->setNotice(Craft::t('two-factor-authentication', 'Logged in.'));
         }
 
         return $this->redirectToPostedUrl($userService->getIdentity(), $returnUrl);
