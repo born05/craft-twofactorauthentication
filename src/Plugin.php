@@ -25,7 +25,7 @@ class Plugin extends CraftPlugin
      * @var string
      */
     public $schemaVersion = '2.0.0';
-    
+
     /**
      * @var bool
      */
@@ -44,7 +44,9 @@ class Plugin extends CraftPlugin
         parent::init();
         self::$plugin = $this;
 
-        if (!$this->isInstalled) return;
+        $request = Craft::$app->getRequest();
+
+        if (!$this->isInstalled || $request->getIsConsoleRequest()) return;
 
         // Register Components (Services)
         $this->setComponents([
@@ -53,7 +55,6 @@ class Plugin extends CraftPlugin
         ]);
 
         // Only allow users in the CP who are verified or don't use two-factor.
-        $request = Craft::$app->getRequest();
         $response = Craft::$app->getResponse();
         $actionSegs = $request->getActionSegments();
 
@@ -119,16 +120,16 @@ class Plugin extends CraftPlugin
                 }
             }
         });
-        
+
         Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, function(RegisterUrlRulesEvent $event) {
             $event->rules['two-factor-authentication'] = 'two-factor-authentication/settings/index';
         });
-        
+
         // Register our widgets
         Event::on(Dashboard::class, Dashboard::EVENT_REGISTER_WIDGET_TYPES, function (RegisterComponentTypesEvent $event) {
             $event->types[] = NotifyWidget::class;
         });
-        
+
         /**
          * Adds the following attributes to the User table in the CMS
          * NOTE: You still need to select them with the 'gear'
