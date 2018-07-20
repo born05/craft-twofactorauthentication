@@ -1,6 +1,12 @@
 Changelog
 ==================
 
+## 2.0.0-beta.6 - 2018-07-20
+
+### Changed
+- Disabled the plugin for console commands.
+- Added support for upgrading from Craft 2.
+
 ## 2.0.0-beta.5 - 2018-07-11
 
 ### Improved
