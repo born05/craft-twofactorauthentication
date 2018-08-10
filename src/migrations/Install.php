@@ -11,7 +11,7 @@ class Install extends Migration
 {
     public function safeUp()
     {
-        if ($this->_upgradeFromCraft2()) {
+        if ($this->upgradeFromCraft2()) {
             return;
         }
 
