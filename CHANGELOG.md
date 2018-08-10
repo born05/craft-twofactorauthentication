@@ -1,6 +1,11 @@
 Changelog
 ==================
 
+## 2.0.0-beta.7 - 2018-08-10
+
+### Improved
+- @brandonkelly Fixed the install migration
+
 ## 2.0.0-beta.6 - 2018-07-20
 
 ### Changed
