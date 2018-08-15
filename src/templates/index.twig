@@ -33,8 +33,9 @@
     {% else %}
 
         <h2>{{ 'Step 1: Download app'|t('two-factor-authentication') }}</h2>
-        <p>{{ 'Install a TOTP app like {linkOpen}Google Authenticator{linkClose} to set-up.'|t('two-factor-authentication', {
-            linkOpen: '<a href="http://support.google.com/a/bin/answer.py?hl=en&answer=1037451" target="_blank">',
+        <p>{{ 'Install a TOTP app like Google Authenticator ({androidOpen}Android{linkClose}, {iosOpen}iPhone/iPad{linkClose}) to set-up.'|t('two-factor-authentication', {
+            androidOpen: '<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank">',
+            iosOpen: '<a href="http://appstore.com/googleauthenticator" target="_blank">',
             linkClose: '</a>'
             })|raw }}
         </p>
