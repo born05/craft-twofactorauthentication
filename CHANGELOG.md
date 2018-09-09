@@ -1,6 +1,11 @@
 Changelog
 ==================
 
+## 2.0.0-beta.8 - 2018-09-09
+
+### Improved
+- @jlamb1 Fix Deprecation Error "Round"
+
 ## 2.0.0-beta.7 - 2018-08-10
 
 ### Improved
