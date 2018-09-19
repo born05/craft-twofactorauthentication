@@ -26,6 +26,40 @@ This means the user is already logged in. When the user tries to visit an other 
 - Craft 3.0.0
 - PHP 7.x at least
 
+## Setting up front end 2FA
+
+When using a login for front end users, the following steps add 2FA support.
+
+- Build a 2FA form accessible by url
+- Set `allowFrontEnd` to `true` in the config file.
+- Choose between using the `frontEndPathWhitelist` or `frontEndPathBlacklist`! Using both will block everything!
+
+## Setting up config
+
+Create a `two-factor-authentication.php` file within your `config/` folder.
+
+```
+<?php
+
+return [
+    'verifyFrontEnd' => false,
+    'forceFrontEnd' => false,
+    'forceBackEnd' => false,
+    
+    // The URI we should use for 2FA on the front-end.
+    'verifyPath' => '',
+
+    // Choose between using the whitelist or blacklist! Using both will block everything!
+    'frontEndPathWhitelist' => [
+        '*' => [],
+    ],
+    'frontEndPathBlacklist' => [
+        '*' => [],
+    ],
+];
+
+```
+
 ## Resetting a user's 2FA
 
 Simply remove the user's `twofactorauthentication_user` record. This disables 2FA for that user.
