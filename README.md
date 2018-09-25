@@ -33,6 +33,31 @@ When using a login for front end users, the following steps add 2FA support.
 - Build a 2FA form accessible by url
 - Set `allowFrontEnd` to `true` in the config file.
 - Choose between using the `frontEndPathWhitelist` or `frontEndPathBlacklist`! Using both will block everything!
+- Add a template for 2FA like example below:
+- Set the `verifyPath`. In our `two-factor.twig` example the path would be `two-factor`.
+
+Example `two-factor.twig` template
+```
+{% requireLogin %}
+
+<form method="post" accept-charset="UTF-8">
+    {{ csrfInput() }}
+    <input type="hidden" name="action" value="two-factor-authentication/verify/login-process">
+
+    <h3><label for="code">Enter the authentication code from your phone.</label></h3>
+    <input id="authenticationCode" type="text" name="authenticationCode">
+
+    <input type="submit" value="Verify">
+    
+    {% if errorMessage is defined %}
+        <p>{{ errorMessage }}</p>
+    {% endif %}
+    
+    <script type="text/javascript">
+        document.getElementById("authenticationCode").focus();
+    </script>
+</form>
+```
 
 ## Setting up config
 
