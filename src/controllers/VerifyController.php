@@ -47,9 +47,9 @@ class VerifyController extends Controller
                     'error' => $errorMessage
                 ]);
             } else {
-                Craft::$app->getUser()->setError($errorMessage);
+                Craft::$app->getSession()->setError($errorMessage);
 
-                Craft::$app->urlManager->setRouteVariables([
+                Craft::$app->getUrlManager()->setRouteParams([
                     'errorCode' => $errorCode,
                     'errorMessage' => $errorMessage,
                 ]);
