@@ -1,0 +1,221 @@
+<?php
+namespace born05\twofactorauthentication\services;
+
+use Craft;
+use born05\twofactorauthentication\Plugin as TwoFactorAuth;
+
+use craft\elements\User;
+use craft\helpers\UrlHelper;
+use yii\base\Component;
+use yii\web\UserEvent;
+
+class Request extends Component
+{
+    /**
+     * Only allow users who are verified or don't use two-factor.
+     */
+    public function validateRequest()
+    {
+        $request = Craft::$app->getRequest();
+        $response = Craft::$app->getResponse();
+        $verify = TwoFactorAuth::$plugin->verify;
+
+        if ($this->shouldRedirectCp() || $this->shouldRedirectFrontEnd()) {
+            // Get the current user
+            $user = Craft::$app->getUser()->getIdentity();
+
+            // Only redirect two-factor enabled users who aren't verified yet.
+            if (isset($user) &&
+                (
+                    $verify->isEnabled($user) ||
+                    $this->isForced()
+                ) &&
+                !$verify->isVerified($user)
+            ) {
+                Craft::$app->getUser()->logout(false);
+
+                if ($request->getIsCpRequest()) {
+                    $response->redirect(UrlHelper::cpUrl());
+                } else {
+                    $response->redirect(UrlHelper::siteUrl());
+                }
+            }
+        }
+    }
+    
+    public function userLoginEventHandler(UserEvent $event)
+    {
+        // Don't redirect cookieBased events.
+        if ($event->cookieBased) {
+            return;
+        }
+
+        $user = Craft::$app->getUser()->getIdentity();
+        $request = Craft::$app->getRequest();
+        $response = Craft::$app->getResponse();
+        $responseService = TwoFactorAuth::$plugin->response;
+        $verify = TwoFactorAuth::$plugin->verify;
+
+        if (isset($user) &&
+            $verify->isEnabled($user) &&
+            !$verify->isVerified($user)
+        ) {
+            if ($request->getIsCpRequest()) {
+                $url = UrlHelper::actionUrl('two-factor-authentication/verify/login');
+            } else {
+                $url = UrlHelper::siteUrl(TwoFactorAuth::$plugin->getSettings()->getVerifyPath());
+            }
+
+            // Redirect to verification page.
+            if ($request->getAcceptsJson()) {
+                return $responseService->asJson([
+                    'success' => true,
+                    'returnUrl' => $url
+                ]);
+            } else {
+                $response->redirect($url);
+            }
+        } else if (isset($user) &&
+            !$verify->isEnabled($user) &&
+            $this->isForced()
+        ) {
+            $url = $this->getSettingsPath();
+
+            // Redirect to verification page.
+            if ($request->getAcceptsJson()) {
+                return $responseService->asJson([
+                    'success' => true,
+                    'returnUrl' => $url
+                ]);
+            } else {
+                $response->redirect($url);
+            }
+        }
+    }
+
+    /**
+     * Test CP requests.
+     * @return boolean
+     */
+    private function shouldRedirectCp()
+    {
+        $request = Craft::$app->getRequest();
+        $actionSegs = $request->getActionSegments();
+
+        return $request->getIsCpRequest() &&
+               !$this->isCraftSpecialRequests() &&
+               !$this->is2FASpecialRequests();
+    }
+
+    /**
+     * Test front end requests.
+     * @return boolean
+     */
+    private function shouldRedirectFrontEnd()
+    {
+        $settings = TwoFactorAuth::$plugin->getSettings();
+
+        $verifyFrontEnd = $settings->verifyFrontEnd;
+        $frontEndPathWhitelist = $settings->getFrontEndPathWhitelist();
+        $frontEndPathBlacklist = $settings->getFrontEndPathBlacklist();
+        $request = Craft::$app->getRequest();
+        $pathInfo = $request->getPathInfo();
+
+        $isLoginPath = (
+            $pathInfo === trim(Craft::$app->getConfig()->getGeneral()->getLoginPath(), '/') ||
+            $pathInfo === trim(Craft::$app->getConfig()->getGeneral()->getLogoutPath(), '/') ||
+            $pathInfo === trim($settings->getVerifyPath(), '/') ||
+            $pathInfo === trim($settings->getSettingsPath(), '/')
+        );
+
+        $isWhitelisted = (
+            empty($frontEndPathWhitelist) ||
+            in_array($pathInfo, $frontEndPathWhitelist)
+        );
+
+        $isBlacklisted = (
+            empty($frontEndPathBlacklist) ||
+            in_array($pathInfo, $frontEndPathBlacklist)
+        );
+
+        return $verifyFrontEnd &&
+            !$request->getIsCpRequest() &&
+            !$this->isCraftSpecialRequests() &&
+            !$this->is2FASpecialRequests() &&
+            !$isLoginPath &&
+            !$isWhitelisted &&
+            $isBlacklisted;
+    }
+
+    /**
+     * Test Craft special requests.
+     * @return boolean
+     */
+    private function isCraftSpecialRequests()
+    {
+        $request = Craft::$app->getRequest();
+        $actionSegs = $request->getActionSegments();
+
+        return (
+            // COPIED from craft\web\Application::_isSpecialCaseActionRequest
+            $request->getPathInfo() === '' ||
+            $actionSegs === ['app', 'migrate'] ||
+            $actionSegs === ['users', 'login'] ||
+            $actionSegs === ['users', 'logout'] ||
+            $actionSegs === ['users', 'set-password'] ||
+            $actionSegs === ['users', 'verify-email'] ||
+            $actionSegs === ['users', 'forgot-password'] ||
+            $actionSegs === ['users', 'send-password-reset-email'] ||
+            $actionSegs === ['users', 'save-user'] ||
+            $actionSegs === ['users', 'get-remaining-session-time'] ||
+            $actionSegs[0] === 'updater' ||
+            $actionSegs[0] === 'debug'
+        );
+    }
+
+    /**
+     * Test 2FA special requests.
+     * @return boolean
+     */
+    private function is2FASpecialRequests()
+    {
+        $request = Craft::$app->getRequest();
+        $actionSegs = $request->getActionSegments();
+
+        return (
+            $actionSegs === ['two-factor-authentication', 'verify'] ||
+            $actionSegs === ['two-factor-authentication', 'settings', 'force'] ||
+            $actionSegs === ['two-factor-authentication', 'settings', 'turn-on']
+        );
+    }
+
+    /**
+     * Determine if 2FA is forced.
+     * @return boolean
+     */
+    private function isForced()
+    {
+        $request = Craft::$app->getRequest();
+
+        if ($request->getIsCpRequest()) {
+            return TwoFactorAuth::$plugin->getSettings()->forceBackEnd;
+        }
+
+        return TwoFactorAuth::$plugin->getSettings()->forceFrontEnd;
+    }
+
+    /**
+     * Determine if 2FA is forced.
+     * @return boolean
+     */
+    private function getSettingsPath()
+    {
+        $request = Craft::$app->getRequest();
+
+        if ($request->getIsCpRequest()) {
+            return UrlHelper::actionUrl('two-factor-authentication/settings/force');
+        }
+
+        return UrlHelper::siteUrl(TwoFactorAuth::$plugin->getSettings()->getSettingsPath());
+    }
+}

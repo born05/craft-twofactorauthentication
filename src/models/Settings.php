@@ -18,6 +18,14 @@ class Settings extends Model
      * @see getVerifyPath()
      */
     public $verifyPath = '';
+    
+    /**
+     * @var mixed The URI we should use for 2FA settings on the front-end.
+     *
+     * See [[ConfigHelper::localizedValue()]] for a list of supported value types.
+     * @see getSettingsPath()
+     */
+    public $settingsPath = '';
 
     // Choose between using the whitelist or blacklist! Using both will block everything!
     /**
@@ -53,6 +61,18 @@ class Settings extends Model
     public function getVerifyPath(string $siteHandle = null): string
     {
         return ConfigHelper::localizedValue($this->verifyPath, $siteHandle);
+    }
+
+    /**
+     * Returns the localized Settings Path value.
+     *
+     * @param string|null $siteHandle The site handle the value should be defined for. Defaults to the current site.
+     * @return string
+     * @see settingsPath
+     */
+    public function getSettingsPath(string $siteHandle = null): string
+    {
+        return ConfigHelper::localizedValue($this->settingsPath, $siteHandle);
     }
 
     /**

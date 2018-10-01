@@ -28,20 +28,21 @@ class VerifyController extends Controller
     {
         $this->requireLogin();
         $this->requirePostRequest();
-        $requestService = Craft::$app->getRequest();
+        $responseService = TwoFactorAuth::$plugin->response;
+        $request = Craft::$app->getRequest();
 
-        $authenticationCode = $requestService->getBodyParam('authenticationCode');
+        $authenticationCode = $request->getBodyParam('authenticationCode');
 
         // Get the current user
-        $currentUser = Craft::$app->getUser()->getIdentity();
+        $user = Craft::$app->getUser()->getIdentity();
 
-        if (TwoFactorAuth::$plugin->verify->verify($currentUser, $authenticationCode)) {
+        if (TwoFactorAuth::$plugin->verify->verify($user, $authenticationCode)) {
             return $this->_handleSuccessfulLogin(true);
         } else {
             $errorCode = User::AUTH_INVALID_CREDENTIALS;
             $errorMessage = Craft::t('two-factor-authentication', 'Authentication code is invalid.');
 
-            if ($requestService->getAcceptsJson()) {
+            if ($request->getAcceptsJson()) {
                 return $this->asJson([
                     'errorCode' => $errorCode,
                     'error' => $errorMessage
@@ -69,34 +70,12 @@ class VerifyController extends Controller
      */
     private function _handleSuccessfulLogin($setNotice)
     {
-        // Get the return URL
-        $userService = Craft::$app->getUser();
-        $requestService = Craft::$app->getRequest();
-        $returnUrl = $userService->getReturnUrl();
-
-        // Clear it out
-        $userService->removeReturnUrl();
-
-        // MODIFIED FROM COPY
-        // Prevent looping back to the verify controller.
-        if (
-            $returnUrl === null ||
-            $returnUrl === $requestService->getPathInfo() ||
-            TwoFactorAuth::$plugin->response->isTwoFactorAuthenticationUrl($returnUrl)
-        ) {
-            // Is this a CP request and can they access the CP?
-            if (Craft::$app->getRequest()->getIsCpRequest() && $this->checkPermission('accessCp')) {
-                $returnUrl = UrlHelper::cpUrl(Craft::$app->getConfig()->getGeneral()->getPostCpLoginRedirect());
-            } else {
-                $returnUrl = UrlHelper::siteUrl(Craft::$app->getConfig()->getGeneral()->getPostLoginRedirect());
-            }
-        }
-
-        // Clear it out
-        $userService->removeReturnUrl();
+        $request = Craft::$app->getRequest();
+        $responseService = TwoFactorAuth::$plugin->response;
+        $returnUrl = $responseService->getReturnUrl();
 
         // If this was an Ajax request, just return success:true
-        if ($requestService->getAcceptsJson()) {
+        if ($request->getAcceptsJson()) {
             return $this->asJson([
                 'success' => true,
                 'returnUrl' => $returnUrl
@@ -107,6 +86,8 @@ class VerifyController extends Controller
             Craft::$app->getSession()->setNotice(Craft::t('two-factor-authentication', 'Logged in.'));
         }
 
-        return $this->redirectToPostedUrl($userService->getIdentity(), $returnUrl);
+        $user = Craft::$app->getUser()->getIdentity();
+
+        return $this->redirectToPostedUrl($user, $returnUrl);
     }
 }

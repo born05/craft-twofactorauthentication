@@ -1,10 +1,11 @@
 Changelog
 ==================
 
-## 2.0.0-beta.9 - 2018-09-09
+## 2.0.0-beta.9 - 2018-10-01
 
 ### Added
 - Front end 2FA support
+- Allow forcing 2FA
 
 ### Fixed
 - Migrated old code to Craft 3

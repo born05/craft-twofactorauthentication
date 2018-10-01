@@ -33,4 +33,35 @@ class Response extends Component
 
         return strpos($url, $verifyUrl) === 0;
     }
+
+    public function getReturnUrl()
+    {
+        // Get the return URL
+        $userService = Craft::$app->getUser();
+        $request = Craft::$app->getRequest();
+        $returnUrl = $userService->getReturnUrl();
+
+        // Clear it out
+        $userService->removeReturnUrl();
+
+        // MODIFIED FROM COPY
+        // Prevent looping back to the verify controller.
+        if (
+            $returnUrl === null ||
+            $returnUrl === $request->getPathInfo() ||
+            TwoFactorAuth::$plugin->response->isTwoFactorAuthenticationUrl($returnUrl)
+        ) {
+            // Is this a CP request and can they access the CP?
+            if (Craft::$app->getRequest()->getIsCpRequest() && $this->checkPermission('accessCp')) {
+                $returnUrl = UrlHelper::cpUrl(Craft::$app->getConfig()->getGeneral()->getPostCpLoginRedirect());
+            } else {
+                $returnUrl = UrlHelper::siteUrl(Craft::$app->getConfig()->getGeneral()->getPostLoginRedirect());
+            }
+        }
+
+        // Clear it out
+        $userService->removeReturnUrl();
+        
+        return $returnUrl;
+    }
 }

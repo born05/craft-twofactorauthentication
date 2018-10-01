@@ -35,6 +35,7 @@ When using a login for front end users, the following steps add 2FA support.
 - Choose between using the `frontEndPathWhitelist` or `frontEndPathBlacklist`! Using both will block everything!
 - Add a template for 2FA like example below:
 - Set the `verifyPath`. In our `two-factor.twig` example the path would be `two-factor`.
+- Optional: allow users setting up 2FA in front end by building a template similar to: `src/templates/index.twig`
 
 Example `two-factor.twig` template
 ```
@@ -73,6 +74,9 @@ return [
     
     // The URI we should use for 2FA on the front-end.
     'verifyPath' => '',
+    
+    // The URI we should use for 2FA settings on the front-end.
+    'settingsPath' => '',
 
     // Choose between using the whitelist or blacklist! Using both will block everything!
     'frontEndPathWhitelist' => [

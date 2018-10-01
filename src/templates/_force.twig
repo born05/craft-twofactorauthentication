@@ -1,0 +1,10 @@
+{% extends "_layouts/basecp" %}
+
+{% set title = "Two-Factor Authentication"|t('two-factor-authentication') %}
+{% set bodyClass = 'two-factor-authentication-settings' %}
+
+{% block body %}
+    <div style="padding: 20px;">
+        {% include 'two-factor-authentication/_settings/base' %}
+    </div>
+{% endblock %}
