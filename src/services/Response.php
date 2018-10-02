@@ -18,20 +18,8 @@ class Response extends Component
         $response = Craft::$app->getResponse();
         $response->format = \yii\web\Response::FORMAT_JSON;
         $response->data = $data;
-        Craft::$app->end(0, $response);
-    }
-
-    /**
-     * Determine if the url points to the verification part of this plugin.
-     *
-     * @param  strin $url
-     * @return boolean
-     */
-    public function isTwoFactorAuthenticationUrl($url)
-    {
-        $verifyUrl = UrlHelper::actionUrl('two-factor-authentication/verify');
-
-        return strpos($url, $verifyUrl) === 0;
+        return $response;
+        // Craft::$app->end(0, $response);
     }
 
     public function getReturnUrl()
@@ -49,7 +37,7 @@ class Response extends Component
         if (
             $returnUrl === null ||
             $returnUrl === $request->getPathInfo() ||
-            TwoFactorAuth::$plugin->response->isTwoFactorAuthenticationUrl($returnUrl)
+            TwoFactorAuth::$plugin->request->is2FASpecialRequests()
         ) {
             // Is this a CP request and can they access the CP?
             if (Craft::$app->getRequest()->getIsCpRequest() && $this->checkPermission('accessCp')) {
@@ -61,7 +49,7 @@ class Response extends Component
 
         // Clear it out
         $userService->removeReturnUrl();
-        
+
         return $returnUrl;
     }
 }

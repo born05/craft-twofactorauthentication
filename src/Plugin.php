@@ -74,7 +74,6 @@ class Plugin extends CraftPlugin
 
         Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, function(RegisterUrlRulesEvent $event) {
             $event->rules['two-factor-authentication'] = 'two-factor-authentication/settings/index';
-            // $event->rules['two-factor-authentication/force'] = 'two-factor-authentication/settings/force';
         });
 
         // Register our widgets

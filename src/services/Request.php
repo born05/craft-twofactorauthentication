@@ -28,7 +28,7 @@ class Request extends Component
             if (isset($user) &&
                 (
                     $verify->isEnabled($user) ||
-                    $this->isForced()
+                    ($this->isForced() && !$this->is2FASettingsRequest())
                 ) &&
                 !$verify->isVerified($user)
             ) {
@@ -113,6 +113,7 @@ class Request extends Component
      */
     private function shouldRedirectFrontEnd()
     {
+        $generalConfig = Craft::$app->getConfig()->getGeneral();
         $settings = TwoFactorAuth::$plugin->getSettings();
 
         $verifyFrontEnd = $settings->verifyFrontEnd;
@@ -122,8 +123,8 @@ class Request extends Component
         $pathInfo = $request->getPathInfo();
 
         $isLoginPath = (
-            $pathInfo === trim(Craft::$app->getConfig()->getGeneral()->getLoginPath(), '/') ||
-            $pathInfo === trim(Craft::$app->getConfig()->getGeneral()->getLogoutPath(), '/') ||
+            $pathInfo === trim($generalConfig->getLoginPath(), '/') ||
+            $pathInfo === trim($generalConfig->getLogoutPath(), '/') ||
             $pathInfo === trim($settings->getVerifyPath(), '/') ||
             $pathInfo === trim($settings->getSettingsPath(), '/')
         );
@@ -177,14 +178,28 @@ class Request extends Component
      * Test 2FA special requests.
      * @return boolean
      */
-    private function is2FASpecialRequests()
+    public function is2FASpecialRequests()
     {
         $request = Craft::$app->getRequest();
         $actionSegs = $request->getActionSegments();
 
         return (
             $actionSegs === ['two-factor-authentication', 'verify'] ||
-            $actionSegs === ['two-factor-authentication', 'settings', 'force'] ||
+            $this->is2FASettingsRequest()
+        );
+    }
+
+    /**
+     * Test 2FA settings request.
+     * @return boolean
+     */
+    public function is2FASettingsRequest()
+    {
+        $request = Craft::$app->getRequest();
+        $actionSegs = $request->getActionSegments();
+
+        return (
+            $request->getAbsoluteUrl() === $this->getSettingsPath() ||
             $actionSegs === ['two-factor-authentication', 'settings', 'turn-on']
         );
     }
