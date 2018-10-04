@@ -40,7 +40,7 @@ class Response extends Component
             TwoFactorAuth::$plugin->request->is2FASpecialRequests()
         ) {
             // Is this a CP request and can they access the CP?
-            if (Craft::$app->getRequest()->getIsCpRequest() && $this->checkPermission('accessCp')) {
+            if (Craft::$app->getRequest()->getIsCpRequest() && Craft::$app->getUser()->checkPermission('accessCp')) {
                 $returnUrl = UrlHelper::cpUrl(Craft::$app->getConfig()->getGeneral()->getPostCpLoginRedirect());
             } else {
                 $returnUrl = UrlHelper::siteUrl(Craft::$app->getConfig()->getGeneral()->getPostLoginRedirect());

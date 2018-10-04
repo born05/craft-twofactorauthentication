@@ -68,27 +68,27 @@ class Request extends Component
 
             // Redirect to verification page.
             if ($request->getAcceptsJson()) {
-                return $responseService->asJson([
+                return Craft::$app->end(0, $responseService->asJson([
                     'success' => true,
                     'returnUrl' => $url
-                ]);
+                ]));
             } else {
-                $response->redirect($url);
+                return Craft::$app->end(0, $response->redirect($url));
             }
         } else if (isset($user) &&
             !$verify->isEnabled($user) &&
             $this->isForced()
         ) {
-            $url = $this->getSettingsPath();
+            $url = $this->getSettingsUrl();
 
             // Redirect to verification page.
             if ($request->getAcceptsJson()) {
-                return $responseService->asJson([
+                return Craft::$app->end(0, $responseService->asJson([
                     'success' => true,
                     'returnUrl' => $url
-                ]);
+                ]));
             } else {
-                $response->redirect($url);
+                return Craft::$app->end(0, $response->redirect($url));
             }
         }
     }
@@ -113,13 +113,17 @@ class Request extends Component
      */
     private function shouldRedirectFrontEnd()
     {
+        $request = Craft::$app->getRequest();
         $generalConfig = Craft::$app->getConfig()->getGeneral();
         $settings = TwoFactorAuth::$plugin->getSettings();
 
-        $verifyFrontEnd = $settings->verifyFrontEnd;
+        // Frontend requests only.
+        if (!$settings->verifyFrontEnd || $request->getIsCpRequest()) {
+            return false;
+        }
+
         $frontEndPathWhitelist = $settings->getFrontEndPathWhitelist();
         $frontEndPathBlacklist = $settings->getFrontEndPathBlacklist();
-        $request = Craft::$app->getRequest();
         $pathInfo = $request->getPathInfo();
 
         $isLoginPath = (
@@ -139,9 +143,7 @@ class Request extends Component
             in_array($pathInfo, $frontEndPathBlacklist)
         );
 
-        return $verifyFrontEnd &&
-            !$request->getIsCpRequest() &&
-            !$this->isCraftSpecialRequests() &&
+        return !$this->isCraftSpecialRequests() &&
             !$this->is2FASpecialRequests() &&
             !$isLoginPath &&
             !$isWhitelisted &&
@@ -199,7 +201,7 @@ class Request extends Component
         $actionSegs = $request->getActionSegments();
 
         return (
-            $request->getAbsoluteUrl() === $this->getSettingsPath() ||
+            $request->getAbsoluteUrl() === $this->getSettingsUrl() ||
             $actionSegs === ['two-factor-authentication', 'settings', 'turn-on']
         );
     }
@@ -221,9 +223,9 @@ class Request extends Component
 
     /**
      * Determine if 2FA is forced.
-     * @return boolean
+     * @return string
      */
-    private function getSettingsPath()
+    private function getSettingsUrl()
     {
         $request = Craft::$app->getRequest();
 

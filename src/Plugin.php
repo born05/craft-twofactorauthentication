@@ -63,7 +63,7 @@ class Plugin extends CraftPlugin
 
         // Verify after login.
         Event::on(\craft\web\User::class, \craft\web\User::EVENT_AFTER_LOGIN, function(UserEvent $event) {
-            return $this->request->userLoginEventHandler($event);
+            $this->request->userLoginEventHandler($event);
         });
 
         Event::on(CraftVariable::class, CraftVariable::EVENT_INIT, function(Event $event) {
