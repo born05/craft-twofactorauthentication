@@ -33,32 +33,10 @@ When using a login for front end users, the following steps add 2FA support.
 - Build a 2FA form accessible by url
 - Set `allowFrontEnd` to `true` in the config file.
 - Choose between using the `frontEndPathWhitelist` or `frontEndPathBlacklist`! Using both will block everything!
-- Add a template for 2FA like example below:
-- Set the `verifyPath`. In our `two-factor.twig` example the path would be `two-factor`.
-- Optional: allow users setting up 2FA in front end by building a template similar to: `src/templates/index.twig`
-
-Example `two-factor.twig` template
-```
-{% requireLogin %}
-
-<form method="post" accept-charset="UTF-8">
-    {{ csrfInput() }}
-    <input type="hidden" name="action" value="two-factor-authentication/verify/login-process">
-
-    <h3><label for="code">Enter the authentication code from your phone.</label></h3>
-    <input id="authenticationCode" type="text" name="authenticationCode">
-
-    <input type="submit" value="Verify">
-    
-    {% if errorMessage is defined %}
-        <p>{{ errorMessage }}</p>
-    {% endif %}
-    
-    <script type="text/javascript">
-        document.getElementById("authenticationCode").focus();
-    </script>
-</form>
-```
+- Add a template for 2FA like the [example twig](https://github.com/born05/craft-twofactorauthentication/blob/master/examples/verify.twig).
+- Set the `verifyPath`. For our `two-factor.twig` example the path would be `two-factor`.
+- Optional: allow users setting up 2FA in front end by building a template like the [example twig](https://github.com/born05/craft-twofactorauthentication/blob/master/examples/settings.twig).
+- Set the `settingsPath`. For our `two-factor-settings.twig` example the path would be `two-factor-settings`.
 
 ## Setting up config
 
