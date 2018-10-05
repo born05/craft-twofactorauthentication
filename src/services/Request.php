@@ -186,7 +186,11 @@ class Request extends Component
         $actionSegs = $request->getActionSegments();
 
         return (
-            $actionSegs === ['two-factor-authentication', 'verify'] ||
+            (
+                isset($actionSegs[1]) &&
+                $actionSegs[0] === 'two-factor-authentication' &&
+                $actionSegs[1] === 'verify'
+            ) ||
             $this->is2FASettingsRequest()
         );
     }

@@ -1,6 +1,11 @@
 Changelog
 ==================
 
+## 2.0.0-beta.10 - 2018-10-05
+
+### Fixed
+- Fixed 2FA CP path detection
+
 ## 2.0.0-beta.9 - 2018-10-05
 
 ### Added
