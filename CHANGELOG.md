@@ -1,7 +1,7 @@
 Changelog
 ==================
 
-## 2.0.0-beta.9 - 2018-10-01
+## 2.0.0-beta.9 - 2018-10-05
 
 ### Added
 - Front end 2FA support
