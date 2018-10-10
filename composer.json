@@ -12,7 +12,7 @@
         "login",
         "craftcms"
     ],
-    "license": "https://raw.githubusercontent.com/born05/craft-twofactorauthentication/master/LICENSE.md",
+    "license": "MIT",
     "homepage": "https://github.com/born05/craft-twofactorauthentication",
     "authors": [
         {
