@@ -1,6 +1,11 @@
 Changelog
 ==================
 
+## 2.0.0-beta.11 - 2018-10-10
+
+### Fixed
+- Fixed link to Google Authenticator
+
 ## 2.0.0-beta.10 - 2018-10-05
 
 ### Fixed
