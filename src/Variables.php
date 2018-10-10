@@ -17,6 +17,12 @@ class Variables
         $user = Craft::$app->getUser()->getIdentity();
         return TwoFactorAuth::$plugin->verify->isVerified($user);
     }
+    
+    public function isTwoFactorEnabled()
+    {
+        $user = Craft::$app->getUser()->getIdentity();
+        return TwoFactorAuth::$plugin->verify->isEnabled($user);
+    }
 
     public function getCurrentUserSecret()
     {
