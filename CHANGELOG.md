@@ -1,6 +1,11 @@
 Changelog
 ==================
 
+## 2.0.0-beta.12 - 2018-10-12
+
+### Fixed
+- Allow 2FA on the front end home.
+
 ## 2.0.0-beta.11 - 2018-10-10
 
 ### Fixed

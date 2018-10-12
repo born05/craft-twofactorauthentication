@@ -19,7 +19,6 @@ class Response extends Component
         $response->format = \yii\web\Response::FORMAT_JSON;
         $response->data = $data;
         return $response;
-        // Craft::$app->end(0, $response);
     }
 
     public function getReturnUrl()

@@ -103,6 +103,8 @@ class Request extends Component
         $actionSegs = $request->getActionSegments();
 
         return $request->getIsCpRequest() &&
+                // COPIED from craft\web\Application::_isSpecialCaseActionRequest
+                $request->getPathInfo() !== '' &&
                !$this->isCraftSpecialRequests() &&
                !$this->is2FASpecialRequests();
     }
@@ -134,12 +136,11 @@ class Request extends Component
         );
 
         $isWhitelisted = (
-            empty($frontEndPathWhitelist) ||
+            !empty($frontEndPathWhitelist) &&
             in_array($pathInfo, $frontEndPathWhitelist)
         );
-
         $isBlacklisted = (
-            empty($frontEndPathBlacklist) ||
+            !empty($frontEndPathBlacklist) &&
             in_array($pathInfo, $frontEndPathBlacklist)
         );
 
@@ -161,7 +162,6 @@ class Request extends Component
 
         return (
             // COPIED from craft\web\Application::_isSpecialCaseActionRequest
-            $request->getPathInfo() === '' ||
             $actionSegs === ['app', 'migrate'] ||
             $actionSegs === ['users', 'login'] ||
             $actionSegs === ['users', 'logout'] ||
