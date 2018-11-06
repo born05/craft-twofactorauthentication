@@ -95,7 +95,7 @@ class Plugin extends CraftPlugin
         Event::on(User::class, Element::EVENT_SET_TABLE_ATTRIBUTE_HTML, function(SetElementTableAttributeHtmlEvent $event) {
             $currentUser = Craft::$app->getUser()->getIdentity();
             if ($event->attribute == 'hasTwoFactorAuthentication' && $currentUser->admin) {
-                /** @var UserModel $user */
+                /** @var User $user */
                 $user = $event->sender;
 
                 if (Plugin::$plugin->verify->isEnabled($user)) {
@@ -106,6 +106,21 @@ class Plugin extends CraftPlugin
 
                 // Prevent other event listeners from getting invoked
                 $event->handled = true;
+            }
+        });
+        
+        /**
+         * Hook into the users cp page.
+         */
+        Craft::$app->view->hook('cp.users.edit.details', function(array &$context) {
+            if (Craft::$app->getUser()->getIsAdmin() && !$context['isNewUser']) {
+                /** @var User $user */
+                $user = $context['user'];
+
+                return Craft::$app->getView()->renderTemplate('two-factor-authentication/_user/status', [
+                    'user' => $user,
+                    'enabled' => Plugin::$plugin->verify->isEnabled($user),
+                ]);
             }
         });
     }

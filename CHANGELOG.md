@@ -1,6 +1,11 @@
 Changelog
 ==================
 
+## 2.0.0-beta.13 - 2018-11-06
+
+### Added
+- Added option to disable 2FA when a user is locked out of the account.
+
 ## 2.0.0-beta.12 - 2018-10-12
 
 ### Fixed

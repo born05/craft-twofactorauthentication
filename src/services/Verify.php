@@ -87,8 +87,11 @@ class Verify extends Component
             }
 
             $twoFactorSessionRecord = $this->getTwoFactorSessionRecord($user);
-            $twoFactorSessionRecord->dateVerified = Db::prepareValueForDb($now);
-            $twoFactorSessionRecord->update();
+            
+            if (isset($twoFactorSessionRecord)) {
+                $twoFactorSessionRecord->dateVerified = Db::prepareValueForDb($now);
+                $twoFactorSessionRecord->update();
+            }
 
             return true;
         }
@@ -114,7 +117,9 @@ class Verify extends Component
 
         // Delete the session record
         $twoFactorSessionRecord = $this->getTwoFactorSessionRecord($user);
-        $twoFactorSessionRecord->delete();
+        if (isset($twoFactorSessionRecord)) {
+            $twoFactorSessionRecord->delete();
+        }
     }
 
     /**
@@ -182,6 +187,10 @@ class Verify extends Component
     private function getTwoFactorSessionRecord(User $user)
     {
         $sessionId = $this->getSessionId($user);
+
+        if (!isset($sessionId)) {
+            return null;
+        }
 
         $twoFactorSessionRecord = SessionRecord::findOne([
             'userId' => $user->id,
