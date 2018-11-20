@@ -135,14 +135,21 @@ class Request extends Component
             $pathInfo === trim($settings->getSettingsPath(), '/')
         );
 
-        $isWhitelisted = (
-            !empty($frontEndPathWhitelist) &&
-            in_array($pathInfo, $frontEndPathWhitelist)
-        );
-        $isBlacklisted = (
-            !empty($frontEndPathBlacklist) &&
-            in_array($pathInfo, $frontEndPathBlacklist)
-        );
+        $isWhitelisted = false;
+		foreach($frontEndPathWhitelist as $path)
+		{
+			if (preg_match("/$path/i", $pathInfo)) {
+				$isWhitelisted = true;
+			}
+		}
+
+		$isBlacklisted = false;
+		foreach($frontEndPathBlacklist as $path)
+		{
+			if (preg_match("/$path/i", $pathInfo)) {
+				$isBlacklisted = true;
+			}
+		}
 
         return !$this->isCraftSpecialRequests() &&
             !$this->is2FASpecialRequests() &&
