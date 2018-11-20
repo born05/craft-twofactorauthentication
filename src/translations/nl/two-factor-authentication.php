@@ -6,6 +6,7 @@ return [
     "Authentication Code" => "Authenticatiecode",
     "Disable two-factor authentication" => "Tweestapsverificatie uitschakelen",
     "Enabled" => "Ingeschakeld",
+    "Disabled" => "Uitgeschakeld",
     "Enter the authentication code from your phone." => "Voer de authenticatiecode in van je telefoon.",
     "Experiencing any issues? Contact your administrator for help." => "Kom je problemen tegen? Neem contact op met je systeembeheerder voor hulp.",
     "Go to settings" => "Ga naar instellingen",

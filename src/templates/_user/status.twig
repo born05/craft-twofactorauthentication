@@ -1,0 +1,23 @@
+<div class="meta">
+    <div class="data">
+        <h5 class="heading">{{ "2-Factor Auth"|t('two-factor-authentication') }}</h5>
+        <div class="value">
+            <div class="flex-grow">
+                <span class="status {{ enabled ? 'active' }}"></span>
+                {{ enabled ? 'Enabled'|t('two-factor-authentication') : 'Disabled'|t('two-factor-authentication') }}
+            </div>
+
+            {% if enabled %}
+                <form id="turnoff-form" method="post" accept-charset="UTF-8">
+                    <input type="hidden" name="action" value="two-factor-authentication/users/turn-off">
+                    {{ csrfInput() }}
+                    <input type="hidden" name="userId" value="{{ user.id }}">
+
+                    <button class="btn submit" type="submit" data-icon="insecure">
+                        {{- "Disable"|t('two-factor-authentication') -}}
+                    </button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+</div>

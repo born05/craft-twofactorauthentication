@@ -4,8 +4,11 @@ namespace born05\twofactorauthentication;
 use born05\twofactorauthentication\widgets\Notify as NotifyWidget;
 
 use Craft;
+use born05\twofactorauthentication\services\Request as RequestService;
 use born05\twofactorauthentication\services\Response as ResponseService;
 use born05\twofactorauthentication\services\Verify as VerifyService;
+use born05\twofactorauthentication\models\Settings;
+use born05\twofactorauthentication\Variables;
 use craft\base\Plugin as CraftPlugin;
 use craft\base\Element;
 use craft\elements\User;
@@ -14,8 +17,8 @@ use craft\events\RegisterUrlRulesEvent;
 use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterElementTableAttributesEvent;
 use craft\events\SetElementTableAttributeHtmlEvent;
-use craft\helpers\UrlHelper;
 use craft\web\UrlManager;
+use craft\web\twig\variables\CraftVariable;
 use yii\base\Event;
 use yii\web\UserEvent;
 
@@ -45,80 +48,28 @@ class Plugin extends CraftPlugin
         self::$plugin = $this;
 
         $request = Craft::$app->getRequest();
+        $response = Craft::$app->getResponse();
 
         if (!$this->isInstalled || $request->getIsConsoleRequest()) return;
 
         // Register Components (Services)
         $this->setComponents([
+            'request' => RequestService::class,
             'response' => ResponseService::class,
             'verify' => VerifyService::class,
         ]);
 
-        // Only allow users in the CP who are verified or don't use two-factor.
-        $response = Craft::$app->getResponse();
-        $actionSegs = $request->getActionSegments();
-
-        if (
-            $request->getIsCpRequest() &&
-            (
-                // COPIED from craft\web\Application::_isSpecialCaseActionRequest
-                $request->getPathInfo() !== '' &&
-                $actionSegs !== ['app', 'migrate'] &&
-                $actionSegs !== ['users', 'login'] &&
-                $actionSegs !== ['users', 'logout'] &&
-                $actionSegs !== ['users', 'set-password'] &&
-                $actionSegs !== ['users', 'verify-email'] &&
-                $actionSegs !== ['users', 'forgot-password'] &&
-                $actionSegs !== ['users', 'send-password-reset-email'] &&
-                $actionSegs !== ['users', 'save-user'] &&
-                $actionSegs !== ['users', 'get-remaining-session-time'] &&
-                $actionSegs[0] !== 'updater' &&
-                $actionSegs[0] !== 'debug'
-            ) &&
-            !(
-                $actionSegs[0] === 'two-factor-authentication' &&
-                $actionSegs[1] === 'verify'
-            )
-        ) {
-            // Get the current user
-            $user = Craft::$app->getUser()->getIdentity();
-
-            // Only redirect two-factor enabled users who aren't verified yet.
-            if (isset($user) &&
-                $this->verify->isEnabled($user) &&
-                !$this->verify->isVerified($user)
-            ) {
-                Craft::$app->getUser()->logout(false);
-                $response->redirect(UrlHelper::cpUrl());
-            }
-        }
+        $this->request->validateRequest();
 
         // Verify after login.
         Event::on(\craft\web\User::class, \craft\web\User::EVENT_AFTER_LOGIN, function(UserEvent $event) {
-            // Don't redirect cookieBased events.
-            if ($event->cookieBased) {
-                return;
-            }
+            $this->request->userLoginEventHandler($event);
+        });
 
-            $user = Craft::$app->getUser()->getIdentity();
-            $request = Craft::$app->getRequest();
-            $response = Craft::$app->getResponse();
-
-            if (isset($user) &&
-                $this->verify->isEnabled($user) &&
-                !$this->verify->isVerified($user)
-            ) {
-                $url = UrlHelper::actionUrl('two-factor-authentication/verify/login');
-
-                if ($request->getAcceptsJson()) {
-                    return $this->response->asJson(array(
-                        'success' => true,
-                        'returnUrl' => $url
-                    ));
-                } else {
-                    $response->redirect($url);
-                }
-            }
+        Event::on(CraftVariable::class, CraftVariable::EVENT_INIT, function(Event $event) {
+            /** @var CraftVariable $variable */
+            $variable = $event->sender;
+            $variable->set('twoFactorAuthentication', Variables::class);
         });
 
         Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, function(RegisterUrlRulesEvent $event) {
@@ -144,7 +95,7 @@ class Plugin extends CraftPlugin
         Event::on(User::class, Element::EVENT_SET_TABLE_ATTRIBUTE_HTML, function(SetElementTableAttributeHtmlEvent $event) {
             $currentUser = Craft::$app->getUser()->getIdentity();
             if ($event->attribute == 'hasTwoFactorAuthentication' && $currentUser->admin) {
-                /** @var UserModel $user */
+                /** @var User $user */
                 $user = $event->sender;
 
                 if (Plugin::$plugin->verify->isEnabled($user)) {
@@ -157,5 +108,25 @@ class Plugin extends CraftPlugin
                 $event->handled = true;
             }
         });
+        
+        /**
+         * Hook into the users cp page.
+         */
+        Craft::$app->view->hook('cp.users.edit.details', function(array &$context) {
+            if (Craft::$app->getUser()->getIsAdmin() && !$context['isNewUser']) {
+                /** @var User $user */
+                $user = $context['user'];
+
+                return Craft::$app->getView()->renderTemplate('two-factor-authentication/_user/status', [
+                    'user' => $user,
+                    'enabled' => Plugin::$plugin->verify->isEnabled($user),
+                ]);
+            }
+        });
+    }
+
+    protected function createSettingsModel()
+    {
+        return new Settings();
     }
 }

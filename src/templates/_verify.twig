@@ -17,7 +17,11 @@
         <h2>{{ 'Two-Factor Authentication'|t('two-factor-authentication') }}</h2>
         <p>{{ "Enter the authentication code from your phone."|t('two-factor-authentication') }}</p>
 
-        {{ forms.textField({ id: "authenticationCode", name: "code", placeholder: "Authentication Code"|t('two-factor-authentication') }) }}
+        {{ forms.textField({
+          id: "authenticationCode",
+          name: "authenticationCode",
+          placeholder: "Authentication Code"|t('two-factor-authentication'),
+        }) }}
 
         <div class="buttons">
             <input id="submit" class="btn submit disabled" type="submit" value="{{ "Verify"|t('two-factor-authentication') }}">

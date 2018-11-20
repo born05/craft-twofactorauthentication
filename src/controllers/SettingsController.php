@@ -12,20 +12,27 @@ use born05\twofactorauthentication\web\assets\verify\VerifyAsset;
 class SettingsController extends Controller
 {
     /**
-     * Show the verify form.
+     * Show the settings form.
      */
     public function actionIndex()
     {
+        Craft::$app->view->registerAssetBundle(VerifyAsset::class);
+        return $this->renderTemplate('two-factor-authentication/index');
+    }
+    
+    /**
+     * Show the settings form.
+     */
+    public function actionForce()
+    {
         $user = Craft::$app->getUser()->getIdentity();
 
-        $rawSecret = TwoFactorAuth::$plugin->verify->getUserSecret($user);
+        if (TwoFactorAuth::$plugin->verify->isVerified($user)) {
+            return Craft::$app->getResponse()->redirect(UrlHelper::cpUrl());
+        }
 
         Craft::$app->view->registerAssetBundle(VerifyAsset::class);
-        return $this->renderTemplate('two-factor-authentication/index', [
-            'isUserVerified' => TwoFactorAuth::$plugin->verify->isVerified($user),
-            'currentUserSecret' => str_split($rawSecret, 4),
-            'currentUserQRCode' => TwoFactorAuth::$plugin->verify->getUserQRCode($user),
-        ]);
+        return $this->renderTemplate('two-factor-authentication/_force');
     }
 
     /**
@@ -35,13 +42,13 @@ class SettingsController extends Controller
         $this->requirePostRequest();
 
         $user = Craft::$app->getUser()->getIdentity();
-        $requestService = Craft::$app->getRequest();
-        
-        $authenticationCode = $requestService->getBodyParam('authenticationCode');
-        $returnUrl = UrlHelper::cpUrl('two-factor-authentication');
+        $request = Craft::$app->getRequest();
+  
+        $authenticationCode = $request->getBodyParam('authenticationCode');
+        $returnUrl = TwoFactorAuth::$plugin->response->getReturnUrl();
 
         if (TwoFactorAuth::$plugin->verify->verify($user, $authenticationCode)) {
-            if ($requestService->getAcceptsJson()) {
+            if ($request->getAcceptsJson()) {
                 return $this->asJson([
                     'success' => true,
                     'returnUrl' => $returnUrl
@@ -53,15 +60,15 @@ class SettingsController extends Controller
             $errorCode = User::AUTH_INVALID_CREDENTIALS;
             $errorMessage = Craft::t('two-factor-authentication', 'Authentication code is invalid.');
 
-            if ($requestService->getAcceptsJson()) {
+            if ($request->getAcceptsJson()) {
                 return $this->asJson([
                     'errorCode' => $errorCode,
                     'error' => $errorMessage
                 ]);
             } else {
-                Craft::$app->user->setError($errorMessage);
+                Craft::$app->getSession()->setError($errorMessage);
 
-                Craft::$app->urlManager->setRouteVariables([
+                Craft::$app->getUrlManager()->setRouteParams([
                     'errorCode' => $errorCode,
                     'errorMessage' => $errorMessage,
                 ]);

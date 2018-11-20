@@ -18,19 +18,37 @@ class Response extends Component
         $response = Craft::$app->getResponse();
         $response->format = \yii\web\Response::FORMAT_JSON;
         $response->data = $data;
-        Craft::$app->end(0, $response);
+        return $response;
     }
 
-    /**
-     * Determine if the url points to the verification part of this plugin.
-     *
-     * @param  strin $url
-     * @return boolean
-     */
-    public function isTwoFactorAuthenticationUrl($url)
+    public function getReturnUrl()
     {
-        $verifyUrl = UrlHelper::actionUrl('two-factor-authentication/verify');
+        // Get the return URL
+        $userService = Craft::$app->getUser();
+        $request = Craft::$app->getRequest();
+        $returnUrl = $userService->getReturnUrl();
 
-        return strpos($url, $verifyUrl) === 0;
+        // Clear it out
+        $userService->removeReturnUrl();
+
+        // MODIFIED FROM COPY
+        // Prevent looping back to the verify controller.
+        if (
+            $returnUrl === null ||
+            $returnUrl === $request->getPathInfo() ||
+            TwoFactorAuth::$plugin->request->is2FASpecialRequests()
+        ) {
+            // Is this a CP request and can they access the CP?
+            if (Craft::$app->getRequest()->getIsCpRequest() && Craft::$app->getUser()->checkPermission('accessCp')) {
+                $returnUrl = UrlHelper::cpUrl(Craft::$app->getConfig()->getGeneral()->getPostCpLoginRedirect());
+            } else {
+                $returnUrl = UrlHelper::siteUrl(Craft::$app->getConfig()->getGeneral()->getPostLoginRedirect());
+            }
+        }
+
+        // Clear it out
+        $userService->removeReturnUrl();
+
+        return $returnUrl;
     }
 }
