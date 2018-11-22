@@ -136,20 +136,26 @@ class Request extends Component
         );
 
         $isWhitelisted = false;
-		foreach($frontEndPathWhitelist as $path)
-		{
-			if (preg_match("/$path/i", $pathInfo)) {
-				$isWhitelisted = true;
-			}
-		}
+        foreach($frontEndPathWhitelist as $path) {
+            if ($this->isRegex("/$path/i")) {
+                if (preg_match("/$path/i", $pathInfo)) {
+                    $isWhitelisted = true;
+                }
+            } elseif ($path === $pathInfo) {
+                $isWhitelisted = true;
+            }
+        }
 
-		$isBlacklisted = false;
-		foreach($frontEndPathBlacklist as $path)
-		{
-			if (preg_match("/$path/i", $pathInfo)) {
-				$isBlacklisted = true;
-			}
-		}
+        $isBlacklisted = false;
+        foreach($frontEndPathBlacklist as $path) {
+            if ($this->isRegex("/$path/i")) {
+                if (preg_match("/$path/i", $pathInfo)) {
+                    $isBlacklisted = true;
+                }
+            } elseif ($path === $pathInfo) {
+                $isBlacklisted = true;
+            }
+        }
 
         return !$this->isCraftSpecialRequests() &&
             !$this->is2FASpecialRequests() &&
@@ -245,5 +251,14 @@ class Request extends Component
         }
 
         return UrlHelper::siteUrl(TwoFactorAuth::$plugin->getSettings()->getSettingsPath());
+    }
+
+    /**
+     * Determine valid regex.
+     * @param string $string
+     * @return boolean
+     */
+    private function isRegex(string $string) {
+        return @preg_match($string, '') !== false;
     }
 }
