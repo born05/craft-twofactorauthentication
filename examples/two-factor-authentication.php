@@ -12,11 +12,11 @@ return [
     'settingsPath' => '',
 
     // Choose between using the whitelist or blacklist! Using both will block everything!
-    // Whitelist paths that do not need 2FA.
+    // Whitelist paths that do not need 2FA. Exact path or regex.
     'frontEndPathWhitelist' => [
         '*' => [],
     ],
-    // Blacklist paths that do need 2FA.
+    // Blacklist paths that do need 2FA. Exact path or regex.
     'frontEndPathBlacklist' => [
         '*' => [],
     ],

@@ -1,6 +1,12 @@
 Changelog
 ==================
 
+## 2.0.0-beta.14 - 2018-11-22
+
+### Added
+- Blacklist and whitelist can be exact paths or regex.
+- `isTwoFactorEnabled` can be used from twig.
+
 ## 2.0.0-beta.13 - 2018-11-06
 
 ### Added

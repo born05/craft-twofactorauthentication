@@ -29,7 +29,7 @@ class Settings extends Model
 
     // Choose between using the whitelist or blacklist! Using both will block everything!
     /**
-     * @var mixed URIs.
+     * @var mixed URIs. Exact path or regex.
      *
      * See [[ConfigHelper::localizedValue()]] for a list of supported value types.
      * @see getFrontEndPathWhitelist()
@@ -37,7 +37,7 @@ class Settings extends Model
     public $frontEndPathWhitelist = [];
     
     /**
-     * @var mixed URIs.
+     * @var mixed URIs. Exact path or regex.
      *
      * See [[ConfigHelper::localizedValue()]] for a list of supported value types.
      * @see getFrontEndPathBlacklist()
