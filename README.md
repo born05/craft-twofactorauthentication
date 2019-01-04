@@ -50,6 +50,6 @@ Simply remove the user's `twofactorauthentication_user` record. This disables 2F
 
 ## License
 
-Copyright © 2018 [Born05](https://www.born05.com/)
+Copyright © 2019 [Born05](https://www.born05.com/)
 
 See [license](https://github.com/born05/craft-twofactorauthentication/blob/master/LICENSE.md)
