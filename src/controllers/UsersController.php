@@ -14,7 +14,8 @@ class UsersController extends Controller
     /**
      * Disable 2-factor for the provided user.
      */
-    public function actionTurnOff() {
+    public function actionTurnOff()
+    {
         $this->requirePostRequest();
 
         if (Craft::$app->getUser()->getIsAdmin()) {

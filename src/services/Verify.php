@@ -147,7 +147,8 @@ class Verify extends Component
      * @param  User $user
      * @return TOTP
      */
-    private function getTotp(User $user) {
+    private function getTotp(User $user)
+    {
         if (!isset($this->totp)) {
             $userRecord = $this->getUserRecord($user);
             $this->totp = new TOTP($user->email, $userRecord->secret);

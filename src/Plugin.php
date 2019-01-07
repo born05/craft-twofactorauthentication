@@ -50,7 +50,9 @@ class Plugin extends CraftPlugin
         $request = Craft::$app->getRequest();
         $response = Craft::$app->getResponse();
 
-        if (!$this->isInstalled || $request->getIsConsoleRequest()) return;
+        if (!$this->isInstalled || $request->getIsConsoleRequest()) {
+            return;
+        }
 
         // Register Components (Services)
         $this->setComponents([
@@ -62,17 +64,17 @@ class Plugin extends CraftPlugin
         $this->request->validateRequest();
 
         // Verify after login.
-        Event::on(\craft\web\User::class, \craft\web\User::EVENT_AFTER_LOGIN, function(UserEvent $event) {
+        Event::on(\craft\web\User::class, \craft\web\User::EVENT_AFTER_LOGIN, function (UserEvent $event) {
             $this->request->userLoginEventHandler($event);
         });
 
-        Event::on(CraftVariable::class, CraftVariable::EVENT_INIT, function(Event $event) {
+        Event::on(CraftVariable::class, CraftVariable::EVENT_INIT, function (Event $event) {
             /** @var CraftVariable $variable */
             $variable = $event->sender;
             $variable->set('twoFactorAuthentication', Variables::class);
         });
 
-        Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, function(RegisterUrlRulesEvent $event) {
+        Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, function (RegisterUrlRulesEvent $event) {
             $event->rules['two-factor-authentication'] = 'two-factor-authentication/settings/index';
         });
 
@@ -85,14 +87,14 @@ class Plugin extends CraftPlugin
          * Adds the following attributes to the User table in the CMS
          * NOTE: You still need to select them with the 'gear'
          */
-        Event::on(User::class, Element::EVENT_REGISTER_TABLE_ATTRIBUTES, function(RegisterElementTableAttributesEvent $event) {
+        Event::on(User::class, Element::EVENT_REGISTER_TABLE_ATTRIBUTES, function (RegisterElementTableAttributesEvent $event) {
             $event->tableAttributes['hasTwoFactorAuthentication'] = ['label' => Craft::t('two-factor-authentication', '2-Factor Auth')];
         });
 
         /**
          * Returns the content for the additional attributes field
          */
-        Event::on(User::class, Element::EVENT_SET_TABLE_ATTRIBUTE_HTML, function(SetElementTableAttributeHtmlEvent $event) {
+        Event::on(User::class, Element::EVENT_SET_TABLE_ATTRIBUTE_HTML, function (SetElementTableAttributeHtmlEvent $event) {
             $currentUser = Craft::$app->getUser()->getIdentity();
             if ($event->attribute == 'hasTwoFactorAuthentication' && $currentUser->admin) {
                 /** @var User $user */
@@ -112,7 +114,7 @@ class Plugin extends CraftPlugin
         /**
          * Hook into the users cp page.
          */
-        Craft::$app->view->hook('cp.users.edit.details', function(array &$context) {
+        Craft::$app->view->hook('cp.users.edit.details', function (array &$context) {
             if (Craft::$app->getUser()->getIsAdmin() && !$context['isNewUser']) {
                 /** @var User $user */
                 $user = $context['user'];

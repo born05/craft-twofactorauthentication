@@ -33,8 +33,7 @@ class Response extends Component
 
         // MODIFIED FROM COPY
         // Prevent looping back to the verify controller.
-        if (
-            $returnUrl === null ||
+        if ($returnUrl === null ||
             $returnUrl === $request->getPathInfo() ||
             TwoFactorAuth::$plugin->request->is2FASpecialRequests()
         ) {

@@ -75,7 +75,7 @@ class Request extends Component
             } else {
                 return Craft::$app->end(0, $response->redirect($url));
             }
-        } else if (isset($user) &&
+        } elseif (isset($user) &&
             !$verify->isEnabled($user) &&
             $this->isForced()
         ) {
@@ -136,7 +136,7 @@ class Request extends Component
         );
 
         $isWhitelisted = false;
-        foreach($frontEndPathWhitelist as $path) {
+        foreach ($frontEndPathWhitelist as $path) {
             if ($this->isRegex("/$path/i")) {
                 if (preg_match("/$path/i", $pathInfo)) {
                     $isWhitelisted = true;
@@ -147,7 +147,7 @@ class Request extends Component
         }
 
         $isBlacklisted = false;
-        foreach($frontEndPathBlacklist as $path) {
+        foreach ($frontEndPathBlacklist as $path) {
             if ($this->isRegex("/$path/i")) {
                 if (preg_match("/$path/i", $pathInfo)) {
                     $isBlacklisted = true;
@@ -258,7 +258,8 @@ class Request extends Component
      * @param string $string
      * @return boolean
      */
-    private function isRegex(string $string) {
+    private function isRegex(string $string)
+    {
         return @preg_match($string, '') !== false;
     }
 }

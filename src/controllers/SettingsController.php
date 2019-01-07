@@ -38,7 +38,8 @@ class SettingsController extends Controller
     /**
      * Turn on 2-factor for current user.
      */
-    public function actionTurnOn() {
+    public function actionTurnOn()
+    {
         $this->requirePostRequest();
 
         $user = Craft::$app->getUser()->getIdentity();
@@ -80,7 +81,8 @@ class SettingsController extends Controller
     /**
      * Disable 2-factor for current user.
      */
-    public function actionTurnOff() {
+    public function actionTurnOff()
+    {
         $this->requirePostRequest();
 
         $user = Craft::$app->getUser()->getIdentity();
