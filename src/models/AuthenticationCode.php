@@ -22,8 +22,7 @@ class AuthenticationCode extends Model
     public function validate($attributes = null, $clearErrors = true)
     {
         // Don't allow whitespace in the authenticationCode.
-        if (preg_match('/\s+/', $this->authenticationCode))
-        {
+        if (preg_match('/\s+/', $this->authenticationCode)) {
             $this->addError('authenticationCode', Craft::t('two-factor-authentication', 'Spaces are not allowed in the authentication code.'));
         }
 

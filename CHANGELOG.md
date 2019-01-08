@@ -1,6 +1,77 @@
 Changelog
 ==================
 
+## 2.0.0-beta.14 - 2018-11-22
+
+### Added
+- Blacklist and whitelist can be exact paths or regex.
+- `isTwoFactorEnabled` can be used from twig.
+
+## 2.0.0-beta.13 - 2018-11-06
+
+### Added
+- Added option to disable 2FA when a user is locked out of the account.
+
+## 2.0.0-beta.12 - 2018-10-12
+
+### Fixed
+- Allow 2FA on the front end home.
+
+## 2.0.0-beta.11 - 2018-10-10
+
+### Fixed
+- Fixed link to Google Authenticator
+
+## 2.0.0-beta.10 - 2018-10-05
+
+### Fixed
+- Fixed 2FA CP path detection
+
+## 2.0.0-beta.9 - 2018-10-05
+
+### Added
+- Front end 2FA support
+- Allow forcing 2FA
+
+### Fixed
+- Migrated old code to Craft 3
+
+## 2.0.0-beta.8 - 2018-09-09
+
+### Improved
+- @jlamb1 Fix Deprecation Error "Round"
+
+## 2.0.0-beta.7 - 2018-08-10
+
+### Improved
+- @brandonkelly Fixed the install migration
+
+## 2.0.0-beta.6 - 2018-07-20
+
+### Changed
+- Disabled the plugin for console commands.
+- Added support for upgrading from Craft 2.
+
+## 2.0.0-beta.5 - 2018-07-11
+
+### Improved
+- Added Dutch (NL) translation file. Thanks to @RichardFrontwise
+
+## 2.0.0-beta.4 - 2018-07-09
+
+### Changed
+- Changed the translation scope to app.
+
+## 2.0.0-beta.3 - 2018-07-05
+
+### Changed
+- Fixed debug bar support. Debug should be allowed, not trigger logout.
+
+## 2.0.0-beta.2 - 2018-07-04
+
+### Improved
+- Prevent redirect loop for cookieBased login.
+
 ## 2.0.0-beta.1 - 2018-06-29
 
 ### Improved

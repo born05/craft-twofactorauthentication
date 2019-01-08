@@ -1,7 +1,7 @@
 {
     "name": "born05/craft-twofactorauthentication",
     "description": "Craft 3 plugin for two-factor or two-step login using Time Based OTP.",
-    "version": "2.0.0-beta.1",
+    "version": "2.0.0-beta.14",
     "type": "craft-plugin",
     "keywords": [
         "craftcms-plugin",
@@ -12,7 +12,7 @@
         "login",
         "craftcms"
     ],
-    "license": "https://raw.githubusercontent.com/born05/craft-twofactorauthentication/master/LICENSE.md",
+    "license": "MIT",
     "homepage": "https://github.com/born05/craft-twofactorauthentication",
     "authors": [
         {
@@ -42,10 +42,6 @@
         "developer": "Born05",
         "developerUrl": "https://born05.com",
         "documentationUrl": "https://github.com/born05/craft-twofactorauthentication",
-        "changelogUrl": "https://raw.githubusercontent.com/born05/craft-twofactorauthentication/master/CHANGELOG.md",
-        "components": {
-            "response": "born05\\twofactorauthentication\\services\\Response",
-            "verify": "born05\\twofactorauthentication\\services\\Verify"
-        }
+        "changelogUrl": "https://raw.githubusercontent.com/born05/craft-twofactorauthentication/master/CHANGELOG.md"
     }
 }
