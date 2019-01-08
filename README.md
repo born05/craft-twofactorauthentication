@@ -1,6 +1,6 @@
 ![Two-Factor Authentication](https://raw.githubusercontent.com/born05/craft-twofactorauthentication/master/plugin-icon.png)
 
-# Two-Factor Authentication
+# THIS BRANCH IS WORK IN PROGRESS! DO NOT USE!!! Two-Factor Authentication
 
 Craft 3 plugin for two-factor or two-step login using Time Based OTP (TOTP, like Google Authenticator).
 Every user can setup TOTP themselves, the plugin does not force users. Admins can list usage in user tables.
