@@ -1,6 +1,10 @@
 Changelog
 ==================
 
+## 2.0.0 - 2019-01-15
+
+Stable release for Craft 3.
+
 ## 2.0.0-beta.14 - 2018-11-22
 
 ### Added
