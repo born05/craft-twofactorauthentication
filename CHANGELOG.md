@@ -1,6 +1,11 @@
 Changelog
 ==================
 
+## 2.1.0-beta.1 - 2019-01-18
+
+### Fixed
+- Support for Craft 3.1
+
 ## 2.0.0 - 2019-01-15
 
 Stable release for Craft 3.

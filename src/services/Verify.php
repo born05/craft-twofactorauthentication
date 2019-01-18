@@ -5,6 +5,8 @@ use Craft;
 use DateInterval;
 use OTPHP\TOTP;
 use yii\base\Component;
+use craft\db\Query;
+use craft\db\Table;
 use craft\elements\User;
 use craft\helpers\Db;
 use craft\helpers\DateTimeHelper;
@@ -216,33 +218,20 @@ class Verify extends Component
      */
     private function getSessionId(User $user)
     {
+        $session = Craft::$app->getSession();
+        $token = $session->get(Craft::$app->user->tokenParam);
+
         // Extract the current session token's UID from the identity cookie
-        $cookieValue = Craft::$app->getRequest()->getCookies()->getValue(Craft::$app->getUser()->identityCookie['name']);
-        if ($cookieValue !== null) {
-            $data = json_decode($cookieValue, true);
-
-            if (is_array($data) && isset($data[2])) {
-                $authData = User::authData($data[1]);
-
-                if ($authData) {
-                    $tokenUid = $authData[1];
-                }
-            }
-        }
-
-        if (isset($tokenUid)) {
-            // retrieve the session id.
-            $sessionRecord = \craft\records\Session::findOne([
+        $tokenId = (new Query())
+            ->select(['id'])
+            ->from([Table::SESSIONS])
+            ->where([
+                'token' => $token,
                 'userId' => $user->id,
-                'uid' => $tokenUid,
-            ]);
+            ])
+            ->scalar();
 
-            if (isset($sessionRecord)) {
-                return $sessionRecord->id;
-            }
-        }
-
-        return null;
+        return $tokenId;
     }
 
     /**
