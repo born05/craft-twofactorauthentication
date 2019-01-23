@@ -1,6 +1,11 @@
 Changelog
 ==================
 
+## 2.0.1 - 2019-01-23
+
+### Fixed
+- Fix otphp to pull their fix for random_compat on php 7.0 thanks to @mikestecker
+
 ## 2.0.0 - 2019-01-15
 
 Stable release for Craft 3.
