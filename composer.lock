@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "102da8dcf0674e48072679b901d7b1bb",
+    "content-hash": "41dc083a632828fb4875b5cd645f6a1a",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -379,16 +379,16 @@
         },
         {
             "name": "craftcms/cms",
-            "version": "3.1.1",
+            "version": "3.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/craftcms/cms.git",
-                "reference": "5e4ccf24c0bf5aab08793017feeaac30164b9fe6"
+                "reference": "0d7c54f05c5854568edd841b65d55e6eff06a9e3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/craftcms/cms/zipball/5e4ccf24c0bf5aab08793017feeaac30164b9fe6",
-                "reference": "5e4ccf24c0bf5aab08793017feeaac30164b9fe6",
+                "url": "https://api.github.com/repos/craftcms/cms/zipball/0d7c54f05c5854568edd841b65d55e6eff06a9e3",
+                "reference": "0d7c54f05c5854568edd841b65d55e6eff06a9e3",
                 "shasum": ""
             },
             "require": {
@@ -463,7 +463,7 @@
                 "craftcms",
                 "yii2"
             ],
-            "time": "2019-01-17T00:54:40+00:00"
+            "time": "2019-01-21T22:17:45+00:00"
         },
         {
             "name": "craftcms/oauth2-craftid",
@@ -1423,33 +1423,29 @@
         },
         {
             "name": "paragonie/random_compat",
-            "version": "v2.0.18",
+            "version": "v9.99.99",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "0a58ef6e3146256cc3dc7cc393927bcc7d1b72db"
+                "reference": "84b4dfb120c6f9b4ff7b3685f9b8f1aa365a0c95"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/0a58ef6e3146256cc3dc7cc393927bcc7d1b72db",
-                "reference": "0a58ef6e3146256cc3dc7cc393927bcc7d1b72db",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/84b4dfb120c6f9b4ff7b3685f9b8f1aa365a0c95",
+                "reference": "84b4dfb120c6f9b4ff7b3685f9b8f1aa365a0c95",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.2.0"
+                "php": "^7"
             },
             "require-dev": {
-                "phpunit/phpunit": "4.*|5.*"
+                "phpunit/phpunit": "4.*|5.*",
+                "vimeo/psalm": "^1"
             },
             "suggest": {
                 "ext-libsodium": "Provides a modern crypto API that can be used to generate random bytes."
             },
             "type": "library",
-            "autoload": {
-                "files": [
-                    "lib/random.php"
-                ]
-            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
@@ -1468,7 +1464,7 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2019-01-03T20:59:08+00:00"
+            "time": "2018-07-02T15:55:56+00:00"
         },
         {
             "name": "pixelandtonic/imagine",
@@ -1808,22 +1804,22 @@
         },
         {
             "name": "spomky-labs/otphp",
-            "version": "v8.3.2",
+            "version": "v8.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Spomky-Labs/otphp.git",
-                "reference": "d6cc467350fc281c8d4d351f9f1718f2f3967721"
+                "reference": "eb14442699ae6470b29ffd89238a9ccfb9f20788"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Spomky-Labs/otphp/zipball/d6cc467350fc281c8d4d351f9f1718f2f3967721",
-                "reference": "d6cc467350fc281c8d4d351f9f1718f2f3967721",
+                "url": "https://api.github.com/repos/Spomky-Labs/otphp/zipball/eb14442699ae6470b29ffd89238a9ccfb9f20788",
+                "reference": "eb14442699ae6470b29ffd89238a9ccfb9f20788",
                 "shasum": ""
             },
             "require": {
                 "beberlei/assert": "^2.4",
                 "paragonie/constant_time_encoding": "^1.0|^2.0",
-                "paragonie/random_compat": "^2.0",
+                "paragonie/random_compat": ">=2",
                 "php": "^5.5|^7.0",
                 "symfony/polyfill-mbstring": "^1.1",
                 "symfony/polyfill-php56": "^1.1"
@@ -1868,7 +1864,7 @@
                 "otp",
                 "totp"
             ],
-            "time": "2017-07-24T10:27:40+00:00"
+            "time": "2018-09-13T19:25:26+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
