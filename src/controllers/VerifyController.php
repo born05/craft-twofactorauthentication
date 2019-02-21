@@ -85,14 +85,20 @@ class VerifyController extends Controller
 
         // If this was an Ajax request, just return success:true
         if ($request->getAcceptsJson()) {
-            return $this->asJson([
+            $return = [
                 'success' => true,
                 'returnUrl' => $returnUrl
-            ]);
+            ];
+
+            if (Craft::$app->getConfig()->getGeneral()->enableCsrfProtection) {
+                $return['csrfTokenValue'] = $request->getCsrfToken();
+            }
+
+            return $this->asJson($return);
         }
 
         if ($setNotice) {
-            Craft::$app->getSession()->setNotice(Craft::t('two-factor-authentication', 'Logged in.'));
+            Craft::$app->getSession()->setNotice(Craft::t('app', 'Logged in.'));
         }
 
         $user = Craft::$app->getUser()->getIdentity();

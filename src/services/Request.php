@@ -170,21 +170,27 @@ class Request extends Component
      */
     private function isCraftSpecialRequests()
     {
+        // COPIED from craft\web\Application::_isSpecialCaseActionRequest
         $request = Craft::$app->getRequest();
         $actionSegs = $request->getActionSegments();
 
+        if (empty($actionSegs)) {
+            return false;
+        }
+
         return (
-            // COPIED from craft\web\Application::_isSpecialCaseActionRequest
             $actionSegs === ['app', 'migrate'] ||
             $actionSegs === ['users', 'login'] ||
+            $actionSegs === ['users', 'forgot-password'] ||
+            $actionSegs === ['users', 'send-password-reset-email'] ||
+            $actionSegs === ['users', 'get-remaining-session-time'] ||
+
             $actionSegs === ['users', 'logout'] ||
             $actionSegs === ['users', 'set-password'] ||
             $actionSegs === ['users', 'verify-email'] ||
-            $actionSegs === ['users', 'forgot-password'] ||
-            $actionSegs === ['users', 'send-password-reset-email'] ||
-            $actionSegs === ['users', 'save-user'] ||
-            $actionSegs === ['users', 'get-remaining-session-time'] ||
-            $actionSegs[0] === 'updater' ||
+
+            $actionSegs[0] === 'update' ||
+            $actionSegs[0] === 'manualupdate' ||
             $actionSegs[0] === 'debug'
         );
     }
