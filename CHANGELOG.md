@@ -1,6 +1,11 @@
 Changelog
 ==================
 
+## 2.1.0 - 2019-02-22
+
+### Fixed
+- Make sure the User's EVENT_AFTER_LOGIN is triggered thanks to @engram-design
+
 ## 2.1.0-beta.2 - 2019-01-23
 
 ### Fixed
