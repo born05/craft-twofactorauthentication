@@ -1,6 +1,11 @@
 Changelog
 ==================
 
+## 2.1.1 - 2019-02-28
+
+### Fixed
+- Disabling 2FA for other users failed
+
 ## 2.1.0 - 2019-02-22
 
 ### Fixed

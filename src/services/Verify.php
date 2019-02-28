@@ -117,9 +117,12 @@ class Verify extends Component
         $userRecord->secret = $totp->getSecret();
         $userRecord->update();
 
-        // Delete the session record
-        $twoFactorSessionRecord = $this->getTwoFactorSessionRecord($user);
-        if (isset($twoFactorSessionRecord)) {
+        // Delete the session records
+        $twoFactorSessionRecords = SessionRecord::findAll([
+            'userId' => $user->id,
+        ]);
+        
+        foreach ($twoFactorSessionRecords as $twoFactorSessionRecord) {
             $twoFactorSessionRecord->delete();
         }
     }
