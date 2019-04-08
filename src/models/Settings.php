@@ -7,6 +7,13 @@ use craft\helpers\ConfigHelper;
 
 class Settings extends Model
 {
+    /**
+     * Allow a totp delay in seconds (gives the user some extra time after code expired)
+     *
+     * @var int
+     */
+    public $totpDelay = null;
+
     public $verifyFrontEnd = false;
     public $forceFrontEnd = false;
     public $forceBackEnd = false;

@@ -1,6 +1,9 @@
 <?php
 
 return [
+    // Allow a totp delay in seconds (gives the user some extra time after code expired)
+    'totpDelay' => null,
+
     'verifyFrontEnd' => false,
     'forceFrontEnd' => false,
     'forceBackEnd' => false,

@@ -1,6 +1,11 @@
 Changelog
 ==================
 
+## 2.1.2 - 2019-04-08
+
+### Added
+- Added `totpDelay` config option (gives the user some extra time after code expired)
+
 ## 2.1.1 - 2019-02-28
 
 ### Fixed

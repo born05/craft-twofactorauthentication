@@ -69,6 +69,8 @@ class Verify extends Component
      */
     public function verify(User $user, $authenticationCode)
     {
+        $settings = TwoFactorAuth::$plugin->getSettings();
+
         $authenticationCodeModel = new AuthenticationCodeModel();
         $authenticationCodeModel->authenticationCode = str_replace(' ', '', $authenticationCode);
 
@@ -76,6 +78,13 @@ class Verify extends Component
             // Magic checking of the authentication code.
             $totp = $this->getTotp($user);
             $isValid = $this->getTotp($user)->verify($authenticationCodeModel->authenticationCode);
+
+            if (!$isValid && is_int($settings->totpDelay)) {
+                $isValid = $this->getTotp($user)->verify(
+                    $authenticationCodeModel->authenticationCode,
+                    time() - $settings->totpDelay
+                );
+            }
 
             if (!$isValid) {
                 return false;
