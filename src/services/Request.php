@@ -101,8 +101,9 @@ class Request extends Component
     {
         $request = Craft::$app->getRequest();
         $actionSegs = $request->getActionSegments();
+        $settings = TwoFactorAuth::$plugin->getSettings();
 
-        return $request->getIsCpRequest() &&
+        return ($settings->verifyBackEnd && $request->getIsCpRequest()) &&
                 // COPIED from craft\web\Application::_isSpecialCaseActionRequest
                 $request->getPathInfo() !== '' &&
                !$this->isCraftSpecialRequests() &&

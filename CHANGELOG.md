@@ -3,6 +3,9 @@ Changelog
 
 ## 2.2.0 - 2019-07-31
 
+### Added
+- Added verifyBackEnd option
+
 ### Fixed
 - Fixed admin redirect issue when using forceBackEnd.
 

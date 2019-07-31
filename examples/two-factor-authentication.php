@@ -5,6 +5,8 @@ return [
     'totpDelay' => null,
 
     'verifyFrontEnd' => false,
+    'verifyBackEnd' => true,
+
     'forceFrontEnd' => false,
     'forceBackEnd' => false,
     
