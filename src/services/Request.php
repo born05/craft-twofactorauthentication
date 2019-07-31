@@ -225,6 +225,7 @@ class Request extends Component
 
         return (
             $request->getAbsoluteUrl() === $this->getSettingsUrl() ||
+            $actionSegs === ['two-factor-authentication', 'settings', 'force'] ||
             $actionSegs === ['two-factor-authentication', 'settings', 'turn-on']
         );
     }

@@ -1,6 +1,11 @@
 Changelog
 ==================
 
+## 2.2.0 - 2019-07-31
+
+### Fixed
+- Fixed admin redirect issue when using forceBackEnd.
+
 ## 2.1.2 - 2019-04-08
 
 ### Added
