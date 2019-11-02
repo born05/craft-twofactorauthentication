@@ -26,7 +26,10 @@ class Response extends Component
         // Get the return URL
         $userService = Craft::$app->getUser();
         $request = Craft::$app->getRequest();
-        $returnUrl = $userService->getReturnUrl();
+        $returnUrl = Craft::$app->getRequest()->getValidatedBodyParam('redirect');
+        if(is_null($returnUrl)){
+            $returnUrl = $userService->getReturnUrl();
+        }
 
         // Clear it out
         $userService->removeReturnUrl();
@@ -40,7 +43,7 @@ class Response extends Component
             // Is this a CP request and can they access the CP?
             if (Craft::$app->getRequest()->getIsCpRequest() && Craft::$app->getUser()->checkPermission('accessCp')) {
                 $returnUrl = UrlHelper::cpUrl(Craft::$app->getConfig()->getGeneral()->getPostCpLoginRedirect());
-            } else {
+            } elseif(is_null($returnUrl)) {
                 $returnUrl = UrlHelper::siteUrl(Craft::$app->getConfig()->getGeneral()->getPostLoginRedirect());
             }
         }

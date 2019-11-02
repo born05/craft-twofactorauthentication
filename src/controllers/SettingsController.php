@@ -46,9 +46,9 @@ class SettingsController extends Controller
         $request = Craft::$app->getRequest();
   
         $authenticationCode = $request->getBodyParam('authenticationCode');
-        $returnUrl = TwoFactorAuth::$plugin->response->getReturnUrl();
 
         if (TwoFactorAuth::$plugin->verify->verify($user, $authenticationCode)) {
+            $returnUrl = TwoFactorAuth::$plugin->response->getReturnUrl();
             if ($request->getAcceptsJson()) {
                 return $this->asJson([
                     'success' => true,
@@ -73,6 +73,11 @@ class SettingsController extends Controller
                     'errorCode' => $errorCode,
                     'errorMessage' => $errorMessage,
                 ]);
+                $returnUrl = TwoFactorAuth::$plugin->response->getReturnUrl();
+                if (Craft::$app->getRequest()->getIsCpRequest() === false) {
+                    $settings = TwoFactorAuth::$plugin->getSettings();
+                    $returnUrl = $settings->getSettingsPath();
+                }
                 return $this->redirect($returnUrl);
             }
         }
@@ -88,7 +93,11 @@ class SettingsController extends Controller
         $user = Craft::$app->getUser()->getIdentity();
         TwoFactorAuth::$plugin->verify->disableUser($user);
 
-        $returnUrl = UrlHelper::cpUrl('two-factor-authentication');
+        if (Craft::$app->getRequest()->getIsCpRequest() && Craft::$app->getUser()->checkPermission('accessCp')) {
+            $returnUrl = UrlHelper::cpUrl('two-factor-authentication');
+        }else{
+            $returnUrl = TwoFactorAuth::$plugin->response->getReturnUrl();
+        }
         return $this->redirect($returnUrl);
     }
 }
