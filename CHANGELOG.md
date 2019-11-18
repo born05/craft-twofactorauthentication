@@ -1,6 +1,14 @@
 Changelog
 ==================
 
+## 2.3.0 - 2019-11-18
+
+### Added
+- Add in the ability to add the secure redirect field to the front-end forms. Thanks to @coxeh
+
+### Fixed
+- Fixed a bug where turning off 2 step on the front end always redirects to the admin cp. Thanks to @coxeh
+
 ## 2.2.0 - 2019-07-31
 
 ### Added
