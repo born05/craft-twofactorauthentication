@@ -31,7 +31,6 @@ class VerifyController extends Controller
     {
         $this->requireLogin();
         $this->requirePostRequest();
-        $responseService = TwoFactorAuth::$plugin->response;
         $request = Craft::$app->getRequest();
 
         $authenticationCode = $request->getBodyParam('authenticationCode');
@@ -80,14 +79,13 @@ class VerifyController extends Controller
     private function _handleSuccessfulLogin($setNotice)
     {
         $request = Craft::$app->getRequest();
-        $responseService = TwoFactorAuth::$plugin->response;
-        $returnUrl = $responseService->getReturnUrl();
+        $returnUrl = TwoFactorAuth::$plugin->response->getReturnUrl();
 
         // If this was an Ajax request, just return success:true
         if ($request->getAcceptsJson()) {
             $return = [
                 'success' => true,
-                'returnUrl' => $returnUrl
+                'returnUrl' => $returnUrl,
             ];
 
             if (Craft::$app->getConfig()->getGeneral()->enableCsrfProtection) {
