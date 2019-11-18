@@ -49,6 +49,7 @@ class SettingsController extends Controller
 
         if (TwoFactorAuth::$plugin->verify->verify($user, $authenticationCode)) {
             $returnUrl = TwoFactorAuth::$plugin->response->getReturnUrl();
+
             if ($request->getAcceptsJson()) {
                 return $this->asJson([
                     'success' => true,
@@ -73,8 +74,10 @@ class SettingsController extends Controller
                     'errorCode' => $errorCode,
                     'errorMessage' => $errorMessage,
                 ]);
+
                 $returnUrl = TwoFactorAuth::$plugin->response->getReturnUrl();
-                if (Craft::$app->getRequest()->getIsCpRequest() === false) {
+
+                if (!Craft::$app->getRequest()->getIsCpRequest()) {
                     $settings = TwoFactorAuth::$plugin->getSettings();
                     $returnUrl = $settings->getSettingsPath();
                 }
@@ -95,7 +98,7 @@ class SettingsController extends Controller
 
         if (Craft::$app->getRequest()->getIsCpRequest() && Craft::$app->getUser()->checkPermission('accessCp')) {
             $returnUrl = UrlHelper::cpUrl('two-factor-authentication');
-        }else{
+        } else {
             $returnUrl = TwoFactorAuth::$plugin->response->getReturnUrl();
         }
         return $this->redirect($returnUrl);
