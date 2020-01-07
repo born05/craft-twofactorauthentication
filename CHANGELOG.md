@@ -1,6 +1,11 @@
 Changelog
 ==================
 
+## 2.4.0 - 2020-01-07
+
+### Fixed
+- `userLoginEventHandler` now uses verifyBackEnd and verifyFrontEnd options as it is supposed to.
+
 ## 2.3.0 - 2019-11-18
 
 ### Added

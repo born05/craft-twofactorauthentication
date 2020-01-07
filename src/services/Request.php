@@ -56,6 +56,17 @@ class Request extends Component
         $responseService = TwoFactorAuth::$plugin->response;
         $verify = TwoFactorAuth::$plugin->verify;
 
+        $settings = TwoFactorAuth::$plugin->getSettings();
+
+        // Don't verify when disabled.
+        if ($request->getIsCpRequest()) {
+            if (!$settings->verifyBackEnd) {
+                return;
+            }
+        } elseif (!$settings->verifyFrontEnd) {
+            return;
+        }
+
         if (isset($user) &&
             $verify->isEnabled($user) &&
             !$verify->isVerified($user)
@@ -63,7 +74,7 @@ class Request extends Component
             if ($request->getIsCpRequest()) {
                 $url = UrlHelper::actionUrl('two-factor-authentication/verify/login');
             } else {
-                $url = UrlHelper::siteUrl(TwoFactorAuth::$plugin->getSettings()->getVerifyPath());
+                $url = UrlHelper::siteUrl($settings->getVerifyPath());
             }
 
             // Redirect to verification page.
