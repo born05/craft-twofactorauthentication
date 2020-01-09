@@ -21,7 +21,7 @@
         }
     ],
     "require": {
-        "craftcms/cms": "^3.1.0",
+        "craftcms/cms": "^3.1",
         "spomky-labs/otphp": "^8.3"
     },
     "autoload": {
