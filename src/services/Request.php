@@ -71,7 +71,7 @@ class Request extends Component
             $verify->isEnabled($user) &&
             !$verify->isVerified($user)
         ) {
-            if ($request->getIsCpRequest()) {
+            if ($request->getIsCpRequest() && $user->can('accessCp')) {
                 $url = UrlHelper::actionUrl('two-factor-authentication/verify/login');
             } else {
                 $url = UrlHelper::siteUrl($settings->getVerifyPath());
@@ -90,7 +90,7 @@ class Request extends Component
             !$verify->isEnabled($user) &&
             $this->isForced()
         ) {
-            $url = $this->getSettingsUrl();
+            $url = $this->getSettingsUrl($user);
 
             // Redirect to verification page.
             if ($request->getAcceptsJson()) {
@@ -261,11 +261,11 @@ class Request extends Component
      * Determine if 2FA is forced.
      * @return string
      */
-    private function getSettingsUrl()
+    private function getSettingsUrl(User $user = null)
     {
         $request = Craft::$app->getRequest();
 
-        if ($request->getIsCpRequest()) {
+        if ($request->getIsCpRequest() && (!isset($user) || $user->can('accessCp'))) {
             return UrlHelper::actionUrl('two-factor-authentication/settings/force');
         }
 
