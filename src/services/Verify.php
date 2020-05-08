@@ -233,7 +233,10 @@ class Verify extends Component
         $session = Craft::$app->getSession();
         $token = $session->get(Craft::$app->user->tokenParam);
 
-        // Extract the current session token's UID from the identity cookie
+        if ($token === null) {
+            return;
+        }
+
         $tokenId = (new Query())
             ->select(['id'])
             ->from([Table::SESSIONS])
@@ -244,22 +247,5 @@ class Verify extends Component
             ->scalar();
 
         return $tokenId;
-    }
-
-    /**
-     * Determine if the UserAgent matches the current one.
-     *
-     * @param string $userAgent
-     * @return bool
-     */
-    private function checkUserAgentString($userAgent)
-    {
-        if (Craft::$app->getConfig()->get('requireMatchingUserAgentForSession')) {
-            $currentUserAgent = Craft::$app->request->getUserAgent();
-
-            return $userAgent === $currentUserAgent;
-        }
-
-        return true;
     }
 }
