@@ -1,6 +1,14 @@
 Changelog
 ==================
 
+## 2.6.0 - 2020-06-15
+
+{warning} BREAKING! Use frontEndPathAllow/frontEndPathExclude instead of frontEndPathWhitelist/frontEndPathBlacklist!
+
+### Improved
+- Use allow/exclude in favor of whitelist/blacklist
+- Removed `ConfigHelper::localizedValue` from config making configs more dependable.
+
 ## 2.5.0 - 2020-05-19
 
 ### Added

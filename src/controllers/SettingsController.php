@@ -79,7 +79,7 @@ class SettingsController extends Controller
 
                 if (!Craft::$app->getRequest()->getIsCpRequest()) {
                     $settings = TwoFactorAuth::$plugin->getSettings();
-                    $returnUrl = $settings->getSettingsPath();
+                    $returnUrl = $settings->settingsPath;
                 }
                 return $this->redirect($returnUrl);
             }

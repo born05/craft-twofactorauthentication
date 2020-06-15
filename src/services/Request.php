@@ -74,7 +74,7 @@ class Request extends Component
             if ($request->getIsCpRequest()) {
                 $url = UrlHelper::actionUrl('two-factor-authentication/verify/login');
             } else {
-                $url = UrlHelper::siteUrl($settings->getVerifyPath());
+                $url = UrlHelper::siteUrl($settings->verifyPath);
             }
 
             // Redirect to verification page.
@@ -136,44 +136,42 @@ class Request extends Component
             return false;
         }
 
-        $frontEndPathWhitelist = $settings->getFrontEndPathWhitelist();
-        $frontEndPathBlacklist = $settings->getFrontEndPathBlacklist();
         $pathInfo = $request->getPathInfo();
 
         $isLoginPath = (
             $pathInfo === trim($generalConfig->getLoginPath(), '/') ||
             $pathInfo === trim($generalConfig->getLogoutPath(), '/') ||
-            $pathInfo === trim($settings->getVerifyPath(), '/') ||
-            $pathInfo === trim($settings->getSettingsPath(), '/')
+            $pathInfo === trim($settings->verifyPath, '/') ||
+            $pathInfo === trim($settings->settingsPath, '/')
         );
 
-        $isWhitelisted = false;
-        foreach ($frontEndPathWhitelist as $path) {
+        $isAllowed = false;
+        foreach ($settings->frontEndPathAllow as $path) {
             if ($this->isRegex("/$path/i")) {
                 if (preg_match("/$path/i", $pathInfo)) {
-                    $isWhitelisted = true;
+                    $isAllowed = true;
                 }
             } elseif ($path === $pathInfo) {
-                $isWhitelisted = true;
+                $isAllowed = true;
             }
         }
 
-        $isBlacklisted = false;
-        foreach ($frontEndPathBlacklist as $path) {
+        $isExcluded = false;
+        foreach ($settings->frontEndPathExclude as $path) {
             if ($this->isRegex("/$path/i")) {
                 if (preg_match("/$path/i", $pathInfo)) {
-                    $isBlacklisted = true;
+                    $isExcluded = true;
                 }
             } elseif ($path === $pathInfo) {
-                $isBlacklisted = true;
+                $isExcluded = true;
             }
         }
 
         return !$this->isCraftSpecialRequests() &&
             !$this->is2FASpecialRequests() &&
             !$isLoginPath &&
-            !$isWhitelisted &&
-            $isBlacklisted;
+            !$isAllowed &&
+            $isExcluded;
     }
 
     /**
@@ -269,7 +267,7 @@ class Request extends Component
             return UrlHelper::actionUrl('two-factor-authentication/settings/force');
         }
 
-        return UrlHelper::siteUrl(TwoFactorAuth::$plugin->getSettings()->getSettingsPath());
+        return UrlHelper::siteUrl(TwoFactorAuth::$plugin->getSettings()->settingsPath);
     }
 
     /**

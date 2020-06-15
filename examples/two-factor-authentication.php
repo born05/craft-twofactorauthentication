@@ -17,12 +17,12 @@ return [
         // The URI we should use for 2FA settings (turning it on and off) on the front-end.
         'settingsPath' => '',
 
-        // Choose between using the whitelist or blacklist! Using both will block everything!
-        // Whitelist paths that do not need 2FA. Exact path or regex. No leading slashes.
-        'frontEndPathWhitelist' => [
+        // Choose between using the accept or exclude! Using both will block everything!
+        // Allow paths that do not need 2FA. Exact path or regex. No leading slashes.
+        'frontEndPathAllow' => [
         ],
-        // Blacklist paths that do need 2FA. Exact path or regex. No leading slashes.
-        'frontEndPathBlacklist' => [
+        // Exclude paths that do need 2FA. Exact path or regex. No leading slashes.
+        'frontEndPathExclude' => [
         ],
     ],
 ];

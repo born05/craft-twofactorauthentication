@@ -24,7 +24,7 @@ When using a login for front end users, the following steps add 2FA support.
 
 - Copy the [two-factor-authentication.php](https://github.com/born05/craft-twofactorauthentication/blob/master/examples/two-factor-authentication.php) file to your `config/` folder.
 - Set `verifyFrontEnd` to `true` in the config file.
-- Define what urls should be protected with 2FA verification. Choose between using the `frontEndPathWhitelist` or `frontEndPathBlacklist`! Using both will block everything! See config for additional info.
+- Define what urls should be protected with 2FA verification. Choose between using the `frontEndPathAllow` or `frontEndPathExclude`! Using both will block everything! See config for additional info.
 - Build a 2FA login-verify form accessible by url like the [example twig](https://github.com/born05/craft-twofactorauthentication/blob/master/examples/login-verify.twig).
 - Set the `verifyPath`. For our `login-verify.twig` example the path would be `login-verify`.
 - Allow users setting up 2FA in front end by building a template like the [example twig](https://github.com/born05/craft-twofactorauthentication/blob/master/examples/two-factor-settings.twig).
