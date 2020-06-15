@@ -3,7 +3,7 @@ Changelog
 
 ## 2.6.1 - 2020-06-15
 
-> {warning} BREAKING! Use frontEndPathAllow/frontEndPathExclude instead of frontEndPathWhitelist/frontEndPathBlacklist!
+Fixed warning of 2.6.0
 
 ## 2.6.0 - 2020-06-15
 
