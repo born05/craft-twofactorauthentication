@@ -1,9 +1,13 @@
 Changelog
 ==================
 
+## 2.6.1 - 2020-06-15
+
+> {warning} BREAKING! Use frontEndPathAllow/frontEndPathExclude instead of frontEndPathWhitelist/frontEndPathBlacklist!
+
 ## 2.6.0 - 2020-06-15
 
-{warning} BREAKING! Use frontEndPathAllow/frontEndPathExclude instead of frontEndPathWhitelist/frontEndPathBlacklist!
+> {warning} BREAKING! Use frontEndPathAllow/frontEndPathExclude instead of frontEndPathWhitelist/frontEndPathBlacklist!
 
 ### Improved
 - Use allow/exclude in favor of whitelist/blacklist
