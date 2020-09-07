@@ -21,7 +21,7 @@ return [
         /**
          * Whether users should be forced to enable 2FA when logging into the
          * front-end. When this is true, users that do not have 2FA enabled will
-         * not be able to access the control panel without first enabling 2FA.
+         * not be able to access the front-end without first enabling 2FA.
          */
         'forceFrontEnd' => false,
 
