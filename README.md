@@ -18,6 +18,11 @@ This means the user is already logged in. When the user tries to visit an other 
 - PHP 7.x at least
 - `userSessionDuration` in the general.php config should be larger than 0 (by default)
 
+## Setting up back end 2FA
+
+- Set `verifyBackEnd` to `true` in the config file (this is the default).
+- Set `forceBackEnd` to `true` if you want to prevent users from accessing the control panel without first enabling 2FA.
+
 ## Setting up front end 2FA
 
 When using a login for front end users, the following steps add 2FA support.
