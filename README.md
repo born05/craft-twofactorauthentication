@@ -58,4 +58,4 @@ Simply remove the user's `twofactorauthentication_user` record. This disables 2F
 
 Copyright © [Born05](https://www.born05.com/)
 
-See [license](https://github.com/born05/craft-twofactorauthentication/blob/master/LICENSE.md)
+See [license](https://github.com/born05/craft-twofactorauthentication/blob/craft-3.1/LICENSE.md)
