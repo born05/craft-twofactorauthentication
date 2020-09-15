@@ -50,7 +50,7 @@ class Verify extends Component
 
             if (isset($sessionRecord)) {
                 $sessionDuration = Craft::$app->getUser()->getRemainingSessionTime();
-                $minimalSessionDate = DateTimeHelper::currentUTCDateTime();
+                $minimalSessionDate = new \DateTime();
                 $minimalSessionDate->sub(new DateInterval('PT' . $sessionDuration . 'S'));
                 $dateVerified = DateTimeHelper::toDateTime($sessionRecord->dateVerified);
 
@@ -213,10 +213,11 @@ class Verify extends Component
         ]);
 
         if (!isset($twoFactorSessionRecord)) {
+            $now = DateTimeHelper::currentUTCDateTime();
             $twoFactorSessionRecord = new SessionRecord();
             $twoFactorSessionRecord->userId = $user->id;
             $twoFactorSessionRecord->sessionId = $sessionId;
-            $twoFactorSessionRecord->dateVerified = DateTimeHelper::currentUTCDateTime();
+            $twoFactorSessionRecord->dateVerified = Db::prepareValueForDb($now);
             $twoFactorSessionRecord->save();
         }
 
