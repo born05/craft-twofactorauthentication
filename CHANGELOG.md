@@ -1,6 +1,11 @@
 Changelog
 ==================
 
+## 2.6.2 - 2020-09-15
+
+### Fixed
+- DateTime comparisment is now between similar timezones. 
+
 ## 2.6.1 - 2020-06-15
 
 Fixed warning of 2.6.0
