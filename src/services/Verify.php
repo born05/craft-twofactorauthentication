@@ -50,6 +50,10 @@ class Verify extends Component
 
             if (isset($sessionRecord)) {
                 $sessionDuration = Craft::$app->getUser()->getRemainingSessionTime();
+                if ($sessionDuration === -1) { // will expire when browser closes
+                    return true;
+                }
+
                 $minimalSessionDate = new \DateTime();
                 $minimalSessionDate->sub(new DateInterval('PT' . $sessionDuration . 'S'));
                 $dateVerified = DateTimeHelper::toDateTime($sessionRecord->dateVerified);

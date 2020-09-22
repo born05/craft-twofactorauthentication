@@ -16,7 +16,6 @@ This means the user is already logged in. When the user tries to visit an other 
 
 - Craft 3.0.0
 - PHP 7.x at least
-- `userSessionDuration` in the general.php config should be larger than 0 (by default)
 
 ## Setting up back end 2FA
 

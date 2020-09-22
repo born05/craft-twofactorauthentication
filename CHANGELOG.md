@@ -1,6 +1,11 @@
 Changelog
 ==================
 
+## 2.6.3 - 2020-09-22
+
+### Changed
+- Allow `userSessionDuration` to be `0`
+
 ## 2.6.2 - 2020-09-15
 
 ### Fixed
