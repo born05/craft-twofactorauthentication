@@ -11,13 +11,14 @@ use craft\elements\User;
 use craft\helpers\Db;
 use craft\helpers\DateTimeHelper;
 use born05\twofactorauthentication\records\User as UserRecord;
-use born05\twofactorauthentication\records\Session as SessionRecord;
 use born05\twofactorauthentication\models\AuthenticationCode as AuthenticationCodeModel;
 use born05\twofactorauthentication\Plugin as TwoFactorAuth;
 
 class Verify extends Component
 {
     private $totp;
+
+    const SESSION_AUTH_HANDLE = 'twofactorauth_verified';
 
     /**
      * Determines if the user has two-factor authentication.
@@ -40,29 +41,7 @@ class Verify extends Component
      */
     public function isVerified(User $user)
     {
-        $sessionId = $this->getSessionId($user);
-
-        if (isset($sessionId)) {
-            $sessionRecord = SessionRecord::findOne([
-                'userId' => $user->id,
-                'sessionId' => $sessionId,
-            ]);
-
-            if (isset($sessionRecord)) {
-                $sessionDuration = Craft::$app->getUser()->getRemainingSessionTime();
-                if ($sessionDuration === -1) { // will expire when browser closes
-                    return true;
-                }
-
-                $minimalSessionDate = new \DateTime();
-                $minimalSessionDate->sub(new DateInterval('PT' . $sessionDuration . 'S'));
-                $dateVerified = DateTimeHelper::toDateTime($sessionRecord->dateVerified);
-
-                return $dateVerified > $minimalSessionDate;
-            }
-        }
-
-        return false;
+        return Craft::$app->getSession()->get(self::SESSION_AUTH_HANDLE) === true;
     }
 
     /**
@@ -101,12 +80,7 @@ class Verify extends Component
                 $userRecord->update();
             }
 
-            $twoFactorSessionRecord = $this->getTwoFactorSessionRecord($user);
-            
-            if (isset($twoFactorSessionRecord)) {
-                $twoFactorSessionRecord->dateVerified = Db::prepareValueForDb($now);
-                $twoFactorSessionRecord->update();
-            }
+            Craft::$app->getSession()->set(self::SESSION_AUTH_HANDLE, true);
 
             return true;
         }
@@ -130,14 +104,7 @@ class Verify extends Component
         $userRecord->secret = $totp->getSecret();
         $userRecord->update();
 
-        // Delete the session records
-        $twoFactorSessionRecords = SessionRecord::findAll([
-            'userId' => $user->id,
-        ]);
-        
-        foreach ($twoFactorSessionRecords as $twoFactorSessionRecord) {
-            $twoFactorSessionRecord->delete();
-        }
+        Craft::$app->getSession()->remove(self::SESSION_AUTH_HANDLE);
     }
 
     /**
@@ -196,61 +163,5 @@ class Verify extends Component
         }
 
         return $userRecord;
-    }
-
-    /**
-     * Get the session record for two-factor.
-     * @param  User $user
-     * @return SessionRecord
-     */
-    private function getTwoFactorSessionRecord(User $user)
-    {
-        $sessionId = $this->getSessionId($user);
-
-        if (!isset($sessionId)) {
-            return null;
-        }
-
-        $twoFactorSessionRecord = SessionRecord::findOne([
-            'userId' => $user->id,
-            'sessionId' => $sessionId,
-        ]);
-
-        if (!isset($twoFactorSessionRecord)) {
-            $now = DateTimeHelper::currentUTCDateTime();
-            $twoFactorSessionRecord = new SessionRecord();
-            $twoFactorSessionRecord->userId = $user->id;
-            $twoFactorSessionRecord->sessionId = $sessionId;
-            $twoFactorSessionRecord->dateVerified = Db::prepareValueForDb($now);
-            $twoFactorSessionRecord->save();
-        }
-
-        return $twoFactorSessionRecord;
-    }
-
-    /**
-     * Get the session id.
-     * @param  User $user
-     * @return int
-     */
-    private function getSessionId(User $user)
-    {
-        $session = Craft::$app->getSession();
-        $token = $session->get(Craft::$app->user->tokenParam);
-
-        if ($token === null) {
-            return;
-        }
-
-        $tokenId = (new Query())
-            ->select(['id'])
-            ->from([Table::SESSIONS])
-            ->where([
-                'token' => $token,
-                'userId' => $user->id,
-            ])
-            ->scalar();
-
-        return $tokenId;
     }
 }

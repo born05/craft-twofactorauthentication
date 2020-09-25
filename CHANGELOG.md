@@ -1,6 +1,11 @@
 Changelog
 ==================
 
+## 2.7.0-beta.1 - 2020-09-25
+
+### Changed
+- Move from a custom session table to storing data in the session.
+
 ## 2.6.3 - 2020-09-22
 
 ### Changed
