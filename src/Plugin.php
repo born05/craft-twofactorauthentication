@@ -27,7 +27,7 @@ class Plugin extends CraftPlugin
     /**
      * @var string
      */
-    public $schemaVersion = '2.7.0';
+    public $schemaVersion = '2.7.2';
 
     /**
      * @var bool

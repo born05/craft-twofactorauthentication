@@ -14,17 +14,6 @@ class Install extends Migration
             return;
         }
 
-        // Fresh install code goes here...
-        $this->createTable('{{%twofactorauthentication_session}}', [
-            'id' => $this->primaryKey(),
-            'userId' => $this->integer()->notNull(),
-            'sessionId' => $this->integer()->notNull(),
-            'dateVerified' => $this->dateTime(),
-            'dateCreated' => $this->dateTime()->notNull(),
-            'dateUpdated' => $this->dateTime()->notNull(),
-            'uid' => $this->uid(),
-        ]);
-
         $this->createTable(User::tableName(), [
             'id' => $this->primaryKey(),
             'userId' => $this->integer()->notNull(),
@@ -35,11 +24,8 @@ class Install extends Migration
             'uid' => $this->uid(),
         ]);
 
-        $this->createIndex(null, '{{%twofactorauthentication_session}}', ['userId', 'sessionId'], true);
         $this->createIndex(null, User::tableName(), ['userId'], true);
 
-        $this->addForeignKey(null, '{{%twofactorauthentication_session}}', ['userId'], '{{%users}}', ['id'], 'CASCADE', null);
-        $this->addForeignKey(null, '{{%twofactorauthentication_session}}', ['sessionId'], '{{%sessions}}', ['id'], 'CASCADE', null);
         $this->addForeignKey(null, User::tableName(), ['userId'], '{{%users}}', ['id'], 'CASCADE', null);
     }
 
@@ -52,7 +38,7 @@ class Install extends Migration
         }
 
         // Any additional upgrade code goes here...
-        $this->renameTable('{{%twofactorauthentication_sessions}}', '{{%twofactorauthentication_session}}');
+        $this->dropTableIfExists('{{%twofactorauthentication_sessions}}');
         $this->renameTable('{{%twofactorauthentication_users}}', User::tableName());
 
         return true;

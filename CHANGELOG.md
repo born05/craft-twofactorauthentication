@@ -1,6 +1,11 @@
 Changelog
 ==================
 
+## 2.7.2 - 2020-10-16
+
+### Fixed
+- Make sure not to install the old session table.
+
 ## 2.7.1 - 2020-10-16
 
 ### Fixed
