@@ -1,6 +1,11 @@
 Changelog
 ==================
 
+## 2.7.3 - 2020-10-16
+
+### Changed
+- Don't do anything until EVENT_AFTER_LOAD_PLUGINS
+
 ## 2.7.2 - 2020-10-16
 
 ### Fixed

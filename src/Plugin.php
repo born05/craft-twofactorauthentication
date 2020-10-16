@@ -13,6 +13,7 @@ use craft\base\Plugin as CraftPlugin;
 use craft\base\Element;
 use craft\elements\User;
 use craft\services\Dashboard;
+use craft\services\Plugins;
 use craft\events\RegisterUrlRulesEvent;
 use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterElementTableAttributesEvent;
@@ -61,7 +62,9 @@ class Plugin extends CraftPlugin
             'verify' => VerifyService::class,
         ]);
 
-        $this->request->validateRequest();
+        Event::on(Plugins::class, Plugins::EVENT_AFTER_LOAD_PLUGINS, function () {
+            $this->request->validateRequest();
+        });
 
         // Verify after login.
         Event::on(\craft\web\User::class, \craft\web\User::EVENT_AFTER_LOGIN, function (UserEvent $event) {
