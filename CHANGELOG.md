@@ -1,6 +1,11 @@
 Changelog
 ==================
 
+## 2.7.1 - 2020-10-16
+
+### Fixed
+- Fixed installation errors
+
 ## 2.7.0 - 2020-10-06
 Released earlier changes.
 
