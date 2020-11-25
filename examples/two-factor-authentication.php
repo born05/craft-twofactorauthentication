@@ -14,7 +14,7 @@ return [
         'verifyFrontEnd' => false,
 
         /**
-         * Whether 2FA should be anbled for the back-end/control panel.
+         * Whether 2FA should be enabled for the back-end/control panel.
          */
         'verifyBackEnd' => true,
 
