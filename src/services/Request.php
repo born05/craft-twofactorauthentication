@@ -194,6 +194,7 @@ class Request extends Component
             $actionSegs === ['users', 'forgot-password'] ||
             $actionSegs === ['users', 'send-password-reset-email'] ||
             $actionSegs === ['users', 'get-remaining-session-time'] ||
+            $actionSegs === ['users', 'session-info'] ||
 
             $actionSegs === ['users', 'logout'] ||
             $actionSegs === ['users', 'set-password'] ||

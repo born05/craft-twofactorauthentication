@@ -1,6 +1,10 @@
 Changelog
 ==================
 
+## 2.7.4 - 2021-02-11
+### Fixed
+- Fixed getting logged out during 2FA screen on Craft 3.4 and up. Thanks to @goraxan
+
 ## 2.7.3.1 - 2020-11-03
 ### Fixed
 - Fixed composer.json for composer 2
