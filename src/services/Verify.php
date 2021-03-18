@@ -4,12 +4,19 @@ namespace born05\twofactorauthentication\services;
 use Craft;
 use DateInterval;
 use OTPHP\TOTP;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Color\Color;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelLow;
+use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
+use Endroid\QrCode\Writer\SvgWriter;
 use yii\base\Component;
 use craft\db\Query;
 use craft\db\Table;
 use craft\elements\User;
 use craft\helpers\Db;
 use craft\helpers\DateTimeHelper;
+
 use born05\twofactorauthentication\records\User as UserRecord;
 use born05\twofactorauthentication\models\AuthenticationCode as AuthenticationCodeModel;
 use born05\twofactorauthentication\Plugin as TwoFactorAuth;
@@ -124,7 +131,13 @@ class Verify extends Component
      */
     public function getUserQRCode(User $user)
     {
-        return $this->getTotp($user)->getQrCodeUri();
+        $provisioningUri = $this->getTotp($user)->getProvisioningUri();
+        $qrCode = QrCode::create($provisioningUri);
+
+        $writer = new SvgWriter();
+        $result = $writer->write($qrCode);
+        
+        return $result->getDataUri();
     }
 
     /**
@@ -136,7 +149,8 @@ class Verify extends Component
     {
         if (!isset($this->totp)) {
             $userRecord = $this->getUserRecord($user);
-            $this->totp = new TOTP($user->email, $userRecord->secret);
+            $this->totp = TOTP::create($userRecord->secret);
+            $this->totp->setLabel($user->email);
             $this->totp->setIssuer(Craft::$app->getInfo()->name);
         }
 

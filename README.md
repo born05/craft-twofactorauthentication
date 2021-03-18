@@ -14,8 +14,8 @@ This means the user is already logged in. When the user tries to visit an other 
 
 ## Requirements
 
-- Craft 3.0.0
-- PHP 7.x at least
+- Craft 3.1.0
+- PHP 7.3 at least
 
 ## Setting up back end 2FA
 

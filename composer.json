@@ -20,8 +20,10 @@
         }
     ],
     "require": {
+        "php": ">=7.3",
         "craftcms/cms": "^3.1",
-        "spomky-labs/otphp": "^8.3"
+        "spomky-labs/otphp": "^10.0.1",
+        "endroid/qr-code": "4.0.2"
     },
     "autoload": {
         "psr-4": {

@@ -1,6 +1,13 @@
 Changelog
 ==================
 
+## 2.8.0 - 2021-03-18
+### Updated
+- Updated spomky-labs/otphp requiring php 7.3 and up.
+
+### Added
+- Use endroid/qr-code for qr code generating instead of google's deprecated chart api.
+
 ## 2.7.4 - 2021-02-11
 ### Fixed
 - Fixed getting logged out during 2FA screen on Craft 3.4 and up. Thanks to @goraxan
