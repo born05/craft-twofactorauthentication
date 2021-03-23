@@ -103,7 +103,8 @@ class Verify extends Component
     public function disableUser(User $user)
     {
         // Update the user record
-        $totp = new TOTP($user->email);
+        $totp = TOTP::create();
+        $totp->setLabel($user->email);
         $userRecord = $this->getUserRecord($user);
         // Remove verified state
         $userRecord->dateVerified = null;
@@ -169,7 +170,8 @@ class Verify extends Component
         ]);
 
         if (!isset($userRecord)) {
-            $totp = new TOTP($user->email);
+            $totp = TOTP::create();
+            $totp->setLabel($user->email);
             $userRecord = new UserRecord();
             $userRecord->userId = $user->id;
             $userRecord->secret = $totp->getSecret();

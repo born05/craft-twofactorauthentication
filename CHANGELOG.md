@@ -1,6 +1,10 @@
 Changelog
 ==================
 
+## 2.8.1 - 2021-03-23
+### Fixed
+- Fixed otphp update. Thanks to @bencroker
+
 ## 2.8.0 - 2021-03-18
 ### Updated
 - Updated spomky-labs/otphp requiring php 7.3 and up.
