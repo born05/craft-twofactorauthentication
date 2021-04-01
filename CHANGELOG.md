@@ -1,6 +1,10 @@
 Changelog
 ==================
 
+## 2.9.0 - 2021-04-01
+### Fixed
+- Verification is now also needed after a second login.
+
 ## 2.8.1 - 2021-03-23
 ### Fixed
 - Fixed otphp update. Thanks to @bencroker
