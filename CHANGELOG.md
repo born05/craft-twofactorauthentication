@@ -1,10 +1,6 @@
 Changelog
 ==================
 
-## 2.10.0 - 2021-04-06
-### Changed
-- Don't do anything until Application::EVENT_INIT
-
 ## 2.9.0 - 2021-04-01
 ### Fixed
 - Verification is now also needed after a second login.
