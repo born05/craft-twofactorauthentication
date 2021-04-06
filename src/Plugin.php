@@ -18,6 +18,7 @@ use craft\events\RegisterUrlRulesEvent;
 use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterElementTableAttributesEvent;
 use craft\events\SetElementTableAttributeHtmlEvent;
+use craft\web\Application;
 use craft\web\UrlManager;
 use craft\web\twig\variables\CraftVariable;
 use yii\base\Event;
@@ -62,7 +63,7 @@ class Plugin extends CraftPlugin
             'verify' => VerifyService::class,
         ]);
 
-        Event::on(Plugins::class, Plugins::EVENT_AFTER_LOAD_PLUGINS, function () {
+        Event::on(Application::class, Application::EVENT_INIT, function () {
             $this->request->validateRequest();
         });
 
