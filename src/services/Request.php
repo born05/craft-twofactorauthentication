@@ -4,7 +4,6 @@ namespace born05\twofactorauthentication\services;
 use Craft;
 use born05\twofactorauthentication\Plugin as TwoFactorAuth;
 
-use craft\elements\User;
 use craft\helpers\UrlHelper;
 use yii\base\Component;
 use yii\web\UserEvent;
@@ -42,7 +41,7 @@ class Request extends Component
             }
         }
     }
-    
+
     public function userLoginEventHandler(UserEvent $event)
     {
         // Don't redirect cookieBased events.
@@ -111,14 +110,27 @@ class Request extends Component
     private function shouldRedirectCp()
     {
         $request = Craft::$app->getRequest();
-        $actionSegs = $request->getActionSegments();
         $settings = TwoFactorAuth::$plugin->getSettings();
+
+        $pathInfo = $request->getPathInfo();
+
+        $isAllowed = false;
+        foreach ($settings->backEndPathAllow as $path) {
+            if ($this->isRegex("/$path/i")) {
+                if (preg_match("/$path/i", $pathInfo)) {
+                    $isAllowed = true;
+                }
+            } elseif ($path === $pathInfo) {
+                $isAllowed = true;
+            }
+        }
 
         return ($settings->verifyBackEnd && $request->getIsCpRequest()) &&
                 // COPIED from craft\web\Application::_isSpecialCaseActionRequest
                 $request->getPathInfo() !== '' &&
-               !$this->isCraftSpecialRequests() &&
-               !$this->is2FASpecialRequests();
+                !$isAllowed &&
+                !$this->isCraftSpecialRequests() &&
+                !$this->is2FASpecialRequests();
     }
 
     /**

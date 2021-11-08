@@ -1,6 +1,10 @@
 Changelog
 ==================
 
+## 2.10.0 - 2021-11-08
+### Added
+- `backEndPathAllow` config option to allow specific backend paths to bypass 2fa checks.
+
 ## 2.9.0 - 2021-04-01
 ### Fixed
 - Verification is now also needed after a second login.

@@ -29,6 +29,11 @@ class Settings extends Model
      */
     public $settingsPath = '';
 
+    /**
+     * @var array URIs. Exact path or regex.
+     */
+    public $backEndPathAllow = [];
+
     // Choose between using the allow or exclude! Using both will block everything!
     /**
      * @var array URIs. Exact path or regex.

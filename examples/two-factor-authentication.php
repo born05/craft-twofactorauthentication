@@ -43,6 +43,10 @@ return [
          */
         'settingsPath' => '',
 
+        /**
+         * Allow paths that do not need 2FA. Exact path or regex, no leading slashes.
+         */
+        'backEndPathAllow' => [],
 
         /**
          *
