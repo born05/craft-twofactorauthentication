@@ -45,7 +45,7 @@ class Settings extends Model
      */
     public $frontEndPathExclude = [];
 
-    public function rules()
+    public function rules(): array
     {
         return [
             [['verifyFrontEnd', 'verifyBackEnd', 'forceFrontEnd', 'forceBackEnd'], 'boolean'],

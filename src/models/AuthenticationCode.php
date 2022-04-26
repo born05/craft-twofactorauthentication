@@ -32,7 +32,7 @@ class AuthenticationCode extends Model
     /**
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['authenticationCode'], 'required'],

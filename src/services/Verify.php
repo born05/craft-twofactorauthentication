@@ -152,7 +152,7 @@ class Verify extends Component
             $userRecord = $this->getUserRecord($user);
             $this->totp = TOTP::create($userRecord->secret);
             $this->totp->setLabel($user->email);
-            $this->totp->setIssuer(Craft::$app->getInfo()->name);
+            $this->totp->setIssuer(Craft::$app->name);
         }
 
         return $this->totp;
