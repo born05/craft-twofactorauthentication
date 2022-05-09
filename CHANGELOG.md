@@ -1,6 +1,10 @@
 Changelog
 ==================
 
+## 3.0.0-beta.1 - 2022-05-09
+### Changed
+- Added craft 4 support
+
 ## 2.10.0 - 2021-11-08
 ### Added
 - `backEndPathAllow` config option to allow specific backend paths to bypass 2fa checks.
