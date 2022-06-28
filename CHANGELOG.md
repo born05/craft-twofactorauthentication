@@ -1,6 +1,11 @@
 Changelog
 ==================
 
+## 3.0.0 - 2022-06-28
+### Fixed
+- Issuer name is now the system name instead of application name
+- Init load event now uses `WebApplication::EVENT_INIT`
+
 ## 3.0.0-beta.1 - 2022-05-09
 ### Changed
 - Added craft 4 support
