@@ -1,6 +1,6 @@
 {
     "name": "born05/craft-twofactorauthentication",
-    "description": "Craft 3 plugin for two-factor or two-step login using Time Based OTP.",
+    "description": "Craft 4 plugin for two-factor or two-step login using Time Based OTP.",
     "type": "craft-plugin",
     "keywords": [
         "craftcms-plugin",

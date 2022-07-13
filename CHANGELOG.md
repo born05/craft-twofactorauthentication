@@ -1,6 +1,14 @@
 Changelog
 ==================
 
+## 3.0.1 - 2022-07-13
+### Changes
+- Code cleanup
+- Simplify request check
+
+### Fixed
+- Init load event now really uses `WebApplication`
+
 ## 3.0.0 - 2022-06-28
 ### Fixed
 - Issuer name is now the system name instead of application name

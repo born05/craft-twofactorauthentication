@@ -2,7 +2,7 @@
 
 # Two-Factor Authentication
 
-Craft 3 plugin for two-factor or two-step login using Time Based OTP (TOTP, like Google Authenticator).
+Craft 4 plugin for two-factor or two-step login using Time Based OTP (TOTP, like Google Authenticator).
 Every user can setup TOTP themselves, the plugin does not force users. Admins can list usage in user tables.
 
 ## Inner working
@@ -14,8 +14,8 @@ This means the user is already logged in. When the user tries to visit an other 
 
 ## Requirements
 
-- Craft 3.1.0
-- PHP 7.3 at least
+- Craft 4.0.0 and up
+- PHP 8.0.2 and up
 
 ## Setting up back end 2FA
 
