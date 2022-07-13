@@ -2,8 +2,6 @@
 namespace born05\twofactorauthentication\migrations;
 
 use craft\db\Migration;
-use craft\db\Query;
-use craft\helpers\MigrationHelper;
 use born05\twofactorauthentication\records\User;
 
 class Install extends Migration

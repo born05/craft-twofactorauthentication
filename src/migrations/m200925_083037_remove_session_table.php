@@ -2,7 +2,6 @@
 
 namespace born05\twofactorauthentication\migrations;
 
-use Craft;
 use craft\db\Migration;
 
 class m200925_083037_remove_session_table extends Migration

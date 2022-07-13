@@ -2,17 +2,10 @@
 namespace born05\twofactorauthentication\services;
 
 use Craft;
-use DateInterval;
 use OTPHP\TOTP;
 use Endroid\QrCode\QrCode;
-use Endroid\QrCode\Color\Color;
-use Endroid\QrCode\Encoding\Encoding;
-use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelLow;
-use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
 use Endroid\QrCode\Writer\SvgWriter;
 use yii\base\Component;
-use craft\db\Query;
-use craft\db\Table;
 use craft\elements\User;
 use craft\helpers\Db;
 use craft\helpers\DateTimeHelper;
