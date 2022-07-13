@@ -45,7 +45,6 @@ class Plugin extends CraftPlugin
         self::$plugin = $this;
 
         $request = Craft::$app->getRequest();
-        $response = Craft::$app->getResponse();
 
         if (!$this->isInstalled || $request->getIsConsoleRequest()) {
             return;
@@ -58,7 +57,7 @@ class Plugin extends CraftPlugin
             'verify' => VerifyService::class,
         ]);
 
-        Event::on(Craft::class, WebApplication::EVENT_INIT, function () {
+        Event::on(WebApplication::class, WebApplication::EVENT_INIT, function () {
             $this->request->validateRequest();
         });
 
