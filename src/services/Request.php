@@ -192,29 +192,15 @@ class Request extends Component
      */
     private function isCraftSpecialRequests()
     {
-        // COPIED from craft\web\Application::_isSpecialCaseActionRequest
-        $request = Craft::$app->getRequest();
-        $actionSegs = $request->getActionSegments();
+        // COPIED from craft\web\Application::handleRequest
 
-        if (empty($actionSegs)) {
-            return false;
-        }
+        $request = Craft::$app->getRequest();
 
         return (
-            $actionSegs === ['app', 'migrate'] ||
-            $actionSegs === ['users', 'login'] ||
-            $actionSegs === ['users', 'forgot-password'] ||
-            $actionSegs === ['users', 'send-password-reset-email'] ||
-            $actionSegs === ['users', 'get-remaining-session-time'] ||
-            $actionSegs === ['users', 'session-info'] ||
-
-            $actionSegs === ['users', 'logout'] ||
-            $actionSegs === ['users', 'set-password'] ||
-            $actionSegs === ['users', 'verify-email'] ||
-
-            $actionSegs[0] === 'update' ||
-            $actionSegs[0] === 'manualupdate' ||
-            $actionSegs[0] === 'debug'
+            $request->getIsCpRequest() &&
+            !$request->getIsActionRequest() &&
+            ($firstSeg = $request->getSegment(1)) !== null &&
+            Craft::$app->getPlugins()->getPlugin($firstSeg) !== null
         );
     }
 
