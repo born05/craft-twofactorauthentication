@@ -4,32 +4,60 @@
 {% set title = "Two-Factor Authentication"|t('two-factor-authentication') %}
 {% set bodyClass = 'two-factor-authentication' %}
 
+{% set hasLogo = CraftEdition == CraftPro and craft.rebrand.isLogoUploaded %}
+
+{% set formAttributes = {
+    id: 'verify-form',
+    method: 'post',
+    'accept-charset': 'UTF-8',
+    action: actionUrl('two-factor-authentication/verify/login-process'),
+} %}
+
+{% if hasLogo %}
+    {% set logo = craft.rebrand.logo %}
+{% endif %}
+
 {% block body %}
-    {%- set hasLogo = (CraftEdition == CraftPro and craft.rebrand.isLogoUploaded ? true : false) -%}
-    <form id="verify-form" class="verify-form-centered centeralign" action="{{ actionUrl('two-factor-authentication/verify/login-process') }}" method="post" accept-charset="UTF-8" {% if hasLogo -%}
-            {%- set logo = craft.rebrand.logo -%}
-            {%- set padding = logo.height + 30 -%}
-            class="has-logo" style="background-image: url('{{ logo.url }}'); background-size: {{ logo.width }}px {{ logo.height }}px; padding-top: {{ padding }}px; margin-top: -{{ (353+padding)/2|round }}px"
-        {%- endif %}>
+    <main>
+        <div class="verify-form centeralign">
+            <h1>
+                {% if hasLogo %}
+                    {{ tag('img', {
+                        id: 'login-logo',
+                        src: logo.url,
+                        alt: systemName,
+                        width: logo.width,
+                        height: logo.height,
+                    }) }}
+                {% else %}
+                    {{ systemName }}
+                {% endif %}
+            </h1>
 
-        {{ csrfInput() }}
+            <form {{ attr(formAttributes) }}>
+                {{ csrfInput() }}
 
-        <h2>{{ 'Two-Factor Authentication'|t('two-factor-authentication') }}</h2>
-        <p>{{ "Enter the authentication code from your phone."|t('two-factor-authentication') }}</p>
+                <h2>{{ 'Two-Factor Authentication'|t('two-factor-authentication') }}</h2>
+                <p>{{ "Enter the authentication code from your phone."|t('two-factor-authentication') }}</p>
 
-        {{ forms.textField({
-          id: "authenticationCode",
-          name: "authenticationCode",
-          placeholder: "Authentication Code"|t('two-factor-authentication'),
-        }) }}
+                {{ forms.textField({
+                    id: "authenticationCode",
+                    name: "authenticationCode",
+                    placeholder: "Authentication Code"|t('two-factor-authentication'),
+                }) }}
 
-        <div class="buttons">
-            <input id="submit" class="btn submit disabled" type="submit" value="{{ "Verify"|t('two-factor-authentication') }}">
-            <div id="spinner" class="spinner hidden"></div>
+                <div class="buttons">
+                    {{ forms.submitButton({
+                        id: 'submit',
+                        label: "Verify"|t('two-factor-authentication'),
+                        spinner: true,
+                    }) }}
+                </div>
+
+                <small>{{ "Experiencing any issues? Contact your administrator for help."|t('two-factor-authentication') }}</small>
+            </form>
         </div>
-
-        <small>{{ "Experiencing any issues? Contact your administrator for help."|t('two-factor-authentication') }}</small>
-    </form>
+    </main>
 
     <script type="text/javascript">
         {% if not craft.app.request.isMobileBrowser(true) %}

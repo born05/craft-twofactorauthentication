@@ -8,39 +8,36 @@ html, body {
     color: rgba(0, 0, 0, 0.5);
 }
 
-.verify-form-centered {
+.verify-form {
+    display: block;
+    width: 300px;
+    background: no-repeat center top;
     position: absolute;
     top: 50%;
     left: 50%;
     margin: -208px 0 0 -150px;
 }
 
-#verify-form {
-    display: block;
-    width: 300px;
-    background: no-repeat center top;
-}
-
-#verify-form.has-logo {
+.verify-form.has-logo {
     padding-top: 116px;
 }
 
-#verify-form h1 {
+.verify-form h1 {
     text-align: center;
     font-size: 3em;
     color: #29323d;
     word-wrap: break-word;
 }
 
-#verify-form .field {
+.verify-form .field {
     margin: 0;
 }
 
-#verify-form .btn {
+.verify-form .btn {
     display: block;
 }
 
-#verify-form .text:focus {
+.verify-form .text:focus {
     position: relative;
     z-index: 1;
 }
@@ -54,13 +51,13 @@ html, body {
     border-bottom-right-radius: 0;
 }
 
-#verify-form .buttons {
+.verify-form .buttons {
     position: relative;
     text-align: center;
     margin-top: 0;
 }
 
-#verify-form .submit {
+.verify-form .submit {
     display: block;
     width: auto;
     float: none;
@@ -82,7 +79,7 @@ p.error {
 }
 
 @media only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (-moz-min-device-pixel-ratio: 1.5), only screen and (-o-min-device-pixel-ratio: 3 / 2), only screen and (min-device-pixel-ratio: 1.5), only screen and (min-resolution: 1.5dppx) {
-    #verify-form {
+    .verify-form {
         background-size: 202px;
     }
 }
