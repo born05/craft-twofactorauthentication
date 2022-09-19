@@ -1,6 +1,10 @@
 Changelog
 ==================
 
+## 3.0.2 - 2022-09-19
+### Changes
+- Updated froms and controllers to use Craft 4 way of returning data.
+
 ## 3.0.1 - 2022-07-13
 ### Changes
 - Code cleanup
