@@ -44,5 +44,11 @@
         "developerUrl": "https://born05.com",
         "documentationUrl": "https://github.com/born05/craft-twofactorauthentication",
         "changelogUrl": "https://raw.githubusercontent.com/born05/craft-twofactorauthentication/craft-4/CHANGELOG.md"
+    },
+    "config": {
+        "allow-plugins": {
+            "yiisoft/yii2-composer": true,
+            "craftcms/plugin-installer": true
+        }
     }
 }
