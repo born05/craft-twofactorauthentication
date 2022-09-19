@@ -50,18 +50,15 @@
 
             Craft.postActionRequest(this.$form.attr('action'), data, $.proxy(function(response, textStatus) {
                 if (textStatus == 'success') {
-                    if (response.success) {
-                        window.location.href = Craft.getUrl(response.returnUrl);
-                    } else {
-                        Garnish.shake(this.$form);
-                        this.onSubmitResponse();
-
-                        // Add the error message
-                        this.showError(response.error);
-                    }
+                    window.location.href = Craft.getUrl(response.redirect);
                 } else {
+                    Garnish.shake(this.$form);
                     this.onSubmitResponse();
+
+                    // Add the error message
+                    this.showError(response.message);
                 }
+                this.onSubmitResponse();
 
             }, this));
 

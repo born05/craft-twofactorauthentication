@@ -47,22 +47,12 @@ class VerifyController extends Controller
 
             return $this->_handleSuccessfulLogin(true);
         } else {
-            $errorCode = User::AUTH_INVALID_CREDENTIALS;
-            $errorMessage = Craft::t('two-factor-authentication', 'Authentication code is invalid.');
-
-            if ($request->getAcceptsJson()) {
-                return $this->asJson([
-                    'errorCode' => $errorCode,
-                    'error' => $errorMessage
-                ]);
-            } else {
-                Craft::$app->getSession()->setError($errorMessage);
-
-                Craft::$app->getUrlManager()->setRouteParams([
-                    'errorCode' => $errorCode,
-                    'errorMessage' => $errorMessage,
-                ]);
-            }
+            return $this->asFailure(
+                Craft::t('two-factor-authentication', 'Authentication code is invalid.'),
+                data: [
+                    'errorCode' => User::AUTH_INVALID_CREDENTIALS,
+                ],
+            );
         }
     }
 
@@ -85,15 +75,7 @@ class VerifyController extends Controller
 
         // If this was an Ajax request, just return success:true
         if ($this->request->getAcceptsJson()) {
-            $return = [
-                'returnUrl' => $returnUrl,
-            ];
-
-            if (Craft::$app->getConfig()->getGeneral()->enableCsrfProtection) {
-                $return['csrfTokenValue'] = $this->request->getCsrfToken();
-            }
-
-            return $this->asSuccess(data: $return);
+            return $this->asSuccess(redirect: $returnUrl);
         }
 
         return $this->redirectToPostedUrl($userSession->getIdentity(), $returnUrl);
