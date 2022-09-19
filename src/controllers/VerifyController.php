@@ -10,6 +10,7 @@ use born05\twofactorauthentication\web\assets\verify\VerifyAsset;
 
 use yii\base\Event;
 use yii\web\UserEvent;
+use yii\web\Response;
 
 class VerifyController extends Controller
 {
@@ -71,36 +72,31 @@ class VerifyController extends Controller
      * Redirects the user after a successful login attempt, or if they visited the Login page while they were already
      * logged in.
      *
-     * @param bool $setNotice Whether a flash notice should be set, if this isn't an Ajax request.
-     *
-     * @return null
+     * @return Response
      */
-    private function _handleSuccessfulLogin($setNotice)
+    private function _handleSuccessfulLogin(): Response
     {
-        $request = Craft::$app->getRequest();
-        $returnUrl = TwoFactorAuth::$plugin->response->getReturnUrl();
+        // Get the return URL
+        $userSession = Craft::$app->getUser();
+        $returnUrl = $userSession->getReturnUrl();
+
+        // Clear it out
+        $userSession->removeReturnUrl();
 
         // If this was an Ajax request, just return success:true
-        if ($request->getAcceptsJson()) {
+        if ($this->request->getAcceptsJson()) {
             $return = [
-                'success' => true,
                 'returnUrl' => $returnUrl,
             ];
 
             if (Craft::$app->getConfig()->getGeneral()->enableCsrfProtection) {
-                $return['csrfTokenValue'] = $request->getCsrfToken();
+                $return['csrfTokenValue'] = $this->request->getCsrfToken();
             }
 
-            return $this->asJson($return);
+            return $this->asSuccess(data: $return);
         }
 
-        if ($setNotice) {
-            Craft::$app->getSession()->setNotice(Craft::t('app', 'Logged in.'));
-        }
-
-        $user = Craft::$app->getUser()->getIdentity();
-
-        return $this->redirectToPostedUrl($user, $returnUrl);
+        return $this->redirectToPostedUrl($userSession->getIdentity(), $returnUrl);
     }
 
     /**
