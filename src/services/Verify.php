@@ -2,17 +2,10 @@
 namespace born05\twofactorauthentication\services;
 
 use Craft;
-use DateInterval;
 use OTPHP\TOTP;
 use Endroid\QrCode\QrCode;
-use Endroid\QrCode\Color\Color;
-use Endroid\QrCode\Encoding\Encoding;
-use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelLow;
-use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
 use Endroid\QrCode\Writer\SvgWriter;
 use yii\base\Component;
-use craft\db\Query;
-use craft\db\Table;
 use craft\elements\User;
 use craft\helpers\Db;
 use craft\helpers\DateTimeHelper;
@@ -67,10 +60,10 @@ class Verify extends Component
         if ($authenticationCodeModel->validate()) {
             // Magic checking of the authentication code.
             $totp = $this->getTotp($user);
-            $isValid = $this->getTotp($user)->verify($authenticationCodeModel->authenticationCode);
+            $isValid = $totp->verify($authenticationCodeModel->authenticationCode);
 
             if (!$isValid && is_int($settings->totpDelay)) {
-                $isValid = $this->getTotp($user)->verify(
+                $isValid = $totp->verify(
                     $authenticationCodeModel->authenticationCode,
                     time() - $settings->totpDelay
                 );

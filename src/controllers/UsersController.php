@@ -4,10 +4,7 @@ namespace born05\twofactorauthentication\controllers;
 
 use Craft;
 use craft\web\Controller;
-use craft\elements\User;
-use craft\helpers\UrlHelper;
 use born05\twofactorauthentication\Plugin as TwoFactorAuth;
-use born05\twofactorauthentication\web\assets\verify\VerifyAsset;
 
 class UsersController extends Controller
 {
