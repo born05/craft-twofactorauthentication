@@ -1,6 +1,10 @@
 Changelog
 ==================
 
+## 2.10.1 - 2022-11-11
+### Changed
+- Init load event now uses `Application::EVENT_INIT`
+
 ## 2.10.0 - 2021-11-08
 ### Added
 - `backEndPathAllow` config option to allow specific backend paths to bypass 2fa checks.
