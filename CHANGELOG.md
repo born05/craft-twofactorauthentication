@@ -4,6 +4,7 @@ Changelog
 ## 2.10.1 - 2022-11-11
 ### Changed
 - Init load event now uses `Application::EVENT_INIT`
+- Code cleanup
 
 ## 2.10.0 - 2021-11-08
 ### Added
