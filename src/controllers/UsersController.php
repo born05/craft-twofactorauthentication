@@ -15,6 +15,7 @@ class UsersController extends Controller
     {
         $this->requirePostRequest();
 
+        /** @var \craft\web\User */
         $currentUser = Craft::$app->user->getIdentity();
         if ($currentUser->can('editUsers') && $currentUser->can('accessPlugin-two-factor-authentication')) {
             $userId = Craft::$app->getRequest()->getRequiredBodyParam('userId');
