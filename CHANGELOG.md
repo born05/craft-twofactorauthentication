@@ -1,6 +1,10 @@
 Changelog
 ==================
 
+## 3.1.0 - 2023-03-31
+### Fixed
+- Fix 500 error in CP for non-admins. Thanks to @mike-moreau
+
 ## 3.0.2 - 2022-09-19
 ### Changes
 - Updated froms and controllers to use Craft 4 way of returning data.
