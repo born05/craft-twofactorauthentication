@@ -114,7 +114,7 @@ class Plugin extends CraftPlugin
         /**
          * Hook into the users cp page.
          */
-        Craft::$app->view->hook('cp.users.edit.details', function (array &$context) {
+        Craft::$app->getView()->hook('cp.users.edit.details', function (array &$context) {
             /** @var \craft\web\User */
             $currentUser = Craft::$app->getUser()->getIdentity();
             if ($currentUser->can('editUsers') && $currentUser->can('accessPlugin-two-factor-authentication') && !$context['isNewUser']) {

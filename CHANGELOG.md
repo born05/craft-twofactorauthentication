@@ -1,6 +1,12 @@
 Changelog
 ==================
 
+## 3.2.0 - 2023-05-04
+### Changed
+- Make sure to render CP templates in `TEMPLATE_MODE_CP`
+- AssetBundle improvement to prevent assets not loading during login
+- Code cleanup
+
 ## 3.1.0 - 2023-03-31
 ### Fixed
 - Fix 500 error in CP for non-admins. Thanks to @mike-moreau

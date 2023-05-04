@@ -3,6 +3,7 @@ namespace born05\twofactorauthentication\widgets;
 
 use Craft;
 use craft\base\Widget;
+use craft\web\View;
 use born05\twofactorauthentication\Plugin as TwoFactorAuth;
 
 class Notify extends Widget
@@ -21,8 +22,8 @@ class Notify extends Widget
     {
         $user = Craft::$app->getUser()->getIdentity();
 
-        return Craft::$app->view->renderTemplate('two-factor-authentication/_widgets/status/body', [
+        return Craft::$app->getView()->renderTemplate('two-factor-authentication/_widgets/status/body', [
             'isEnabled' => TwoFactorAuth::$plugin->verify->isEnabled($user),
-        ]);
+        ], View::TEMPLATE_MODE_CP);
     }
 }

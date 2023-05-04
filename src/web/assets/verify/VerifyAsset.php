@@ -12,7 +12,7 @@ class VerifyAsset extends AssetBundle
 {
     public function init()
     {
-        $this->sourcePath = __DIR__.'/dist';
+        $this->sourcePath = '@born05/twofactorauthentication/web/assets/verify/dist';
 
         $this->depends = [
             CpAsset::class,

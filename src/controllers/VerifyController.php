@@ -4,6 +4,7 @@ namespace born05\twofactorauthentication\controllers;
 
 use Craft;
 use craft\web\Controller;
+use craft\web\View;
 use craft\elements\User;
 use born05\twofactorauthentication\Plugin as TwoFactorAuth;
 use born05\twofactorauthentication\web\assets\verify\VerifyAsset;
@@ -20,8 +21,8 @@ class VerifyController extends Controller
     public function actionLogin()
     {
         $this->requireLogin();
-        Craft::$app->view->registerAssetBundle(VerifyAsset::class);
-        return $this->renderTemplate('two-factor-authentication/_verify');
+        Craft::$app->getView()->registerAssetBundle(VerifyAsset::class);
+        return $this->renderTemplate('two-factor-authentication/_verify', [], View::TEMPLATE_MODE_CP);
     }
 
     /**
