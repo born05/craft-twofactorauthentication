@@ -4,6 +4,7 @@ namespace born05\twofactorauthentication\controllers;
 
 use Craft;
 use craft\web\Controller;
+use craft\web\View;
 use craft\elements\User;
 use craft\helpers\UrlHelper;
 use born05\twofactorauthentication\Plugin as TwoFactorAuth;
@@ -16,8 +17,8 @@ class SettingsController extends Controller
      */
     public function actionIndex()
     {
-        Craft::$app->view->registerAssetBundle(VerifyAsset::class);
-        return $this->renderTemplate('two-factor-authentication/index');
+        Craft::$app->getView()->registerAssetBundle(VerifyAsset::class);
+        return $this->renderTemplate('two-factor-authentication/index', [], View::TEMPLATE_MODE_CP);
     }
     
     /**
@@ -31,8 +32,8 @@ class SettingsController extends Controller
             return Craft::$app->getResponse()->redirect(UrlHelper::cpUrl());
         }
 
-        Craft::$app->view->registerAssetBundle(VerifyAsset::class);
-        return $this->renderTemplate('two-factor-authentication/_force');
+        Craft::$app->getView()->registerAssetBundle(VerifyAsset::class);
+        return $this->renderTemplate('two-factor-authentication/_force', [], View::TEMPLATE_MODE_CP);
     }
 
     /**

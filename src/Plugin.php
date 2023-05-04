@@ -49,7 +49,6 @@ class Plugin extends CraftPlugin
         self::$plugin = $this;
 
         $request = Craft::$app->getRequest();
-        $response = Craft::$app->getResponse();
 
         if (!$this->isInstalled || $request->getIsConsoleRequest()) {
             return;
@@ -117,7 +116,7 @@ class Plugin extends CraftPlugin
         /**
          * Hook into the users cp page.
          */
-        Craft::$app->view->hook('cp.users.edit.details', function (array &$context) {
+        Craft::$app->getView()->hook('cp.users.edit.details', function (array &$context) {
             if (Craft::$app->getUser()->getIsAdmin() && !$context['isNewUser']) {
                 /** @var User $user */
                 $user = $context['user'];
@@ -130,7 +129,7 @@ class Plugin extends CraftPlugin
         });
     }
 
-    protected function createSettingsModel()
+    protected function createSettingsModel(): null|Settings
     {
         return new Settings();
     }

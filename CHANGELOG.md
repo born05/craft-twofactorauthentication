@@ -1,6 +1,12 @@
 Changelog
 ==================
 
+## 2.11.0 - 2023-05-04
+### Changed
+- Make sure to render CP templates in `TEMPLATE_MODE_CP`
+- AssetBundle improvement to prevent assets not loading during login
+- Code cleanup
+
 ## 2.10.1 - 2022-11-11
 ### Changed
 - Init load event now uses `Application::EVENT_INIT`
