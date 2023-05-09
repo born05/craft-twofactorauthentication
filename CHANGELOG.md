@@ -1,6 +1,10 @@
 Changelog
 ==================
 
+## 2.11.1 - 2023-05-09
+### Fixed
+- Remove php 8 syntax
+
 ## 2.11.0 - 2023-05-04
 ### Changed
 - Make sure to render CP templates in `TEMPLATE_MODE_CP`
