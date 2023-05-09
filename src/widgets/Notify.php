@@ -18,7 +18,7 @@ class Notify extends Widget
         return Craft::getAlias('@born05/twofactorauthentication/icon-mask.svg');
     }
 
-    public function getBodyHtml(): null|string
+    public function getBodyHtml()
     {
         $user = Craft::$app->getUser()->getIdentity();
 
