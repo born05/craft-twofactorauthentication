@@ -129,7 +129,7 @@ class Plugin extends CraftPlugin
         });
     }
 
-    protected function createSettingsModel(): null|Settings
+    protected function createSettingsModel()
     {
         return new Settings();
     }
