@@ -41,7 +41,7 @@ class Verify extends Component
      */
     public function isVerified(User $user)
     {
-        return Craft::$app->getSession()->get(self::SESSION_AUTH_HANDLE) === $user->lastLoginDate->getTimestamp();
+        return isset($user->lastLoginDate) && Craft::$app->getSession()->get(self::SESSION_AUTH_HANDLE) === $user->lastLoginDate->getTimestamp();
     }
 
     /**

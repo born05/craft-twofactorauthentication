@@ -1,6 +1,10 @@
 Changelog
 ==================
 
+## 3.2.1 - 2023-07-06
+### Fixed
+- Prevent error when lastLoginDate is not set. Thanks to @joepagan
+
 ## 3.2.0 - 2023-05-04
 ### Changed
 - Make sure to render CP templates in `TEMPLATE_MODE_CP`
