@@ -5,28 +5,40 @@
         $authenticationCodeInput: null,
         $submitBtn: null,
         $spinner: null,
-        $error: null,
+        $errors: null,
 
         loading: false,
 
-        init: function()
-        {
+        init: function() {
             this.$form = $('#verify-form'),
             this.$authenticationCodeInput = $('#authenticationCode');
             this.$submitBtn = $('#submit');
-            this.$spinner = $('#spinner');
+            this.$errors = $('#login-errors');
+            
+            this.submitBtn = new Garnish.MultiFunctionBtn(this.$submitBtn, {
+                changeButtonText: true,
+            });
 
-            this.addListener(this.$authenticationCodeInput, 'textchange', 'validate');
+            this.addListener(this.$authenticationCodeInput, 'input', 'onInput');
             this.addListener(this.$form, 'submit', 'onSubmit');
+
+            // Focus first empty field in form
+            if (!Garnish.isMobileBrowser()) {
+                this.$authenticationCodeInput.focus();
+            }
         },
 
         validate: function() {
-            if (this.$authenticationCodeInput.val()) {
-                this.$submitBtn.enable();
-                return true;
-            } else {
-                this.$submitBtn.disable();
-                return false;
+            if (!this.$authenticationCodeInput.val()) {
+                return Craft.t('app', 'Authentication code is invalid.');
+            }
+
+            return true;
+        },
+
+        onInput: function (event) {
+            if (this.validateOnInput && this.validate() === true) {
+                this.clearErrors();
             }
         },
 
@@ -34,53 +46,53 @@
             // Prevent full HTTP submits
             event.preventDefault();
 
-            if (!this.validate()) return;
-
-            this.$submitBtn.addClass('active');
-            this.$spinner.removeClass('hidden');
-            this.loading = true;
-
-            if (this.$error) {
-                this.$error.remove();
+            const error = this.validate();
+            if (error !== true) {
+                this.showError(error);
+                this.validateOnInput = true;
+                return;
             }
+
+            this.submitBtn.busyEvent();
+
+            this.clearErrors();
 
             var data = {
                 authenticationCode: this.$authenticationCodeInput.val()
             };
 
-            Craft.postActionRequest(this.$form.attr('action'), data, $.proxy(function(response, textStatus) {
-                if (textStatus == 'success') {
-                    window.location.href = Craft.getUrl(response.redirect);
-                } else {
-                    Garnish.shake(this.$form);
+            Craft.sendActionRequest('POST', 'two-factor-authentication/verify/login-process', {data})
+                .then((response) => {
+                    this.submitBtn.successEvent();
+                    window.location.href = response.data.returnUrl;
+                })
+                .catch(({response}) => {
+                    Garnish.shake(this.$form, 'left');
                     this.onSubmitResponse();
-
+            
                     // Add the error message
-                    this.showError(response.message);
-                }
-                this.onSubmitResponse();
-
-            }, this));
-
+                    this.showError(response.data.message);
+                });
+    
             return false;
         },
 
         onSubmitResponse: function() {
-            this.$submitBtn.removeClass('active');
-            this.$spinner.addClass('hidden');
-            this.loading = false;
+            this.submitBtn.failureEvent();
         },
 
-        showError: function(error) {
-            if (!error) {
-                error = Craft.t('An unknown error occurred.');
-            }
+        showError: function (error) {
+            this.clearErrors();
 
-            this.$error = $('<p class="error" style="display:none">' + error + '</p>').insertAfter($('.buttons', this.$form));
-            this.$error.velocity('fadeIn');
-        }
+            $('<p style="display: none;">' + error + '</p>')
+                .appendTo(this.$errors)
+                .velocity('fadeIn');
+        },
+
+        clearErrors: function () {
+            this.$errors.empty();
+        },
     });
 
-    var verifyForm = new VerifyForm();
-
+    new VerifyForm();
 })(jQuery);

@@ -69,7 +69,14 @@
     <h2>{{ 'Step 3: Verify the code from your device'|t('two-factor-authentication') }}</h2>
     <p>{{ 'Please enter the code from your device, do note it changes every few seconds.'|t('two-factor-authentication') }}</p>
 
-    <form id="verify-form" action="{{ actionUrl('two-factor-authentication/settings/turn-on') }}" method="post" accept-charset="UTF-8">
+    {% set formAttributes = {
+        id: 'verify-form',
+        method: 'post',
+        'accept-charset': 'UTF-8',
+        action: actionUrl('two-factor-authentication/verify/login-process'),
+    } %}
+
+    <form {{ attr(formAttributes) }}>
         {{ csrfInput() }}
 
         {{ forms.textField({
@@ -79,9 +86,14 @@
         }) }}
 
         <div class="buttons">
-            <input id="submit" class="btn submit disabled icon secure" type="submit" value="{{ "Verify"|t('two-factor-authentication') }}">
-            <div id="spinner" class="spinner hidden"></div>
+            {{ forms.submitButton({
+                id: 'submit',
+                label: "Verify"|t('two-factor-authentication'),
+                spinner: true,
+            }) }}
         </div>
     </form>
+
+    <div id="verify-errors" role="status"></div>
 
 {% endif %}

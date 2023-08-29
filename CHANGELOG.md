@@ -1,6 +1,11 @@
 Changelog
 ==================
 
+## 3.3.0 - 2023-08-29
+### Fixed
+- Verify screen updated to Craft's new frontend style.
+- Verify step wasn't functioning correctly.
+
 ## 3.2.1 - 2023-07-06
 ### Fixed
 - Prevent error when lastLoginDate is not set. Thanks to @joepagan

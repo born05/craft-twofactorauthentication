@@ -46,13 +46,17 @@ class VerifyController extends Controller
             // Throw the after login event, because we blocked it earlier for non-cookieBased events.
             $this->afterLogin($user, false, $sessionDuration);
 
-            return $this->_handleSuccessfulLogin(true);
+            return $this->_handleSuccessfulLogin($user);
         } else {
             return $this->asFailure(
                 Craft::t('two-factor-authentication', 'Authentication code is invalid.'),
                 data: [
                     'errorCode' => User::AUTH_INVALID_CREDENTIALS,
                 ],
+                routeParams: [
+                    'errorCode' => User::AUTH_INVALID_CREDENTIALS,
+                    'errorMessage' => Craft::t('two-factor-authentication', 'Authentication code is invalid.'),
+                ]
             );
         }
     }
@@ -65,7 +69,7 @@ class VerifyController extends Controller
      *
      * @return Response
      */
-    private function _handleSuccessfulLogin(): Response
+    private function _handleSuccessfulLogin(User $user): Response
     {
         // Get the return URL
         $userSession = Craft::$app->getUser();
@@ -76,7 +80,15 @@ class VerifyController extends Controller
 
         // If this was an Ajax request, just return success:true
         if ($this->request->getAcceptsJson()) {
-            return $this->asSuccess(redirect: $returnUrl);
+            $return = [
+                'returnUrl' => $returnUrl,
+            ];
+
+            if (Craft::$app->getConfig()->getGeneral()->enableCsrfProtection) {
+                $return['csrfTokenValue'] = $this->request->getCsrfToken();
+            }
+
+            return $this->asModelSuccess($user, modelName: 'user', data: $return);
         }
 
         return $this->redirectToPostedUrl($userSession->getIdentity(), $returnUrl);
