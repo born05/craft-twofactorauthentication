@@ -1,6 +1,5 @@
 {% import "_includes/forms" as forms %}
 
-{% set isUserVerified = craft.twoFactorAuthentication.isUserVerified() %}
 {% set currentUserSecret = craft.twoFactorAuthentication.getCurrentUserSecret() %}
 {% set currentUserQRCode = craft.twoFactorAuthentication.getCurrentUserQRCode() %}
 
@@ -12,7 +11,7 @@
 
 <hr />
 
-{% if isUserVerified %}
+{% if craft.twoFactorAuthentication.isTwoFactorEnabled() %}
 
     <h2 class="success">{{ 'Your account is secured.'|t('two-factor-authentication') }}</h2>
     <p>{{ 'Two-factor authentication is enabled for your personal account.'|t('two-factor-authentication') }}</p>
@@ -73,7 +72,8 @@
         id: 'verify-form',
         method: 'post',
         'accept-charset': 'UTF-8',
-        action: actionUrl('two-factor-authentication/verify/login-process'),
+        action: actionUrl('two-factor-authentication/settings/turn-on'),
+        'data-action': 'two-factor-authentication/settings/turn-on',
     } %}
 
     <form {{ attr(formAttributes) }}>

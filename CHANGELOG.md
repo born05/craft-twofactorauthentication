@@ -1,6 +1,11 @@
 Changelog
 ==================
 
+## 3.3.1 - 2023-08-29
+### Fixed
+- Use `isTwoFactorEnabled` on settings screen.
+- Use `two-factor-authentication/settings/turn-on` action on settings screen.
+
 ## 3.3.0 - 2023-08-29
 ### Fixed
 - Verify screen updated to Craft's new frontend style.

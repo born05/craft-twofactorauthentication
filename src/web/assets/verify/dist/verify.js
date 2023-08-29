@@ -61,7 +61,7 @@
                 authenticationCode: this.$authenticationCodeInput.val()
             };
 
-            Craft.sendActionRequest('POST', 'two-factor-authentication/verify/login-process', {data})
+            Craft.sendActionRequest('POST', this.$form.attr('data-action'), {data})
                 .then((response) => {
                     this.submitBtn.successEvent();
                     window.location.href = response.data.returnUrl;

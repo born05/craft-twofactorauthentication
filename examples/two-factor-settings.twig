@@ -1,6 +1,5 @@
 {% requireLogin %}
 
-{% set isUserVerified = craft.twoFactorAuthentication.isUserVerified() %}
 {% set currentUserSecret = craft.twoFactorAuthentication.getCurrentUserSecret() %}
 {% set currentUserQRCode = craft.twoFactorAuthentication.getCurrentUserQRCode() %}
 
@@ -12,7 +11,7 @@
 
 <hr />
 
-{% if isUserVerified %}
+{% if craft.twoFactorAuthentication.isTwoFactorEnabled() %}
 
     <h2 class="success">{{ 'Your account is secured.'|t('two-factor-authentication') }}</h2>
     <p>{{ 'Two-factor authentication is enabled for your personal account.'|t('two-factor-authentication') }}</p>

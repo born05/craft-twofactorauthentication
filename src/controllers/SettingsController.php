@@ -5,7 +5,7 @@ namespace born05\twofactorauthentication\controllers;
 use Craft;
 use craft\web\Controller;
 use craft\web\View;
-use craft\elements\User;
+use craft\web\User;
 use craft\helpers\UrlHelper;
 use born05\twofactorauthentication\Plugin as TwoFactorAuth;
 use born05\twofactorauthentication\web\assets\verify\VerifyAsset;
@@ -43,7 +43,9 @@ class SettingsController extends Controller
     {
         $this->requirePostRequest();
 
-        $user = Craft::$app->getUser()->getIdentity();
+        /** @var User */
+        $userSession = Craft::$app->getUser();
+        $user = $userSession->getIdentity();
         $request = Craft::$app->getRequest();
   
         $authenticationCode = $request->getBodyParam('authenticationCode');
@@ -51,39 +53,34 @@ class SettingsController extends Controller
         if (TwoFactorAuth::$plugin->verify->verify($user, $authenticationCode)) {
             $returnUrl = TwoFactorAuth::$plugin->response->getReturnUrl();
 
-            if ($request->getAcceptsJson()) {
-                return $this->asJson([
-                    'success' => true,
-                    'returnUrl' => $returnUrl
-                ]);
-            } else {
-                return $this->redirect($returnUrl);
+            // If this was an Ajax request, just return success:true
+            if ($this->request->getAcceptsJson()) {
+                $return = [
+                    'returnUrl' => $returnUrl,
+                ];
+
+                if (Craft::$app->getConfig()->getGeneral()->enableCsrfProtection) {
+                    $return['csrfTokenValue'] = $this->request->getCsrfToken();
+                }
+
+                return $this->asModelSuccess($user, modelName: 'user', data: $return);
             }
+
+            return $this->redirectToPostedUrl($userSession->getIdentity(), $returnUrl);
         } else {
-            $errorCode = User::AUTH_INVALID_CREDENTIALS;
+            $errorCode = \craft\elements\User::AUTH_INVALID_CREDENTIALS;
             $errorMessage = Craft::t('two-factor-authentication', 'Authentication code is invalid.');
 
-            if ($request->getAcceptsJson()) {
-                return $this->asJson([
+            return $this->asFailure(
+                $errorMessage,
+                data: [
                     'errorCode' => $errorCode,
-                    'error' => $errorMessage
-                ]);
-            } else {
-                Craft::$app->getSession()->setError($errorMessage);
-
-                Craft::$app->getUrlManager()->setRouteParams([
+                ],
+                routeParams: [
                     'errorCode' => $errorCode,
                     'errorMessage' => $errorMessage,
-                ]);
-
-                $returnUrl = TwoFactorAuth::$plugin->response->getReturnUrl();
-
-                if (!Craft::$app->getRequest()->getIsCpRequest()) {
-                    $settings = TwoFactorAuth::$plugin->getSettings();
-                    $returnUrl = $settings->settingsPath;
-                }
-                return $this->redirect($returnUrl);
-            }
+                ]
+            );
         }
     }
 
