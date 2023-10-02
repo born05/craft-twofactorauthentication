@@ -1,6 +1,10 @@
 Changelog
 ==================
 
+## 3.3.2 - 2023-10-02
+### Fixed
+- Fixed a post-login vulnerability.
+
 ## 3.3.1 - 2023-08-29
 ### Fixed
 - Use `isTwoFactorEnabled` on settings screen.

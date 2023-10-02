@@ -9,6 +9,7 @@ use craft\web\User;
 use craft\helpers\UrlHelper;
 use born05\twofactorauthentication\Plugin as TwoFactorAuth;
 use born05\twofactorauthentication\web\assets\verify\VerifyAsset;
+use yii\web\ForbiddenHttpException;
 
 class SettingsController extends Controller
 {
@@ -20,7 +21,7 @@ class SettingsController extends Controller
         Craft::$app->getView()->registerAssetBundle(VerifyAsset::class);
         return $this->renderTemplate('two-factor-authentication/index', [], View::TEMPLATE_MODE_CP);
     }
-    
+
     /**
      * Show the settings form.
      */
@@ -47,7 +48,7 @@ class SettingsController extends Controller
         $userSession = Craft::$app->getUser();
         $user = $userSession->getIdentity();
         $request = Craft::$app->getRequest();
-  
+
         $authenticationCode = $request->getBodyParam('authenticationCode');
 
         if (TwoFactorAuth::$plugin->verify->verify($user, $authenticationCode)) {
@@ -92,6 +93,11 @@ class SettingsController extends Controller
         $this->requirePostRequest();
 
         $user = Craft::$app->getUser()->getIdentity();
+
+        if (!TwoFactorAuth::$plugin->verify->isVerified($user)) {
+            throw new ForbiddenHttpException('User is not permitted to perform this action.');
+        }
+
         TwoFactorAuth::$plugin->verify->disableUser($user);
 
         if (Craft::$app->getRequest()->getIsCpRequest() && Craft::$app->getUser()->checkPermission('accessCp')) {
