@@ -1,6 +1,11 @@
 Changelog
 ==================
 
+## 3.3.4 - 2024-02-08
+### Fixed
+- fix: Exposure of Sensitive Attributes
+- fix: Corrected the single use token time window
+
 ## 3.3.3 - 2024-02-08
 ### Changed
 - Deprecate php 8.0
