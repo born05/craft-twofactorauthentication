@@ -59,7 +59,6 @@ class Verify extends Component
 
         if ($authenticationCodeModel->validate()) {
             // Magic checking of the authentication code.
-            $totp = $this->getTotp($user);
             $isValid = $this->getTotp($user)->verify($authenticationCodeModel->authenticationCode);
 
             if (!$isValid && is_int($settings->totpDelay)) {
