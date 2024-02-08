@@ -1,6 +1,17 @@
 Changelog
 ==================
 
+## 3.3.3 - 2024-02-08
+### Changed
+- Deprecate php 8.0
+- Updated spomky-labs/otphp
+- Updated endroid/qr-code
+
+### Fixed
+- Remove unneeded getTotp call.
+- fix: Exposure of Sensitive Attributes
+- fix: Token is now single use within time window
+
 ## 3.3.2 - 2023-10-02
 ### Fixed
 - Fixed a post-login vulnerability.
