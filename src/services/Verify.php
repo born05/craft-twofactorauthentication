@@ -11,6 +11,7 @@ use craft\helpers\Db;
 use craft\helpers\DateTimeHelper;
 
 use born05\twofactorauthentication\records\User as UserRecord;
+use born05\twofactorauthentication\records\UserToken as UserTokenRecord;
 use born05\twofactorauthentication\models\AuthenticationCode as AuthenticationCodeModel;
 use born05\twofactorauthentication\Plugin as TwoFactorAuth;
 
@@ -68,7 +69,8 @@ class Verify extends Component
                 );
             }
 
-            if (!$isValid) {
+            // Not verified when token is invalid or used before.
+            if (!$isValid || $this->isTokenUsed($authenticationCodeModel->authenticationCode, $user)) {
                 return false;
             }
 
@@ -171,5 +173,76 @@ class Verify extends Component
         }
 
         return $userRecord;
+    }
+
+    /**
+     * Determine if a token is used before by user in the current window.
+     * @param  string $token
+     * @param  User $user
+     * @return bool
+     */
+    private function isTokenUsed($token, User $user): bool
+    {
+        $settings = TwoFactorAuth::$plugin->getSettings();
+        $delay = is_int($settings->totpDelay) ? $settings->totpDelay : 0;
+        $start = new \DateTime("-$delay seconds");
+
+        // Find the token used by user in the current window.
+        $userTokenRecord = UserTokenRecord::find()
+            ->where([
+                'userId' => $user->id,
+                'token' => $token,
+            ])
+            ->andWhere(['>=', 'dateCreated', Db::prepareValueForDb($start)])
+            ->one();
+
+        if (isset($userTokenRecord)) {
+            return true;
+        }
+
+        // If the token isn't used, create a new record.
+        $this->insertToken($token, $user);
+
+        // Remove all tokens from user older than the current window.
+        $this->removeOldTokens($user);
+
+        return false;
+    }
+
+    /**
+     * Insert token used by user in the current window.
+     * @param  string $token
+     * @param  User $user
+     * @return void
+     */
+    private function insertToken($token, User $user)
+    {
+        $userTokenRecord = new UserTokenRecord();
+        $userTokenRecord->userId = $user->id;
+        $userTokenRecord->token = $token;
+        $userTokenRecord->save();
+    }
+
+    /**
+     * Remove all tokens from user older than the current window.
+     * @param  User $user
+     * @return void
+     */
+    public function removeOldTokens(User $user)
+    {
+        $settings = TwoFactorAuth::$plugin->getSettings();
+        $delay = is_int($settings->totpDelay) ? $settings->totpDelay : 0;
+        $start = new \DateTime("-$delay seconds");
+
+        $userTokenRecords = UserTokenRecord::find()
+            ->where([
+                'userId' => $user->id,
+            ])
+            ->andWhere(['<', 'dateCreated', Db::prepareValueForDb($start)])
+            ->all();
+
+        foreach ($userTokenRecords as $userTokenRecord) {
+            $userTokenRecord->delete();
+        }
     }
 }

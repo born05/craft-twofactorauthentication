@@ -25,7 +25,7 @@ use yii\web\UserEvent;
 
 class Plugin extends CraftPlugin
 {
-    public string $schemaVersion = '2.7.2';
+    public string $schemaVersion = '3.3.3';
     public bool $hasCpSection = true;
 
     /**
