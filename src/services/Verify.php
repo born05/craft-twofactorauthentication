@@ -183,9 +183,7 @@ class Verify extends Component
      */
     private function isTokenUsed($token, User $user): bool
     {
-        $settings = TwoFactorAuth::$plugin->getSettings();
-        $delay = is_int($settings->totpDelay) ? $settings->totpDelay : 0;
-        $start = new \DateTime("-$delay seconds");
+        $start = $this->getTotpStartTime();
 
         // Find the token used by user in the current window.
         $userTokenRecord = UserTokenRecord::find()
@@ -230,9 +228,7 @@ class Verify extends Component
      */
     public function removeOldTokens(User $user)
     {
-        $settings = TwoFactorAuth::$plugin->getSettings();
-        $delay = is_int($settings->totpDelay) ? $settings->totpDelay : 0;
-        $start = new \DateTime("-$delay seconds");
+        $start = $this->getTotpStartTime();
 
         $userTokenRecords = UserTokenRecord::find()
             ->where([
@@ -244,5 +240,17 @@ class Verify extends Component
         foreach ($userTokenRecords as $userTokenRecord) {
             $userTokenRecord->delete();
         }
+    }
+
+    /**
+     * Get TOTP start time
+     * @return \DateTime
+     */
+    private function getTotpStartTime(): \DateTime
+    {
+        $settings = TwoFactorAuth::$plugin->getSettings();
+        $delay = is_int($settings->totpDelay) ? $settings->totpDelay : 0;
+        $window = 31 + $delay; // Default window is 30 seconds, but we add 1 second to be sure.
+        return new \DateTime("-$window seconds");
     }
 }
