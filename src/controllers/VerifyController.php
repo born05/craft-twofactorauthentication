@@ -94,7 +94,7 @@ class VerifyController extends Controller
                 $return['csrfTokenValue'] = $this->request->getCsrfToken();
             }
 
-            return $this->asModelSuccess($user, modelName: 'user', data: $return);
+            return $this->asSuccess(data: $return);
         }
 
         return $this->redirectToPostedUrl($userSession->getIdentity(), $returnUrl);
