@@ -1,6 +1,10 @@
 Changelog
 ==================
 
+## 3.3.5 - 2024-02-13
+### Fixed
+- fix: Missing usertoken table on fresh install
+
 ## 3.3.4 - 2024-02-08
 ### Fixed
 - fix: Exposure of Sensitive Attributes

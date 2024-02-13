@@ -3,6 +3,7 @@ namespace born05\twofactorauthentication\migrations;
 
 use craft\db\Migration;
 use born05\twofactorauthentication\records\User;
+use born05\twofactorauthentication\records\UserToken;
 
 class Install extends Migration
 {
@@ -23,8 +24,19 @@ class Install extends Migration
         ]);
 
         $this->createIndex(null, User::tableName(), ['userId'], true);
-
         $this->addForeignKey(null, User::tableName(), ['userId'], '{{%users}}', ['id'], 'CASCADE', null);
+
+        $this->createTable(UserToken::tableName(), [
+            'id' => $this->primaryKey(),
+            'userId' => $this->integer()->notNull(),
+            'token' => $this->string(100)->notNull(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+        ]);
+
+        $this->createIndex(null, UserToken::tableName(), ['userId', 'dateCreated'], false);
+        $this->createIndex(null, UserToken::tableName(), ['userId', 'token', 'dateCreated'], true);
     }
 
     protected function upgradeFromCraft2()
@@ -46,6 +58,7 @@ class Install extends Migration
     {
         $this->dropTableIfExists('{{%twofactorauthentication_session}}');
         $this->dropTableIfExists(User::tableName());
+        $this->dropTableIfExists(UserToken::tableName());
 
         return true;
     }
