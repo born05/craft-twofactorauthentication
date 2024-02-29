@@ -1,6 +1,10 @@
 Changelog
 ==================
 
+## 3.3.6 - 2024-02-29
+### Fixed
+- fix: dont allow visits to plugin templates before 2fa
+
 ## 3.3.5 - 2024-02-13
 ### Fixed
 - fix: Missing usertoken table on fresh install
