@@ -1,6 +1,10 @@
 Changelog
 ==================
 
+## 3.3.7 - 2024-03-07
+### Fixed
+- fix: removed reference to old code
+
 ## 3.3.6 - 2024-02-29
 ### Fixed
 - fix: dont allow visits to plugin templates before 2fa

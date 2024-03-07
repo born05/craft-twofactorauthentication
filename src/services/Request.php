@@ -178,8 +178,7 @@ class Request extends Component
             }
         }
 
-        return !$this->isCraftSpecialRequests() &&
-            !$this->is2FASpecialRequests() &&
+        return !$this->is2FASpecialRequests() &&
             !$isLoginPath &&
             !$isAllowed &&
             $isExcluded;
